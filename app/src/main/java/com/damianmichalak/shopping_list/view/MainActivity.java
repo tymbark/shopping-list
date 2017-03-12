@@ -26,16 +26,17 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance()).commit();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.shopping_list:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, ShoppingListFragment.newInstance()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance()).commit();
                 return true;
             case R.id.history:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, HistoryFragment.newInstance()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, HistoryFragment.newInstance()).commit();
                 return true;
         }
         return false;

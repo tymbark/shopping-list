@@ -16,6 +16,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -37,9 +38,23 @@ dependencies {
     compile 'com.android.support:design:25.2.0'
     compile 'com.android.support:recyclerview-v7:25.2.0'
 
+    // RX
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0'
+    compile('com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    compile('com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0') {
+        exclude group: 'com.android.support', module: 'appcompat-v4'
+    }
+
     // Dagger
     compile 'com.google.dagger:dagger:2.9'
     apt 'com.google.dagger:dagger-compiler:2.9'
+
+    // Butterknife
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
     testCompile 'junit:junit:4.12'
     compile 'com.google.code.findbugs:jsr305:2.0.1'

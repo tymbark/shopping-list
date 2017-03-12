@@ -4,13 +4,39 @@ package com.damianmichalak.shopping_list.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.model.ShoppingItem;
+import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
+
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import dagger.Provides;
+import rx.functions.Action1;
+import rx.subscriptions.SerialSubscription;
+import rx.subscriptions.Subscriptions;
 
 public class ShoppingListFragment extends BaseFragment {
+
+    @Inject
+    ShoppingListPresenter presenter;
+    @Inject
+    ShoppingListAdapter adapter;
+
+    @BindView(R.id.shopping_list_recycler_view)
+    RecyclerView recyclerView;
+
+    @Nonnull
+    private final SerialSubscription subscription = new SerialSubscription();
 
     public static ShoppingListFragment newInstance() {
         return new ShoppingListFragment();
@@ -25,12 +51,32 @@ public class ShoppingListFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+
+        subscription.set(Subscriptions.from(
+                presenter.getShoppingListObservable()
+                        .subscribe(new Action1<List<ShoppingItem>>() {
+                            @Override
+                            public void call(List<ShoppingItem> shoppingItems) {
+                                adapter.update(shoppingItems);
+                            }
+                        })
+        ));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        subscription.set(Subscriptions.empty());
     }
 
     @Override
     protected void inject() {
         final Component component = DaggerShoppingListFragment_Component
                 .builder()
+                .module(new Module(this))
                 .component(((MainActivity) getActivity()).getComponent())
                 .build();
 
@@ -53,6 +99,11 @@ public class ShoppingListFragment extends BaseFragment {
 
         public Module(Fragment fragment) {
             this.fragment = fragment;
+        }
+
+        @Provides
+        public LayoutInflater provideLayoutInflater() {
+            return fragment.getActivity().getLayoutInflater();
         }
     }
 
