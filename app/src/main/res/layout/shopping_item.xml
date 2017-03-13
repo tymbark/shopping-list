@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="?selectableItemBackgroundBorderless"
-              android:orientation="vertical"
+              android:orientation="horizontal"
               android:padding="16dp">
 
-    <TextView
-        android:id="@+id/shopping_item_text"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/shopping_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:text="Bread"/>
+
+        <TextView
+            android:id="@+id/shopping_item_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="with sunflower seeds"/>
+
+    </LinearLayout>
+
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_input_add"/>
 
 </LinearLayout>

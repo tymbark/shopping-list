@@ -32,7 +32,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public ShoppingItemView(View itemView) {
             super(itemView);
-            text = ((TextView) itemView.findViewById(R.id.shopping_item_text));
+            text = ((TextView) itemView.findViewById(R.id.shopping_item_name));
         }
     }
 
