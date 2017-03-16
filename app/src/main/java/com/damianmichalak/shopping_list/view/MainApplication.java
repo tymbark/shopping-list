@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.damianmichalak.shopping_list.dagger.NetworkModule;
 import com.damianmichalak.shopping_list.dagger.SchedulersModule;
+import com.damianmichalak.shopping_list.dagger.TokenModule;
 
 public class MainApplication extends Application {
 
@@ -21,6 +22,7 @@ public class MainApplication extends Application {
 
     @dagger.Component(
             modules = {
+                    TokenModule.class,
                     NetworkModule.class,
                     SchedulersModule.class
             }

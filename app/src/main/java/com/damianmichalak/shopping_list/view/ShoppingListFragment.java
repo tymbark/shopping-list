@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,11 @@ import android.view.ViewGroup;
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.model.ShoppingItem;
 import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jacekmarchwicki.universaladapter.UniversalAdapter;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
@@ -66,6 +72,9 @@ public class ShoppingListFragment extends BaseFragment {
                 presenter.getShoppingListObservable()
                         .subscribe(adapter)
         ));
+
+
+
     }
 
     @Override
