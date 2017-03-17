@@ -74,7 +74,6 @@ public class ShoppingListFragment extends BaseFragment {
         ));
 
 
-
     }
 
     @Override

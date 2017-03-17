@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,8 +54,28 @@ public class HistoryFragment extends BaseFragment {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        final FirebaseDatabase instance = FirebaseDatabase.getInstance();
+                        String USERID = "123abc";
+                        final DatabaseReference reference = instance.getReference("users/" + USERID);
+
+                        final Test o = new Test();
+                        o.age = 2124;
+                        o.surname = "Nowak";
+                        reference.setValue(o);
                     }
                 });
+
+        FirebaseDatabase.getInstance().getReference("shopping_lists/0").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
