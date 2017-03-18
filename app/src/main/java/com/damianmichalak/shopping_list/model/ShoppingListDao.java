@@ -1,22 +1,14 @@
 package com.damianmichalak.shopping_list.model;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.damianmichalak.shopping_list.helper.EventsWrapper;
+import com.damianmichalak.shopping_list.helper.RxUtils;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.AsyncEmitter;
 import rx.Observable;
-import rx.functions.Action0;
-import rx.functions.Action1;
 
 @Singleton
 public class ShoppingListDao {
@@ -25,41 +17,13 @@ public class ShoppingListDao {
     private final Observable<ShoppingList> listObservable;
 
     @Inject
-    public ShoppingListDao(final DatabaseReference reference) {
+    public ShoppingListDao(@Nonnull final DatabaseReference reference,
+                           @Nonnull final EventsWrapper eventsWrapper) {
 
-        final List<ValueEventListener> listeners = new ArrayList<>();
-
-        listObservable = Observable.fromEmitter(new Action1<AsyncEmitter<ShoppingList>>() {
-            @Override
-            public void call(final AsyncEmitter<ShoppingList> asyncEmitter) {
-                final ValueEventListener valueEventListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
-                        asyncEmitter.onNext(shoppingList);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        asyncEmitter.onError(new Throwable(databaseError.getMessage()));
-                    }
-                };
-                listeners.add(valueEventListener);
-                reference.addValueEventListener(valueEventListener);
-            }
-        }, AsyncEmitter.BackpressureMode.LATEST)
-                .doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        for (ValueEventListener listener : listeners) {
-                            reference.removeEventListener(listener);
-                        }
-                        listeners.clear();
-
-                    }
-                });
+        listObservable = RxUtils.createObservableForReference(reference, eventsWrapper);
 
     }
+
 
     public Observable<ShoppingList> getListObservable() {
         return listObservable;
