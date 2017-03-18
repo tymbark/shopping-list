@@ -1,5 +1,6 @@
 package com.damianmichalak.shopping_list;
 
+import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +20,9 @@ import rx.AsyncEmitter;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.observers.TestSubscriber;
 
+import static com.google.common.truth.Truth.assert_;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -30,50 +33,62 @@ public class ExampleUnitTest {
     private DatabaseReference reference;
     private com.google.firebase.database.ValueEventListener testListner;
 
+    @Mock
+    private DataSnapshot dataSnapshot;
+    @Mock
+    private DatabaseError databaseError;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
-
     }
 
     @Test
-    public void addition_isCorrect() throws Exception {
+    public void testPushingOneEvent_isSuccess() throws Exception {
+        final EventsWrapper eventsWrapper = new EventsWrapper();
+        final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
+        final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
-        when(reference.addValueEventListener(testListner)).thenReturn(testListner);
+        dao.getListObservable().subscribe(subscriber);
+        eventsWrapper.pushEventOnDataChange(dataSnapshot);
 
-        final List<ValueEventListener> listeners = new ArrayList<>();
+        assert_().that(subscriber.getOnNextEvents()).hasSize(1);
+    }
 
-        Observable.fromEmitter(new Action1<AsyncEmitter<ShoppingList>>() {
-            @Override
-            public void call(final AsyncEmitter<ShoppingList> asyncEmitter) {
-                testListner = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
-                        asyncEmitter.onNext(shoppingList);
-                    }
+    @Test
+    public void testPushingOneEvent_isNotError() throws Exception {
+        final EventsWrapper eventsWrapper = new EventsWrapper();
+        final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
+        final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        asyncEmitter.onError(new Throwable(databaseError.getMessage()));
-                    }
-                };
-                listeners.add(testListner);
-                reference.addValueEventListener(testListner);
-            }
-        }, AsyncEmitter.BackpressureMode.LATEST)
-                .doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        for (ValueEventListener listener : listeners) {
-                            reference.removeEventListener(listener);
-                        }
-                        listeners.clear();
+        dao.getListObservable().subscribe(subscriber);
+        eventsWrapper.pushEventOnDataChange(dataSnapshot);
 
-                    }
-                });
+        assert_().that(subscriber.getOnErrorEvents()).hasSize(0);
+    }
+
+    @Test
+    public void testPushingOneErrorEvent_isError() throws Exception {
+        final EventsWrapper eventsWrapper = new EventsWrapper();
+        final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
+        final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
+
+        dao.getListObservable().subscribe(subscriber);
+        eventsWrapper.pushEventDatabaseError(databaseError);
+
+        assert_().that(subscriber.getOnErrorEvents()).hasSize(1);
+    }
+
+    @Test
+    public void testPushingOneErrorEvent_isNotSuccess() throws Exception {
+        final EventsWrapper eventsWrapper = new EventsWrapper();
+        final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
+        final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
+
+        dao.getListObservable().subscribe(subscriber);
+        eventsWrapper.pushEventDatabaseError(databaseError);
+
+        assert_().that(subscriber.getOnNextEvents()).hasSize(0);
     }
 
 

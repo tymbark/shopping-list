@@ -5,6 +5,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EventsWrapper {
 
