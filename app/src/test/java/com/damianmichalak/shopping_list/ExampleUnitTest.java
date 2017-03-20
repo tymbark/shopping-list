@@ -6,6 +6,7 @@ import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Before;
@@ -91,5 +92,34 @@ public class ExampleUnitTest {
         assert_().that(subscriber.getOnNextEvents()).hasSize(0);
     }
 
+    @Test
+    public void testPushingSomeValue_returnsThisValue() throws Exception {
+        final EventsWrapper eventsWrapper = new EventsWrapper();
+        final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
+        final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
+
+        final ShoppingList value = new ShoppingList();
+        when(dataSnapshot.getValue(any(Class.class))).thenReturn(value);
+
+        dao.getListObservable().subscribe(subscriber);
+        eventsWrapper.pushEventOnDataChange(dataSnapshot);
+
+        assert_().that(subscriber.getOnNextEvents().get(0)).isEqualTo(value);
+    }
+
+    @Test
+    public void x() throws Exception {
+        final EventsWrapper eventsWrapper = new EventsWrapper();
+        final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
+        final TestSubscriber<ShoppingList> subscriber1 = new TestSubscriber<>();
+        final TestSubscriber<ShoppingList> subscriber2 = new TestSubscriber<>();
+
+        dao.getListObservable().subscribe(subscriber1);
+        dao.getListObservable().subscribe(subscriber2);
+
+        when(dataSnapshot.getValue(any(Class.class))).thenReturn(new ShoppingList());
+        eventsWrapper.pushEventOnDataChange(dataSnapshot);
+
+    }
 
 }

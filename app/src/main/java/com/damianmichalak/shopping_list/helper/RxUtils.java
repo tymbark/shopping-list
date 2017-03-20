@@ -1,6 +1,5 @@
 package com.damianmichalak.shopping_list.helper;
 
-import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,16 +15,15 @@ import rx.functions.Action1;
 public class RxUtils {
 
     @Nonnull
-    public static Observable<ShoppingList> createObservableForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper) {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<ShoppingList>>() {
+    public static <T> Observable<T> createObservableForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
+        return Observable.fromEmitter(new Action1<AsyncEmitter<T>>() {
             @Override
-            public void call(final AsyncEmitter<ShoppingList> asyncEmitter) {
-
+            public void call(final AsyncEmitter<T> asyncEmitter) {
                 eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
-                        asyncEmitter.onNext(shoppingList);
+                        final T item = dataSnapshot.getValue(type);
+                        asyncEmitter.onNext(item);
                     }
 
                     @Override

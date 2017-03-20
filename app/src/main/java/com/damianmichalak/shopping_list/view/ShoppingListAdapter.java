@@ -14,12 +14,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+@Deprecated
 public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_SHOPPING_ITEM = 1;
 
     private final LayoutInflater layoutInflater;
-    private List<ShoppingItem> items = new ArrayList<>();
+    private List<Object> items = new ArrayList<>();
 
     @Inject
     ShoppingListAdapter(LayoutInflater layoutInflater) {
@@ -41,7 +42,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return TYPE_SHOPPING_ITEM;
     }
 
-    public void update(List<ShoppingItem> items) {
+    public void update(List<Object> items) {
         this.items = items;
         notifyDataSetChanged();
     }
@@ -54,7 +55,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((ShoppingItemView) holder).text.setText(items.get(position).getName());
+//        ((ShoppingItemView) holder).text.setText(items.get(position).getName());
     }
 
     @Override

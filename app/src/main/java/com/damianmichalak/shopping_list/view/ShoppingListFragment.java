@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.dagger.FragmentScope;
 import com.damianmichalak.shopping_list.model.ShoppingItem;
 import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
 import com.google.firebase.database.DataSnapshot;
@@ -87,14 +88,15 @@ public class ShoppingListFragment extends BaseFragment {
         final Component component = DaggerShoppingListFragment_Component
                 .builder()
                 .module(new Module(this))
-                .component(((MainActivity) getActivity()).getComponent())
+                .applicationComponent(((BaseActivity) getActivity()).getApplicationComponent())
                 .build();
 
         component.inject(this);
     }
 
+    @FragmentScope
     @dagger.Component(
-            dependencies = MainActivity.Component.class,
+            dependencies = MainApplication.ApplicationComponent.class,
             modules = Module.class
     )
     public interface Component {

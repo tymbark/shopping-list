@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
-import com.damianmichalak.shopping_list.model.ShoppingItem;
+import com.damianmichalak.shopping_list.model.Product;
 import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
@@ -50,9 +50,9 @@ public class ShoppingListManager implements ViewHolderManager {
 
         @Override
         public void bind(@Nonnull BaseAdapterItem item) {
-            final ShoppingItem shoppingItem = ((ShoppingListPresenter.ShoppingListItem) item).getShoppingItem();
-            itemName.setText(shoppingItem.getName());
-            itemDesc.setText(shoppingItem.getDescription());
+            final Product product = ((ShoppingListPresenter.ShoppingListItem) item).getProduct();
+            itemName.setText(product.getName());
+            itemDesc.setText(product.getInfo());
         }
 
     }

@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.presenter.MainActivityPresenter;
 
 import javax.annotation.Nonnull;
@@ -55,7 +56,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         component.inject(this);
     }
 
-
+    @ActivityScope
     @dagger.Component(
             dependencies = MainApplication.ApplicationComponent.class
     )

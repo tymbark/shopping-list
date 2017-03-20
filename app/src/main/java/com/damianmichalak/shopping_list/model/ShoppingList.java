@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 public class ShoppingList {
 
     @Nonnull
-    private List<String> items;
+    private List<Product> products;
 
     @Nonnull
     @PropertyName("created_at")
@@ -18,8 +18,9 @@ public class ShoppingList {
     @Nonnull
     private String name;
 
-    public List<String> getItems() {
-        return items;
+    @Nonnull
+    public List<Product> getProducts() {
+        return products;
     }
 
     public long getCreatedAt() {
