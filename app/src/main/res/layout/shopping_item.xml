@@ -22,13 +22,6 @@
             android:textSize="16sp"
             tools:text="Bread"/>
 
-        <TextView
-            android:id="@+id/shopping_item_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            tools:text="with sunflower seeds"/>
-
     </LinearLayout>
 
     <ImageView

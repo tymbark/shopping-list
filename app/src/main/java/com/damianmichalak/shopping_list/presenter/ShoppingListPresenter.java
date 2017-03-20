@@ -34,7 +34,7 @@ public class ShoppingListPresenter {
             public List<BaseAdapterItem> call(ShoppingList shoppingList) {
                 final List<BaseAdapterItem> items = new ArrayList<>();
 
-                for (Product product : shoppingList.getProducts()) {
+                for (String product : shoppingList.getProducts()) {
                     items.add(new ShoppingListItem(product));
                 }
 
@@ -70,14 +70,14 @@ public class ShoppingListPresenter {
     public class ShoppingListItem implements BaseAdapterItem {
 
         @Nonnull
-        private final Product product;
+        private final String product;
 
-        public ShoppingListItem(@Nonnull Product product) {
+        public ShoppingListItem(@Nonnull String product) {
             this.product = product;
         }
 
         @Nonnull
-        public Product getProduct() {
+        public String getProduct() {
             return product;
         }
 

@@ -1,5 +1,6 @@
 package com.damianmichalak.shopping_list.model;
 
+@Deprecated
 public class ShoppingItem {
 
     private final String name;

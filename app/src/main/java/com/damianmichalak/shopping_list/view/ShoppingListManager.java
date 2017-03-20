@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
-import com.damianmichalak.shopping_list.model.Product;
 import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
@@ -40,9 +39,6 @@ public class ShoppingListManager implements ViewHolderManager {
         @BindView(R.id.shopping_item_name)
         TextView itemName;
 
-        @BindView(R.id.shopping_item_description)
-        TextView itemDesc;
-
         public ShoppingViewHolder(@Nonnull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -50,9 +46,8 @@ public class ShoppingListManager implements ViewHolderManager {
 
         @Override
         public void bind(@Nonnull BaseAdapterItem item) {
-            final Product product = ((ShoppingListPresenter.ShoppingListItem) item).getProduct();
-            itemName.setText(product.getName());
-            itemDesc.setText(product.getInfo());
+            final String product = ((ShoppingListPresenter.ShoppingListItem) item).getProduct();
+            itemName.setText(product);
         }
 
     }
