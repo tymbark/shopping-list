@@ -30,7 +30,6 @@ public class MainApplication extends Application {
                 .builder()
                 .networkModule(new NetworkModule())
                 .tokenModule(new TokenModule())
-//                .chuj(new Chuj(this))
                 .build();
 
 //        dao.getListObservable().subscribe();

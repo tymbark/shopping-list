@@ -4,9 +4,7 @@ import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.google.firebase.database.PropertyName;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +15,7 @@ public class ShoppingList {
 
     @Nullable
     @PropertyName("products")
-    private LinkedHashMap<String, String> products;
+    private HashMap<String, String> products;
 
     @Nonnull
     @PropertyName("created_at")

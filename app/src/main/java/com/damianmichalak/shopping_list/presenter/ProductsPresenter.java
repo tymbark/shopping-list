@@ -37,7 +37,7 @@ public class ProductsPresenter {
                         .flatMap(new Func1<String, Observable<?>>() {
                             @Override
                             public Observable<?> call(String input) {
-                                return dao.removeItemByKeyObservable(input);
+                                return dao.addNewItemObservable(input);
                             }
                         })
                         .subscribe()

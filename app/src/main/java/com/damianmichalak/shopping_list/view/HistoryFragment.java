@@ -88,7 +88,7 @@ public class HistoryFragment extends BaseFragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("CHUJ", "data changed: " + dataSnapshot.getValue());
+
             }
 
             @Override
@@ -106,7 +106,7 @@ public class HistoryFragment extends BaseFragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("CHUJ", "data changed: " + dataSnapshot.getValue());
+
             }
 
             @Override

@@ -12,11 +12,12 @@ import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
+import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,6 +33,8 @@ public class ShoppingListFragment extends BaseFragment {
     ShoppingListPresenter presenter;
     @Inject
     ShoppingListManager manager;
+    @Inject
+    ShoppingListManagerSecond manager2;
 
     @BindView(R.id.shopping_list_recycler_view)
     RecyclerView recyclerView;
@@ -56,8 +59,7 @@ public class ShoppingListFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        final ArrayList<ViewHolderManager> managers = new ArrayList<>();
-        managers.add(manager);
+        final List<ViewHolderManager> managers = Lists.newArrayList(manager, manager2);
         final RxUniversalAdapter adapter = new RxUniversalAdapter(managers);
         recyclerView.setAdapter(adapter);
 
