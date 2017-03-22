@@ -1,14 +1,14 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
-import com.damianmichalak.shopping_list.model.Product;
-import com.damianmichalak.shopping_list.model.ShoppingItem;
+import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ public class ShoppingListPresenter {
 
     @Inject
     ShoppingListPresenter(@Nonnull final ShoppingListDao dao) {
-        shoppingListObservable = dao.getListObservable()
+        shoppingListObservable = dao.getShoppingListObservable()
                 .map(toAdapterItems());
     }
 
@@ -34,8 +34,11 @@ public class ShoppingListPresenter {
             public List<BaseAdapterItem> call(ShoppingList shoppingList) {
                 final List<BaseAdapterItem> items = new ArrayList<>();
 
-                for (String product : shoppingList.getProducts()) {
-                    items.add(new ShoppingListItem(product));
+                final Map<String, String> products = shoppingList.getProducts();
+                if (products != null) {
+                    for (String product : products.values()) {
+                        items.add(new ShoppingListItem(product));
+                    }
                 }
 
                 return items;
@@ -43,24 +46,22 @@ public class ShoppingListPresenter {
         };
     }
 
-//    private Observable<List<BaseAdapterItem>> getFakeItems() {
-//        List<BaseAdapterItem> list = new ArrayList<>();
-//        list.add(new ShoppingListItem(new ShoppingItem("Milk", "3%")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Bread", "with seeds")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Water", "mineral")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Cheese", "at least 10 pieces")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Corn flakes", "")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Chocolate", "milka")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Popcorn", "")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Coca Cola", "")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Apples", "1kg")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Ketchup", "")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Pizza", "frozen, with bacon")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Toothpaste", "")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Toilet paper", "")));
-//        list.add(new ShoppingListItem(new ShoppingItem("Plastic bags", "")));
-//        return Observable.just(list);
-//    }
+    private Func1<List<String>, List<BaseAdapterItem>> toAdapterItems2() {
+        return new Func1<List<String>, List<BaseAdapterItem>>() {
+            @Override
+            public List<BaseAdapterItem> call(List<String> products) {
+                final List<BaseAdapterItem> items = Lists.newArrayList();
+
+                if (products != null) {
+                    for (String product : products) {
+                        items.add(new ShoppingListItem(product));
+                    }
+                }
+
+                return items;
+            }
+        };
+    }
 
     @Nonnull
     public Observable<List<BaseAdapterItem>> getShoppingListObservable() {

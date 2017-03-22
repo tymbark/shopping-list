@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.helper.RxUtils;
+import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -127,7 +129,7 @@ public class HistoryFragment extends BaseFragment {
         public String surname = "M";
         public int age = 24;
         public long timestamp = System.currentTimeMillis();
-        public List<String> contacts = new ArrayList<>();
+        public List<String> contacts = Lists.newArrayList();
 
         public Test() {
             contacts.add("Przemek");

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.model.ShoppingItem;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int TYPE_SHOPPING_ITEM = 1;
 
     private final LayoutInflater layoutInflater;
-    private List<Object> items = new ArrayList<>();
+    private List<Object> items = Lists.newArrayList();
 
     @Inject
     ShoppingListAdapter(LayoutInflater layoutInflater) {

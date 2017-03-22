@@ -28,4 +28,12 @@ public class NetworkModule {
         return firebaseDatabase.getReference("shopping_lists/0");
     }
 
+    @Provides
+    @Singleton
+    @Named("shopping_list/products")
+    @Nonnull
+    public DatabaseReference provideProductsReference(@Nonnull FirebaseDatabase firebaseDatabase) {
+        return firebaseDatabase.getReference("shopping_lists/0/products");
+    }
+
 }
