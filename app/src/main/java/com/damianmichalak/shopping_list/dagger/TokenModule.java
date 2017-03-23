@@ -1,5 +1,8 @@
 package com.damianmichalak.shopping_list.dagger;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.UUID;
 
 import javax.inject.Named;
@@ -15,7 +18,12 @@ public class TokenModule {
     @Provides
     @Named("token")
     String provideUserToken() {
-        return "token12345";
+        final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            return currentUser.getUid();
+        } else {
+            return "EMPTY"; //TODO MAKE SURE THAT TOKEN IS PRESENT
+        }
     }
 
 }

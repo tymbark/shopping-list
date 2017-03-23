@@ -39,9 +39,6 @@ dependencies {
     compile 'com.android.support:design:25.3.0'
     compile 'com.android.support:recyclerview-v7:25.3.0'
 
-    // Firebase
-    compile 'com.google.firebase:firebase-database:10.2.0'
-
     // RX
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0'
@@ -59,6 +56,9 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     compile 'com.google.android:flexbox:0.3.0-alpha2'
 
+    // Firebase
+    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-auth:10.2.0'
 
     // Butterknife
     compile 'com.jakewharton:butterknife:8.4.0'

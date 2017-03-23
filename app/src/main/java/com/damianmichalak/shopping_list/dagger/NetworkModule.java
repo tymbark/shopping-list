@@ -1,6 +1,5 @@
 package com.damianmichalak.shopping_list.dagger;
 
-import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,8 +31,8 @@ public class NetworkModule {
     @Singleton
     @Named("shopping_list/products")
     @Nonnull
-    public DatabaseReference provideProductsReference(@Nonnull FirebaseDatabase firebaseDatabase) {
-        return firebaseDatabase.getReference("shopping_lists/0/products");
+    public DatabaseReference provideProductsReference(@Nonnull FirebaseDatabase firebaseDatabase, @Named("token") String token) {
+        return firebaseDatabase.getReference("shopping_lists/" + token + "/products");
     }
 
 }
