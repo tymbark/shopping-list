@@ -8,6 +8,7 @@ import com.damianmichalak.shopping_list.dagger.ForApplication;
 import com.damianmichalak.shopping_list.dagger.NetworkModule;
 import com.damianmichalak.shopping_list.dagger.SchedulersModule;
 import com.damianmichalak.shopping_list.dagger.TokenModule;
+import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
 
 import javax.inject.Singleton;
@@ -43,11 +44,13 @@ public class MainApplication extends Application {
                     MainApplicationModule.class
             }
     )
-    public interface ApplicationComponent extends DaoComponent {
+    public interface ApplicationComponent {
 
         void inject(MainApplication mainApplication);
 
         UserPreferences UserPreferences();
+
+        ShoppingListDao shoppingListDao();
 
     }
 
