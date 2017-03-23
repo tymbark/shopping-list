@@ -5,13 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
+import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.ProductsPresenter;
+import com.jacekmarchwicki.universaladapter.ViewHolderManager;
+import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
@@ -37,6 +42,8 @@ public class ProductsActivity extends BaseActivity {
 
     @Inject
     ProductsPresenter presenter;
+    @Inject
+    ProductsListManager manager;
 
     private final SerialSubscription subscription = new SerialSubscription();
 
@@ -51,10 +58,14 @@ public class ProductsActivity extends BaseActivity {
         ButterKnife.bind(this);
         initDagger();
 
-        subscription.set(Subscriptions.from(presenter.getSubscription()));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.<ViewHolderManager>newArrayList(manager));
+        recyclerView.setAdapter(adapter);
 
-
-
+        subscription.set(Subscriptions.from(
+                presenter.getSubscription(),
+                presenter.getSuggestedProductsObservable().subscribe(adapter)
+        ));
 
     }
 

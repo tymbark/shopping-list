@@ -1,13 +1,12 @@
 package com.damianmichalak.shopping_list.view;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
-import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
+import com.damianmichalak.shopping_list.presenter.ProductsPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 
@@ -17,39 +16,39 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ShoppingListManager implements ViewHolderManager {
+
+public class ProductsListManager implements ViewHolderManager {
 
     @Inject
-    public ShoppingListManager() {
+    public ProductsListManager() {
     }
 
     @Override
     public boolean matches(@Nonnull BaseAdapterItem baseAdapterItem) {
-        return baseAdapterItem instanceof ShoppingListPresenter.ShoppingListItem;
+        return baseAdapterItem instanceof ProductsPresenter.SuggestedProductItem;
     }
 
     @Nonnull
     @Override
     public BaseViewHolder createViewHolder(@Nonnull ViewGroup parent, @Nonnull LayoutInflater inflater) {
-        return new ShoppingViewHolder(inflater.inflate(R.layout.list_item_shopping, parent, false));
+        return new ProductsViewHolder(inflater.inflate(R.layout.list_item_products, parent, false));
     }
 
-    class ShoppingViewHolder extends BaseViewHolder {
+    class ProductsViewHolder extends BaseViewHolder {
 
-        @BindView(R.id.shopping_item_name)
-        TextView itemName;
+        @BindView(R.id.product_item_name)
+        TextView productName;
 
-        public ShoppingViewHolder(@Nonnull View itemView) {
+        public ProductsViewHolder(@Nonnull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
         @Override
         public void bind(@Nonnull BaseAdapterItem item) {
-            final String product = ((ShoppingListPresenter.ShoppingListItem) item).getProduct();
-            itemName.setText(product);
+            final ProductsPresenter.SuggestedProductItem productItem = (ProductsPresenter.SuggestedProductItem) item;
+            productName.setText(productItem.getProduct());
         }
-
     }
 
 }

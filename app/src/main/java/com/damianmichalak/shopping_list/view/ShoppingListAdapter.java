@@ -8,9 +8,7 @@ import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
-import com.damianmichalak.shopping_list.model.ShoppingItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -50,7 +48,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = layoutInflater.inflate(R.layout.shopping_item, parent, false);
+        final View view = layoutInflater.inflate(R.layout.list_item_shopping, parent, false);
         return new ShoppingItemView(view);
     }
 

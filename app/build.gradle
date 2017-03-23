@@ -27,11 +27,11 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
 
     // android support
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:support-vector-drawable:25.2.0'
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:support-v4:25.3.0'
+    compile 'com.android.support:support-vector-drawable:25.3.0'
+    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
 
     // Firebase
     compile 'com.google.firebase:firebase-database:10.2.0'
@@ -47,7 +47,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v4'
     }
 
-    // Dagger
+    // Google
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.dagger:dagger:2.9'
     apt 'com.google.dagger:dagger-compiler:2.9'
 

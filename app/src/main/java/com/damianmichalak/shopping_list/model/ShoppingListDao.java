@@ -21,7 +21,6 @@ public class ShoppingListDao {
     private final Observable<ShoppingList> shoppingListObservable;
     @Nonnull
     private final Observable<Map<String, String>> productsObservable;
-
     @Nonnull
     private final DatabaseReference listReference;
     @Nonnull

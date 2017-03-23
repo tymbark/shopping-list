@@ -34,7 +34,7 @@ public class ShoppingListManagerSecond implements ViewHolderManager {
     @Nonnull
     @Override
     public BaseViewHolder createViewHolder(@Nonnull ViewGroup parent, @Nonnull LayoutInflater inflater) {
-        return new ShoppingViewHolder(inflater.inflate(R.layout.shopping_item, parent, false));
+        return new ShoppingViewHolder(inflater.inflate(R.layout.list_item_shopping, parent, false));
     }
 
     class ShoppingViewHolder extends BaseViewHolder {

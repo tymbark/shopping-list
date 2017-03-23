@@ -50,7 +50,7 @@ public class ExampleUnitTest {
         final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
-        dao.getListObservable().subscribe(subscriber);
+        dao.getShoppingListObservable().subscribe(subscriber);
         eventsWrapper.pushEventOnDataChange(dataSnapshot);
 
         assert_().that(subscriber.getOnNextEvents()).hasSize(1);
@@ -62,7 +62,7 @@ public class ExampleUnitTest {
         final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
-        dao.getListObservable().subscribe(subscriber);
+        dao.getShoppingListObservable().subscribe(subscriber);
         eventsWrapper.pushEventOnDataChange(dataSnapshot);
 
         assert_().that(subscriber.getOnErrorEvents()).hasSize(0);
@@ -74,7 +74,7 @@ public class ExampleUnitTest {
         final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
-        dao.getListObservable().subscribe(subscriber);
+        dao.getShoppingListObservable().subscribe(subscriber);
         eventsWrapper.pushEventDatabaseError(databaseError);
 
         assert_().that(subscriber.getOnErrorEvents()).hasSize(1);
@@ -86,7 +86,7 @@ public class ExampleUnitTest {
         final ShoppingListDao dao = new ShoppingListDao(reference, eventsWrapper);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
-        dao.getListObservable().subscribe(subscriber);
+        dao.getShoppingListObservable().subscribe(subscriber);
         eventsWrapper.pushEventDatabaseError(databaseError);
 
         assert_().that(subscriber.getOnNextEvents()).hasSize(0);
@@ -101,7 +101,7 @@ public class ExampleUnitTest {
         final ShoppingList value = new ShoppingList();
         when(dataSnapshot.getValue(any(Class.class))).thenReturn(value);
 
-        dao.getListObservable().subscribe(subscriber);
+        dao.getShoppingListObservable().subscribe(subscriber);
         eventsWrapper.pushEventOnDataChange(dataSnapshot);
 
         assert_().that(subscriber.getOnNextEvents().get(0)).isEqualTo(value);
@@ -114,8 +114,8 @@ public class ExampleUnitTest {
         final TestSubscriber<ShoppingList> subscriber1 = new TestSubscriber<>();
         final TestSubscriber<ShoppingList> subscriber2 = new TestSubscriber<>();
 
-        dao.getListObservable().subscribe(subscriber1);
-        dao.getListObservable().subscribe(subscriber2);
+        dao.getShoppingListObservable().subscribe(subscriber1);
+        dao.getShoppingListObservable().subscribe(subscriber2);
 
         when(dataSnapshot.getValue(any(Class.class))).thenReturn(new ShoppingList());
         eventsWrapper.pushEventOnDataChange(dataSnapshot);
