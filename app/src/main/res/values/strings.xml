@@ -3,4 +3,7 @@
 
     <string name="title_shopping">Shopping</string>
     <string name="title_history">History</string>
+
+    <string name="add_products_done">done</string>
+
 </resources>

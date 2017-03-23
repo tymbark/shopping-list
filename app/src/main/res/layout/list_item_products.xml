@@ -3,16 +3,18 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:background="?selectableItemBackgroundBorderless"
               android:orientation="horizontal"
-              android:padding="16dp">
+              android:padding="8dp">
 
 
     <TextView
         android:id="@+id/product_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
+        android:background="@drawable/item_background"
+        android:clickable="true"
+        android:foreground="?selectableItemBackground"
+        android:padding="8dp"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         tools:text="Bread"/>

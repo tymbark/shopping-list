@@ -15,6 +15,7 @@ import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.ProductsPresenter;
+import com.google.android.flexbox.FlexboxLayoutManager;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
 import com.jakewharton.rxbinding.view.RxView;
@@ -58,7 +59,7 @@ public class ProductsActivity extends BaseActivity {
         ButterKnife.bind(this);
         initDagger();
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setLayoutManager(new FlexboxLayoutManager());
         final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.<ViewHolderManager>newArrayList(manager));
         recyclerView.setAdapter(adapter);
 

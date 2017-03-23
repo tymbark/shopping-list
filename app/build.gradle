@@ -51,6 +51,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.dagger:dagger:2.9'
     apt 'com.google.dagger:dagger-compiler:2.9'
+    compile 'com.google.android:flexbox:0.3.0-alpha2'
+
 
     // Butterknife
     compile 'com.jakewharton:butterknife:8.4.0'
