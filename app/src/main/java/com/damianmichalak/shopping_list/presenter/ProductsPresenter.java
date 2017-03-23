@@ -16,8 +16,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
+import rx.Observer;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.observers.Observers;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
@@ -28,6 +32,10 @@ public class ProductsPresenter {
     private final SerialSubscription subscription = new SerialSubscription();
     @Nonnull
     private final Observable<List<BaseAdapterItem>> suggestedProductsObservable;
+    @Nonnull
+    private final PublishSubject<String> clickItemSubject = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<Object> refreshSubject = PublishSubject.create();
 
     @Inject
     public ProductsPresenter(@Nonnull @Named("AddItemClickObservable") final Observable<Void> clickObservable,
@@ -35,34 +43,28 @@ public class ProductsPresenter {
                              @Nonnull final ShoppingListDao dao,
                              @Nonnull final UserPreferences userPreferences) {
 
-        suggestedProductsObservable = Observable.fromCallable(new Callable<List<BaseAdapterItem>>() {
-            @Override
-            public List<BaseAdapterItem> call() throws Exception {
-                final Set<String> suggestedProducts = userPreferences.getSuggestedProducts();
-                final List<BaseAdapterItem> adapterItems = Lists.newArrayList();
+        final Observable<List<BaseAdapterItem>> itemsObservable = Observable.fromCallable(() -> {
+            final Set<String> suggestedProducts = userPreferences.getSuggestedProducts();
+            final List<BaseAdapterItem> adapterItems = Lists.newArrayList();
 
-                for (String product : suggestedProducts) {
-                    adapterItems.add(new SuggestedProductItem(product));
-                }
-
-                return adapterItems;
+            for (String product : suggestedProducts) {
+                adapterItems.add(new SuggestedProductItem(product));
             }
+
+            return adapterItems;
         });
 
+        suggestedProductsObservable = Observable.combineLatest(itemsObservable, refreshSubject, (items, refresh) -> items);
+
         subscription.set(Subscriptions.from(
-                clickObservable.withLatestFrom(textChanges, new Func2<Void, CharSequence, String>() {
-                    @Override
-                    public String call(Void aVoid, CharSequence charSequence) {
-                        return charSequence.toString();
-                    }
-                })
-                        .flatMap(new Func1<String, Observable<?>>() {
-                            @Override
-                            public Observable<?> call(String input) {
-                                userPreferences.addProductSuggested(input);
-                                return dao.addNewItemObservable(input);
-                            }
+                clickObservable.withLatestFrom(textChanges, (aVoid, charSequence) -> charSequence.toString())
+                        .flatMap(input -> {
+                            userPreferences.addProductSuggested(input);
+                            return dao.addNewItemObservable(input);
                         })
+                        .subscribe(),
+                clickItemSubject
+                        .doOnNext(userPreferences::removeSuggestedProduct)
                         .subscribe()
         ));
 
@@ -118,6 +120,10 @@ public class ProductsPresenter {
         @Override
         public int hashCode() {
             return Objects.hashCode(product);
+        }
+
+        public Observer<Void> clickAction() {
+            return Observers.create(o -> clickItemSubject.onNext(product));
         }
     }
 
