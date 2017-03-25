@@ -18,6 +18,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.subscriptions.SerialSubscription;
+import rx.subscriptions.Subscriptions;
 
 public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -31,8 +33,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     @BindView(R.id.main_drawer_layout)
     DrawerLayout drawerLayout;
 
-    private DrawerFragment mNavigationDrawerFragment;
     private ActionBarDrawerToggle drawerToggle;
+    private final SerialSubscription subscription = new SerialSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,17 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        subscription.set(Subscriptions.from(
+                presenter.getCloseDrawerObservable()
+                        .subscribe(o -> drawerLayout.closeDrawers())
+        ));
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscription.set(Subscriptions.empty());
     }
 
     @Override
