@@ -18,9 +18,9 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     private Component component;
 
     @Inject
-    private MainActivityPresenter presenter;
+    MainActivityPresenter presenter;
     @Inject
-    private AuthHelper authHelper;
+    AuthHelper authHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class AuthHelper {
 
@@ -14,6 +15,7 @@ public class AuthHelper {
     @Nonnull
     private final FirebaseAuth mAuth;
 
+    @Inject
     public AuthHelper() {
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth -> {
