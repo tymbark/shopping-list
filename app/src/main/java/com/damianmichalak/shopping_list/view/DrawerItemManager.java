@@ -1,7 +1,6 @@
 package com.damianmichalak.shopping_list.view;
 
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import rx.functions.Action1;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
@@ -62,12 +60,7 @@ public class DrawerItemManager implements ViewHolderManager {
 
             subscription.set(Subscriptions.from(
                     RxView.clicks(text)
-                            .doOnNext(new Action1<Void>() {
-                                @Override
-                                public void call(Void aVoid) {
-                                    Log.d("CHUJ", "click event");
-                                }
-                            }).subscribe(adapterItem.clickObserver())
+                            .subscribe(adapterItem.clickObserver())
             ));
 
         }

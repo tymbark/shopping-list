@@ -65,7 +65,6 @@ public class CurrentListDao {
     @Nonnull
     public Observer<String> saveCurrentListIdObserver() {
         return Observers.create(currentListID1 -> {
-            Log.d("CHUJ", "click in dao");
             userPreferences.setCurrentList(currentListID1);
             currentListRefreshSubject.onNext(null);
         });

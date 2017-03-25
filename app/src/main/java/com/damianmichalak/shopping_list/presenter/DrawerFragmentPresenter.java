@@ -106,13 +106,7 @@ public class DrawerFragmentPresenter {
         }
 
         public Observer<Void> clickObserver() {
-            return Observers.create(new Action1<Void>() {
-                @Override
-                public void call(Void aVoid) {
-                    Log.d("CHUJ", "click observer");
-                    setCurrentListSubejct.onNext(key);
-                }
-            });
+            return Observers.create(aVoid -> setCurrentListSubejct.onNext(key));
         }
     }
 
