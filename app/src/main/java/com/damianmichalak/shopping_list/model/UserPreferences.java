@@ -23,6 +23,7 @@ public class UserPreferences {
     private static final String PREFERENCES_NAME = "user_preferences";
     private static final String SUGGESTED_PRODUCTS = "suggested_products";
     private static final String USER_UID = "uid";
+    private static final String CURRENT_LIST = "current_list";
 
     @Nonnull
     private final SharedPreferences preferences;
@@ -88,12 +89,21 @@ public class UserPreferences {
         return set;
     }
 
-    public void saveUid(String uid) {
+    public void setUid(String uid) {
         preferences.edit().putString(USER_UID, uid).apply();
     }
 
     @Nullable
     public String getUid() {
-        return preferences.getString(USER_UID, "TEST");
+        return preferences.getString(USER_UID, null);
+    }
+
+    public void setCurrentList(String uid) {
+        preferences.edit().putString(CURRENT_LIST, uid).apply();
+    }
+
+    @Nullable
+    public String getCurrentList() {
+        return preferences.getString(CURRENT_LIST, null);
     }
 }

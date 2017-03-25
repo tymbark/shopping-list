@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@Deprecated
 public class ShoppingListManager implements ViewHolderManager {
 
     @Inject

@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 
+@Deprecated
 @Singleton
 public class ShoppingListDao {
 
@@ -30,25 +31,27 @@ public class ShoppingListDao {
         this.database = database;
 
         shoppingListObservable = userDao.getUidObservable()
+                .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableForReference
-                        (database.shoppingListReference(), listEventsWrapper, ShoppingList.class))
+                        (database.DEPRECATEDshoppingListReference(), listEventsWrapper, ShoppingList.class))
                 .replay(1)
                 .refCount();
 
         productsObservable = userDao.getUidObservable()
+                .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableMapForReference
-                        (database.productsReference(), productsEventWrapper, String.class))
+                        (database.DEPRECATEDproductsReference(), productsEventWrapper, String.class))
                 .replay(1)
                 .refCount();
 
     }
 
     public Observable<Object> addNewItemObservable(final String itemName) {
-        return Observable.fromCallable(() -> database.productsReference().push().setValue(itemName));
+        return Observable.fromCallable(() -> database.DEPRECATEDproductsReference().push().setValue(itemName));
     }
 
     public Observable<Object> removeItemByKeyObservable(final String key) {
-        return Observable.fromCallable(() -> database.productsReference().child(key).removeValue());
+        return Observable.fromCallable(() -> database.DEPRECATEDproductsReference().child(key).removeValue());
     }
 
     @Nonnull

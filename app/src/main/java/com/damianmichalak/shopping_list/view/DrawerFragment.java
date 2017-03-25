@@ -3,52 +3,105 @@ package com.damianmichalak.shopping_list.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
+import com.damianmichalak.shopping_list.helper.guava.Lists;
+import com.damianmichalak.shopping_list.presenter.DrawerFragmentPresenter;
+import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
+import com.jakewharton.rxbinding.view.RxView;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import dagger.Provides;
+import rx.Observable;
+import rx.subscriptions.SerialSubscription;
+import rx.subscriptions.Subscriptions;
 
 public class DrawerFragment extends BaseFragment {
 
     @BindView(R.id.drawer_username)
     TextView username;
     @BindView(R.id.drawer_shopping_list)
-    ListView shoppingList;
+    RecyclerView recyclerView;
+    @BindView(R.id.drawer_add_new_list)
+    View addNew;
 
-    Unbinder unbinder;
+    @Inject
+    DrawerFragmentPresenter presenter;
 
+    @Inject
+    DrawerItemManager manager;
+
+    @Nonnull
+    private final SerialSubscription subscription = new SerialSubscription();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_drawer_layout, container, false);
-        unbinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.newArrayList(manager));
+        recyclerView.setAdapter(adapter);
+
+        subscription.set(Subscriptions.from(
+                presenter.getListObservable()
+                        .subscribe(adapter),
+                presenter.getSubscription()
+        ));
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        subscription.set(Subscriptions.empty());
     }
 
     @Override
-    protected void inject() {
-        DaggerDrawerFragment_DrawerFragmentComponent.builder().build().inject(this);
+    protected void initDagger() {
+        DaggerDrawerFragment_DrawerFragmentComponent
+                .builder()
+                .applicationComponent(((BaseActivity) getActivity()).getApplicationComponent())
+                .drawerFragmentModule(new DrawerFragmentModule())
+                .build()
+                .inject(this);
     }
 
     @FragmentScope
-    @dagger.Component(dependencies = MainApplication.ApplicationComponent.class)
+    @dagger.Component(
+            dependencies = MainApplication.ApplicationComponent.class,
+            modules = DrawerFragmentModule.class)
     interface DrawerFragmentComponent {
         void inject(DrawerFragment drawer);
+    }
+
+    @dagger.Module
+    class DrawerFragmentModule {
+
+        @Provides
+        @Named("AddNewListClickObservable")
+        Observable<Void> provideAddNewListClickObservable() {
+            return RxView.clicks(addNew);
+        }
+
+
     }
 
 }

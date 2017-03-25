@@ -1,19 +1,18 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
-import javax.inject.Inject;
+import com.damianmichalak.shopping_list.model.UserDao;
 
-import rx.subjects.PublishSubject;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 public class MainActivityPresenter {
 
-    final PublishSubject<String> uidSubject = PublishSubject.create();
 
     @Inject
-    public MainActivityPresenter() {
+    public MainActivityPresenter(@Nonnull UserDao userDao) {
+
+
     }
 
-    public PublishSubject<String> getUidSubject() {
-        return uidSubject;
-    }
 }

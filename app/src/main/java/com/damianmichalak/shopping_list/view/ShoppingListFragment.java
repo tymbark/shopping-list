@@ -84,7 +84,7 @@ public class ShoppingListFragment extends BaseFragment {
     }
 
     @Override
-    protected void inject() {
+    protected void initDagger() {
         final Component component = DaggerShoppingListFragment_Component
                 .builder()
                 .module(new Module(this))

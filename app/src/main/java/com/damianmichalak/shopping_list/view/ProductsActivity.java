@@ -110,7 +110,6 @@ public class ProductsActivity extends BaseActivity {
         @Provides
         @Named("AddItemClickObservable")
         Observable<Void> provideAddItemClickObservable() {
-//            final View view = productsActivity.findViewById(R.id.activity_product_done);
             return RxView.clicks(done);
         }
 

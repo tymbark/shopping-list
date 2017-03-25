@@ -10,7 +10,8 @@ import javax.inject.Inject;
 
 public class Database {
 
-    private final String DATABASE_NAME = "shopping_lists/";
+    private final String DB_SHOPPING_LIST = "shopping_lists/";
+    private final String DB_USERS = "users/";
 
     @Nonnull
     private final UserPreferences userPreferences;
@@ -24,16 +25,38 @@ public class Database {
         this.firebaseDatabase = firebaseDatabase;
     }
 
-    public DatabaseReference productsReference() {
-        return firebaseDatabase.getReference(DATABASE_NAME + userPreferences.getUid() + "/products");
+    @Deprecated
+    public DatabaseReference DEPRECATEDproductsReference() {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST + userPreferences.getUid() + "/products");
     }
 
-    public DatabaseReference shoppingListReference() {
-        return firebaseDatabase.getReference(DATABASE_NAME + userPreferences.getUid());
+    @Deprecated
+    public DatabaseReference DEPRECATEDshoppingListReference() {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST + userPreferences.getUid());
+    }
+
+    public DatabaseReference allListsReference() {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST);
     }
 
     public DatabaseReference userReference() {
-        return firebaseDatabase.getReference(DATABASE_NAME + userPreferences.getUid());
+        return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid());
+    }
+
+    public DatabaseReference userListsReference() {
+        return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid() + "/shopping_list_access/");
+    }
+
+    public DatabaseReference singleListReference(String listUID) {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID);
+    }
+
+    public DatabaseReference productsReference(String listUID) {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID + "/products");
+    }
+
+    public DatabaseReference shoppingListReference(String listUID) {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID + "/products");
     }
 
 }

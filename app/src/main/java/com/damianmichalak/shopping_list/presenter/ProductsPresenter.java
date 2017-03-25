@@ -3,6 +3,7 @@ package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
+import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
@@ -36,7 +37,7 @@ public class ProductsPresenter {
     @Inject
     public ProductsPresenter(@Nonnull @Named("AddItemClickObservable") final Observable<Void> clickObservable,
                              @Nonnull @Named("ProductTextInputObservable") final Observable<CharSequence> textChanges,
-                             @Nonnull final ShoppingListDao dao,
+                             @Nonnull final ProductsDao dao,
                              @Nonnull final UserPreferences userPreferences) {
 
         final Observable<List<BaseAdapterItem>> itemsObservable = Observable.fromCallable(() -> {

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@android:color/white"
               android:orientation="vertical">
 
     <TextView
@@ -24,10 +25,17 @@
         android:text="@string/drawer_lists_header"
         android:textAllCaps="true"/>
 
-    <ListView
+    <Button
+        android:id="@+id/drawer_add_new_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/drawer_add_new_list"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/drawer_shopping_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/drawer_shopping_list"
         android:layout_weight="1"/>
+
 
 </LinearLayout>

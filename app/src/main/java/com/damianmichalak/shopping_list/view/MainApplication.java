@@ -8,6 +8,9 @@ import com.damianmichalak.shopping_list.dagger.ForApplication;
 import com.damianmichalak.shopping_list.dagger.NetworkModule;
 import com.damianmichalak.shopping_list.dagger.SchedulersModule;
 import com.damianmichalak.shopping_list.dagger.TokenModule;
+import com.damianmichalak.shopping_list.model.CurrentListDao;
+import com.damianmichalak.shopping_list.model.ListsDao;
+import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
@@ -48,6 +51,12 @@ public class MainApplication extends Application {
         UserPreferences UserPreferences();
 
         ShoppingListDao shoppingListDao();
+
+        CurrentListDao currentListDao();
+
+        ProductsDao productsDao();
+
+        ListsDao listDao();
 
         UserDao userDao();
 

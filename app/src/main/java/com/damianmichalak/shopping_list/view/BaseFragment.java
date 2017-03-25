@@ -13,10 +13,10 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        inject();
         ButterKnife.bind(this, view);
+        initDagger();
     }
 
-    protected abstract void inject();
+    protected abstract void initDagger();
 
 }

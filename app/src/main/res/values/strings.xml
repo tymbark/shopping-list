@@ -10,5 +10,6 @@
     <string name="drawer_close">close</string>
     <string name="drawer_name_header">name</string>
     <string name="drawer_lists_header">your lists</string>
+    <string name="drawer_add_new_list">add new list</string>
 
 </resources>

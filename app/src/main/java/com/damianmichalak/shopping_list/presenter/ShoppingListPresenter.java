@@ -3,11 +3,10 @@ package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
-import com.damianmichalak.shopping_list.model.ShoppingList;
+import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,76 +27,30 @@ public class ShoppingListPresenter {
     private final Observable<List<BaseAdapterItem>> shoppingListObservable;
     @Nonnull
     private final PublishSubject<String> removeItemSubject = PublishSubject.create();
-    @Nonnull
-    private final ShoppingListDao dao;
 
     @Inject
-    ShoppingListPresenter(@Nonnull final ShoppingListDao dao) {
+    ShoppingListPresenter(@Nonnull final ProductsDao dao) {
+
         shoppingListObservable = dao.getProductsObservable()
-                .map(toAdapterItems3());
-        this.dao = dao;
+                .map(toAdapterItems());
 
         removeItemSubject
-                .flatMap(new Func1<String, Observable<?>>() {
-                    @Override
-                    public Observable<?> call(String itemKey) {
-                        return dao.removeItemByKeyObservable(itemKey);
-                    }
-                })
+                .flatMap(dao::removeItemByKeyObservable)
                 .subscribe();
 
     }
 
-    private Func1<ShoppingList, List<BaseAdapterItem>> toAdapterItems() {
-        return new Func1<ShoppingList, List<BaseAdapterItem>>() {
-            @Override
-            public List<BaseAdapterItem> call(ShoppingList shoppingList) {
-                final List<BaseAdapterItem> items = new ArrayList<>();
+    private Func1<Map<String, String>, List<BaseAdapterItem>> toAdapterItems() {
+        return products -> {
+            final List<BaseAdapterItem> items = Lists.newArrayList();
 
-                final Map<String, String> products = shoppingList.getProducts();
-                if (products != null) {
-                    for (String product : products.values()) {
-                        items.add(new ShoppingListItem(product));
-                    }
+            if (products != null) {
+                for (String key : products.keySet()) {
+                    items.add(new ShoppingListItemWithKey(key, products.get(key)));
                 }
-
-                return items;
             }
-        };
-    }
 
-    private Func1<List<String>, List<BaseAdapterItem>> toAdapterItems2() {
-        return new Func1<List<String>, List<BaseAdapterItem>>() {
-            @Override
-            public List<BaseAdapterItem> call(List<String> products) {
-                final List<BaseAdapterItem> items = Lists.newArrayList();
-
-                if (products != null) {
-                    for (String product : products) {
-                        items.add(new ShoppingListItem(product));
-                    }
-                }
-
-                return items;
-            }
-        };
-    }
-
-    private Func1<Map<String, String>, List<BaseAdapterItem>> toAdapterItems3() {
-        return new Func1<Map<String, String>, List<BaseAdapterItem>>() {
-            @Override
-            public List<BaseAdapterItem> call(Map<String, String> products) {
-                final List<BaseAdapterItem> items = Lists.newArrayList();
-
-                if (products != null) {
-                    for (String key : products.keySet()) {
-                        items.add(new ShoppingListItemWithKey(key, products.get(key)));
-                    }
-
-                }
-
-                return items;
-            }
+            return items;
         };
     }
 
@@ -201,12 +154,7 @@ public class ShoppingListPresenter {
         }
 
         public Observer<Object> removeItem() {
-            return Observers.create(new Action1<Object>() {
-                @Override
-                public void call(Object o) {
-                    removeItemSubject.onNext(id);
-                }
-            });
+            return Observers.create(o -> removeItemSubject.onNext(id));
         }
     }
 

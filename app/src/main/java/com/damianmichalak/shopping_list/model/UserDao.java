@@ -22,17 +22,19 @@ public class UserDao {
     private final Observable<String> uidObservable;
     @Nonnull
     private final PublishSubject<Object> uidRefreshSubject = PublishSubject.create();
+    @Nonnull
+    private final Database database;
     private UserPreferences userPreferences;
 
     @Inject
     public UserDao(@Nonnull final Database database,
                    @Nonnull final EventsWrapper eventsWrapper,
                    @Nonnull final UserPreferences userPreferences) {
+        this.database = database;
         this.userPreferences = userPreferences;
 
         uidObservable = uidRefreshSubject.startWith((Object) null)
                 .switchMap(o -> Observable.fromCallable(userPreferences::getUid))
-                .filter(o -> o != null)
                 .replay(1)
                 .refCount();
 
@@ -54,7 +56,7 @@ public class UserDao {
     @Nonnull
     public Observer<String> uidObserver() {
         return Observers.create(uid -> {
-            userPreferences.saveUid(uid);
+            userPreferences.setUid(uid);
             uidRefreshSubject.onNext(null);
         });
     }
