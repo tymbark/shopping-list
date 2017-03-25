@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -21,6 +22,7 @@ public class UserPreferences {
 
     private static final String PREFERENCES_NAME = "user_preferences";
     private static final String SUGGESTED_PRODUCTS = "suggested_products";
+    private static final String USER_UID = "uid";
 
     @Nonnull
     private final SharedPreferences preferences;
@@ -86,4 +88,12 @@ public class UserPreferences {
         return set;
     }
 
+    public void saveUid(String uid) {
+        preferences.edit().putString(USER_UID, uid).apply();
+    }
+
+    @Nullable
+    public String getUid() {
+        return preferences.getString(USER_UID, "TEST");
+    }
 }

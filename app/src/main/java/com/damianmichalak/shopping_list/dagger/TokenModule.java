@@ -10,6 +10,7 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 
+@Deprecated
 @Module
 public class TokenModule {
 

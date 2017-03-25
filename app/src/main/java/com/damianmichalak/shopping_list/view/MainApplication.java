@@ -9,6 +9,7 @@ import com.damianmichalak.shopping_list.dagger.NetworkModule;
 import com.damianmichalak.shopping_list.dagger.SchedulersModule;
 import com.damianmichalak.shopping_list.dagger.TokenModule;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
+import com.damianmichalak.shopping_list.model.UserDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
 
 import javax.inject.Singleton;
@@ -24,8 +25,6 @@ public class MainApplication extends Application {
         super.onCreate();
         applicationComponent = DaggerMainApplication_ApplicationComponent
                 .builder()
-                .networkModule(new NetworkModule())
-                .tokenModule(new TokenModule())
                 .mainApplicationModule(new MainApplicationModule(this))
                 .build();
 
@@ -38,9 +37,6 @@ public class MainApplication extends Application {
     @Singleton
     @dagger.Component(
             modules = {
-                    TokenModule.class,
-                    NetworkModule.class,
-                    SchedulersModule.class,
                     MainApplicationModule.class
             }
     )
@@ -51,6 +47,8 @@ public class MainApplication extends Application {
         UserPreferences UserPreferences();
 
         ShoppingListDao shoppingListDao();
+
+        UserDao userDao();
 
     }
 

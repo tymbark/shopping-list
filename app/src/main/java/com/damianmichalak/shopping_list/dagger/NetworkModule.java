@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import dagger.Provides;
 
+@Deprecated
 @dagger.Module
 public class NetworkModule {
 
@@ -32,7 +33,7 @@ public class NetworkModule {
     @Named("shopping_list/products")
     @Nonnull
     public DatabaseReference provideProductsReference(@Nonnull FirebaseDatabase firebaseDatabase, @Named("token") String token) {
-        return firebaseDatabase.getReference("shopping_lists/" + token + "/products");
+        return firebaseDatabase.getReference("shopping_lists//products");
     }
 
 }

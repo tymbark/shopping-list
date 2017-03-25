@@ -21,95 +21,68 @@ public class RxUtils {
 
     @Nonnull
     public static <T> Observable<T> createObservableForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<T>>() {
-            @Override
-            public void call(final AsyncEmitter<T> asyncEmitter) {
-                eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final T item = dataSnapshot.getValue(type);
-                        asyncEmitter.onNext(item);
-                    }
+        return Observable.fromEmitter(asyncEmitter -> {
+            eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final T item = dataSnapshot.getValue(type);
+                    asyncEmitter.onNext(item);
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        asyncEmitter.onError(new Throwable(databaseError.getMessage()));
-                    }
-                });
-                reference.addValueEventListener(eventsWrapper.getFirebaseListener());
-            }
-        }, AsyncEmitter.BackpressureMode.LATEST)
-                .doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        reference.removeEventListener(eventsWrapper.getFirebaseListener());
-
-                    }
-                });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    asyncEmitter.onError(new Throwable(databaseError.getMessage()));
+                }
+            });
+            reference.addValueEventListener(eventsWrapper.getFirebaseListener());
+        }, AsyncEmitter.BackpressureMode.LATEST);
+//                .doOnUnsubscribe(() -> reference.removeEventListener(eventsWrapper.getFirebaseListener()));
     }
 
     @Nonnull
     public static <T> Observable<List<T>> createObservableListForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<List<T>>>() {
-            @Override
-            public void call(final AsyncEmitter<List<T>> asyncEmitter) {
-                eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final List<T> output = Lists.newArrayList();
-                        for (DataSnapshot next : dataSnapshot.getChildren()) {
-                            output.add(next.getValue(type));
-                        }
-                        asyncEmitter.onNext(output);
+        return Observable.fromEmitter((Action1<AsyncEmitter<List<T>>>) asyncEmitter -> {
+            eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final List<T> output = Lists.newArrayList();
+                    for (DataSnapshot next : dataSnapshot.getChildren()) {
+                        output.add(next.getValue(type));
                     }
+                    asyncEmitter.onNext(output);
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        asyncEmitter.onError(new Throwable(databaseError.getMessage()));
-                    }
-                });
-                reference.addValueEventListener(eventsWrapper.getFirebaseListener());
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    asyncEmitter.onError(new Throwable(databaseError.getMessage()));
+                }
+            });
+            reference.addValueEventListener(eventsWrapper.getFirebaseListener());
         }, AsyncEmitter.BackpressureMode.LATEST)
-                .doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        reference.removeEventListener(eventsWrapper.getFirebaseListener());
-
-                    }
-                });
+                .doOnUnsubscribe(() -> reference.removeEventListener(eventsWrapper.getFirebaseListener()));
     }
 
     @Nonnull
     public static <T> Observable<Map<String, T>> createObservableMapForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<Map<String, T>>>() {
-            @Override
-            public void call(final AsyncEmitter<Map<String, T>> asyncEmitter) {
-                eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final LinkedHashMap<String, T> output = new LinkedHashMap<>();
-                        for (DataSnapshot next : dataSnapshot.getChildren()) {
-                            output.put(next.getKey(), next.getValue(type));
-                        }
-                        asyncEmitter.onNext(output);
+        return Observable.fromEmitter((Action1<AsyncEmitter<Map<String, T>>>) asyncEmitter -> {
+            eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final LinkedHashMap<String, T> output = new LinkedHashMap<>();
+                    for (DataSnapshot next : dataSnapshot.getChildren()) {
+                        output.put(next.getKey(), next.getValue(type));
                     }
+                    asyncEmitter.onNext(output);
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        asyncEmitter.onError(new Throwable(databaseError.getMessage()));
-                    }
-                });
-                reference.addValueEventListener(eventsWrapper.getFirebaseListener());
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    asyncEmitter.onError(new Throwable(databaseError.getMessage()));
+                }
+            });
+            reference.addValueEventListener(eventsWrapper.getFirebaseListener());
         }, AsyncEmitter.BackpressureMode.LATEST)
-                .doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        reference.removeEventListener(eventsWrapper.getFirebaseListener());
-
-                    }
-                });
+                .doOnUnsubscribe(() -> reference.removeEventListener(eventsWrapper.getFirebaseListener()));
     }
 
 }
