@@ -8,23 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
-import com.damianmichalak.shopping_list.helper.RxUtils;
-import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.model.ShoppingList;
+import com.damianmichalak.shopping_list.model.User;
+import com.damianmichalak.shopping_list.model.UserDao;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Inject;
+
+import rx.functions.Action1;
 
 public class HistoryFragment extends BaseFragment {
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
     }
+
+    @Inject
+    UserDao userDao;
 
     @Nullable
     @Override
@@ -36,11 +39,18 @@ public class HistoryFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.string_save)
+        userDao.getUserObservable().subscribe(new Action1<User>() {
+            @Override
+            public void call(User user) {
+                Log.d("CHUJ", "available lists" + user.getListIDs());
+            }
+        });
+
+        view.findViewById(R.id.add_list)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        stringTest();
+
                     }
                 });
 
@@ -48,7 +58,6 @@ public class HistoryFragment extends BaseFragment {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        objectTest();
                     }
                 });
 
@@ -56,88 +65,27 @@ public class HistoryFragment extends BaseFragment {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final FirebaseDatabase instance = FirebaseDatabase.getInstance();
-                        String USERID = "123abc";
-                        final DatabaseReference reference = instance.getReference("users/" + USERID);
-
-                        final Test o = new Test();
-                        o.age = 2124;
-                        o.surname = "Nowak";
-                        reference.setValue(o);
                     }
                 });
 
-        FirebaseDatabase.getInstance().getReference("shopping_lists/0").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
-            }
+//        FirebaseDatabase.getInstance().getReference("shopping_lists/0").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-
-
-    }
-
-    private void objectTest() {
-        final FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        final DatabaseReference reference = instance.getReference("object");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        reference.setValue(new Test());
-    }
-
-    private void stringTest() {
-        final FirebaseDatabase instance = FirebaseDatabase.getInstance();
-        final DatabaseReference reference = instance.getReference("test");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        reference.setValue("Hello World1");
-        reference.setValue("Hello World2");
     }
 
     @Override
     protected void inject() {
 
-    }
-
-    class Test {
-        public String name = "Damian";
-        public String surname = "M";
-        public int age = 24;
-        public long timestamp = System.currentTimeMillis();
-        public List<String> contacts = Lists.newArrayList();
-
-        public Test() {
-            contacts.add("Przemek");
-            contacts.add("Kamil");
-            contacts.add("Adam");
-            contacts.add("Marek");
-            contacts.add("Szymon");
-        }
     }
 
 }

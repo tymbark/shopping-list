@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/main_root_view"
+
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/main_drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.damianmichalak.shopping_list.view.MainActivity">
+    tools:context="com.damianmichalak.shopping_list.view.MainActivity"
+    tools:openDrawer="start">
 
     <FrameLayout
         android:id="@+id/content"
@@ -15,12 +15,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation"/>
+    <fragment
+        android:id="@+id/main_navigation_drawer"
+        android:name="com.damianmichalak.shopping_list.view.DrawerFragment"
+        android:layout_width="260dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        tools:layout="@layout/fragment_drawer_layout"/>
 
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>

@@ -29,7 +29,11 @@ public class ShoppingListDao {
                            @Nonnull final UserDao userDao) {
         this.database = database;
 
-        shoppingListObservable = RxUtils.createObservableForReference(database.shoppingListReference(), listEventsWrapper, ShoppingList.class);
+        shoppingListObservable = userDao.getUidObservable()
+                .switchMap(o -> RxUtils.createObservableForReference
+                        (database.shoppingListReference(), listEventsWrapper, ShoppingList.class))
+                .replay(1)
+                .refCount();
 
         productsObservable = userDao.getUidObservable()
                 .switchMap(o -> RxUtils.createObservableMapForReference
