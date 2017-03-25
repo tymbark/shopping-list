@@ -3,7 +3,6 @@ package com.damianmichalak.shopping_list.model;
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Action1;
 
 @Singleton
 public class ShoppingListDao {
@@ -23,10 +21,6 @@ public class ShoppingListDao {
     private final Observable<Map<String, String>> productsObservable;
     @Nonnull
     private final Database database;
-//    @Nonnull
-//    private final DatabaseReference listReference;
-//    @Nonnull
-//    private final DatabaseReference productsReference;
 
     @Inject
     public ShoppingListDao(@Nonnull final Database database,
@@ -35,19 +29,10 @@ public class ShoppingListDao {
                            @Nonnull final UserDao userDao) {
         this.database = database;
 
-//        listReference = database.shoppingListReference();
-//        productsReference = database.productsReference();
-
         shoppingListObservable = RxUtils.createObservableForReference(database.shoppingListReference(), listEventsWrapper, ShoppingList.class);
 
         productsObservable = userDao.getUidObservable()
-                .doOnNext(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-
-                    }
-                })
-                .flatMap(o -> RxUtils.createObservableMapForReference
+                .switchMap(o -> RxUtils.createObservableMapForReference
                         (database.productsReference(), productsEventWrapper, String.class))
                 .replay(1)
                 .refCount();

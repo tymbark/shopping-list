@@ -9,7 +9,6 @@ import javax.inject.Singleton;
 
 import dagger.Provides;
 
-@Deprecated
 @dagger.Module
 public class NetworkModule {
 
@@ -20,20 +19,20 @@ public class NetworkModule {
         return FirebaseDatabase.getInstance();
     }
 
-    @Provides
-    @Singleton
-    @Named("shopping_list")
-    @Nonnull
-    public DatabaseReference provideShoppingReference(@Nonnull FirebaseDatabase firebaseDatabase) {
-        return firebaseDatabase.getReference("shopping_lists/0");
-    }
-
-    @Provides
-    @Singleton
-    @Named("shopping_list/products")
-    @Nonnull
-    public DatabaseReference provideProductsReference(@Nonnull FirebaseDatabase firebaseDatabase, @Named("token") String token) {
-        return firebaseDatabase.getReference("shopping_lists//products");
-    }
+//    @Provides
+//    @Singleton
+//    @Named("shopping_list")
+//    @Nonnull
+//    public DatabaseReference provideShoppingReference(@Nonnull FirebaseDatabase firebaseDatabase) {
+//        return firebaseDatabase.getReference("shopping_lists/0");
+//    }
+//
+//    @Provides
+//    @Singleton
+//    @Named("shopping_list/products")
+//    @Nonnull
+//    public DatabaseReference provideProductsReference(@Nonnull FirebaseDatabase firebaseDatabase, @Named("token") String token) {
+//        return firebaseDatabase.getReference("shopping_lists//products");
+//    }
 
 }

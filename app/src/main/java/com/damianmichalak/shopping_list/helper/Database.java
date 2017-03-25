@@ -12,13 +12,16 @@ public class Database {
 
     private final String DATABASE_NAME = "shopping_lists/";
 
+    @Nonnull
+    private final UserPreferences userPreferences;
+    @Nonnull
     private final FirebaseDatabase firebaseDatabase;
-    private UserPreferences userPreferences;
 
     @Inject
-    public Database(@Nonnull final UserPreferences userPreferences) {
+    public Database(@Nonnull final UserPreferences userPreferences,
+                    @Nonnull final FirebaseDatabase firebaseDatabase) {
         this.userPreferences = userPreferences;
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        this.firebaseDatabase = firebaseDatabase;
     }
 
     public DatabaseReference productsReference() {

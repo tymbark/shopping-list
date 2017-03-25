@@ -37,6 +37,7 @@ public class MainApplication extends Application {
     @Singleton
     @dagger.Component(
             modules = {
+                    NetworkModule.class,
                     MainApplicationModule.class
             }
     )

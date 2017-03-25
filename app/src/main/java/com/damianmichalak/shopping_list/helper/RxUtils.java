@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
 
 import rx.AsyncEmitter;
 import rx.Observable;
-import rx.functions.Action0;
 import rx.functions.Action1;
 
 
@@ -21,7 +20,7 @@ public class RxUtils {
 
     @Nonnull
     public static <T> Observable<T> createObservableForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
-        return Observable.fromEmitter(asyncEmitter -> {
+        return Observable.fromEmitter((Action1<AsyncEmitter<T>>) asyncEmitter -> {
             eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -35,8 +34,8 @@ public class RxUtils {
                 }
             });
             reference.addValueEventListener(eventsWrapper.getFirebaseListener());
-        }, AsyncEmitter.BackpressureMode.LATEST);
-//                .doOnUnsubscribe(() -> reference.removeEventListener(eventsWrapper.getFirebaseListener()));
+        }, AsyncEmitter.BackpressureMode.LATEST)
+                .doOnUnsubscribe(() -> reference.removeEventListener(eventsWrapper.getFirebaseListener()));
     }
 
     @Nonnull
