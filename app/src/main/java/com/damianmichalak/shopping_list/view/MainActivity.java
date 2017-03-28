@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
@@ -35,6 +36,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
     private ActionBarDrawerToggle drawerToggle;
     private final SerialSubscription subscription = new SerialSubscription();
+    private ActionBar supportActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,16 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance()).commit();
 
+        setupDrawerAndToolbar();
+
+        subscription.set(Subscriptions.from(
+                presenter.getCloseDrawerObservable()
+                        .subscribe(o -> drawerLayout.closeDrawers())
+        ));
+
+    }
+
+    private void setupDrawerAndToolbar() {
         drawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawerLayout,
@@ -56,14 +68,17 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         );
         drawerLayout.addDrawerListener(drawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeButtonEnabled(true);
+        }
+    }
 
-        subscription.set(Subscriptions.from(
-                presenter.getCloseDrawerObservable()
-                        .subscribe(o -> drawerLayout.closeDrawers())
-        ));
-
+    public void setToolbarTitle(String title) {
+        if (supportActionBar != null) {
+            supportActionBar.setTitle(title);
+        }
     }
 
     @Override

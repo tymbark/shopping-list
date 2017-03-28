@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
+import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.DrawerFragmentPresenter;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
@@ -24,6 +25,7 @@ import javax.inject.Named;
 import butterknife.BindView;
 import dagger.Provides;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
@@ -66,6 +68,14 @@ public class DrawerFragment extends BaseFragment {
                 presenter.getSubscription()
         ));
 
+        RxView.clicks(addNew)
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        DialogHelper.showNewListNameDialog(getActivity());
+                    }
+                });
+
     }
 
     @Override
@@ -98,7 +108,7 @@ public class DrawerFragment extends BaseFragment {
         @Provides
         @Named("AddNewListClickObservable")
         Observable<Void> provideAddNewListClickObservable() {
-            return RxView.clicks(addNew);
+            return Observable.empty();
         }
 
 

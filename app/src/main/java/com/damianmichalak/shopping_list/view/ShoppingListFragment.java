@@ -67,13 +67,8 @@ public class ShoppingListFragment extends BaseFragment {
                 presenter.getShoppingListObservable()
                         .subscribe(adapter)
         ));
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(ProductsActivity.newIntent(getActivity()));
-            }
-        });
 
+        add.setOnClickListener(v -> startActivity(ProductsActivity.newIntent(getActivity())));
 
     }
 

@@ -59,4 +59,8 @@ public class Database {
         return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID + "/products");
     }
 
+    public static String path(DatabaseReference reference) {
+        return reference.toString().replace(reference.getRoot().toString(), "");
+    }
+
 }
