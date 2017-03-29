@@ -1,7 +1,5 @@
 package com.damianmichalak.shopping_list.presenter;
 
-import android.util.Log;
-
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
@@ -16,7 +14,6 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -30,22 +27,22 @@ public class DrawerFragmentPresenter {
     @Nonnull
     private final Observable<List<BaseAdapterItem>> listObservable;
     @Nonnull
-    private final PublishSubject<String> setCurrentListSubejct = PublishSubject.create();
+    private final PublishSubject<String> setCurrentListSubject = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
 
     @Inject
-    public DrawerFragmentPresenter(@Nonnull @Named("AddNewListClickObservable") final Observable<Void> addNewListClickObservable,
-                                   @Nonnull final ListsDao listsDao,
+    public DrawerFragmentPresenter(@Nonnull final ListsDao listsDao,
                                    @Nonnull final CurrentListDao currentListDao) {
 
         listObservable = listsDao.getCurrentListObservable()
                 .map(toAdapterItems());
 
         subscription.set(Subscriptions.from(
-                addNewListClickObservable
-                        .map(o -> "damian")
+                addNewListClickSubject
                         .flatMap(listsDao::addNewListObservable)
                         .subscribe(),
-                setCurrentListSubejct
+                setCurrentListSubject
                         .subscribe(currentListDao.saveCurrentListIdObserver())
         ));
     }
@@ -65,6 +62,11 @@ public class DrawerFragmentPresenter {
     @Nonnull
     public Observable<List<BaseAdapterItem>> getListObservable() {
         return listObservable;
+    }
+
+    @Nonnull
+    public Observer<String> getAddNewListClickSubject() {
+        return addNewListClickSubject;
     }
 
     @Nonnull
@@ -106,7 +108,7 @@ public class DrawerFragmentPresenter {
         }
 
         public Observer<Void> clickObserver() {
-            return Observers.create(aVoid -> setCurrentListSubejct.onNext(key));
+            return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
         }
     }
 

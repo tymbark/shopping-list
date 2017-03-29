@@ -50,8 +50,7 @@ public class DrawerFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_drawer_layout, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_drawer_layout, container, false);
     }
 
     @Override
@@ -65,16 +64,10 @@ public class DrawerFragment extends BaseFragment {
         subscription.set(Subscriptions.from(
                 presenter.getListObservable()
                         .subscribe(adapter),
-                presenter.getSubscription()
+                presenter.getSubscription(),
+                RxView.clicks(addNew)
+                        .subscribe(aVoid -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getAddNewListClickSubject()))
         ));
-
-        RxView.clicks(addNew)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        DialogHelper.showNewListNameDialog(getActivity());
-                    }
-                });
 
     }
 
