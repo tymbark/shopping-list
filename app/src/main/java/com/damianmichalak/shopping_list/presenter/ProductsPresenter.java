@@ -1,10 +1,11 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
+import android.util.Log;
+
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.ProductsDao;
-import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
@@ -17,6 +18,9 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
@@ -33,12 +37,18 @@ public class ProductsPresenter {
     private final PublishSubject<String> clickItemSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<Object> refreshSubject = PublishSubject.create();
+    @Nonnull
+    private final Observable<String> addedItemForSnackbarObservable;
+    @Nonnull
+    private final Observable<Void> doneClickObservable;
 
     @Inject
-    public ProductsPresenter(@Nonnull @Named("AddItemClickObservable") final Observable<Void> clickObservable,
+    public ProductsPresenter(@Nonnull @Named("DoneClickObservable") final Observable<Void> doneClickObservable,
+                             @Nonnull @Named("AddClickObservable") final Observable<Void> addClickObservable,
                              @Nonnull @Named("ProductTextInputObservable") final Observable<CharSequence> textChanges,
                              @Nonnull final ProductsDao dao,
                              @Nonnull final UserPreferences userPreferences) {
+        this.doneClickObservable = doneClickObservable;
 
         final Observable<List<BaseAdapterItem>> itemsObservable = Observable.fromCallable(() -> {
             final Set<String> suggestedProducts = userPreferences.getSuggestedProducts();
@@ -53,20 +63,31 @@ public class ProductsPresenter {
 
         suggestedProductsObservable = refreshSubject.startWith((Object) null).concatMap(o -> itemsObservable);
 
+        final Observable<String> addClick = Observable.merge(doneClickObservable, addClickObservable)
+                .withLatestFrom(textChanges, (aVoid, charSequence) -> charSequence.toString());
+
+        addedItemForSnackbarObservable =
+                Observable.merge(addClick, clickItemSubject)
+                .filter(name -> !name.isEmpty())
+                .doOnNext(userPreferences::addSuggestedProduct)
+                .flatMap(input -> dao.addNewItemObservable(input)
+                        .map(o -> input))
+                .doOnNext(s -> refreshSubject.onNext(null));
+
         subscription.set(Subscriptions.from(
-                clickObservable.withLatestFrom(textChanges, (aVoid, charSequence) -> charSequence.toString())
-                        .flatMap(input -> {
-                            userPreferences.addProductSuggested(input);
-                            return dao.addNewItemObservable(input);
-                        })
-                        .doOnNext(s -> refreshSubject.onNext(null))
-                        .subscribe(),
-                clickItemSubject
-                        .doOnNext(userPreferences::removeSuggestedProduct)
-                        .doOnNext(s -> refreshSubject.onNext(null))
-                        .subscribe()
+//                todo add removing items from suggested
         ));
 
+    }
+
+    @Nonnull
+    public Observable<Void> closeActivityObservable() {
+        return doneClickObservable;
+    }
+
+    @Nonnull
+    public Observable<String> getAddedItemForSnackbarObservable() {
+        return addedItemForSnackbarObservable;
     }
 
     @Nonnull

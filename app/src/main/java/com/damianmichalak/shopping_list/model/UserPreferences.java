@@ -55,7 +55,7 @@ public class UserPreferences {
         preferences.edit().putString(SUGGESTED_PRODUCTS, newJson).apply();
     }
 
-    public void addProductSuggested(String string) {
+    public void addSuggestedProduct(String string) {
         final String json = preferences.getString(SUGGESTED_PRODUCTS, null);
 
         final Type type = new TypeToken<Set<String>>() {

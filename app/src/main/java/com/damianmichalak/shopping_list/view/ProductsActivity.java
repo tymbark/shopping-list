@@ -5,14 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
+import com.damianmichalak.shopping_list.helper.RxSnackbar;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.ProductsPresenter;
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -34,8 +34,12 @@ import rx.subscriptions.Subscriptions;
 
 public class ProductsActivity extends BaseActivity {
 
+    @BindView(R.id.activity_product_root_view)
+    View rootView;
     @BindView(R.id.activity_product_input)
     EditText input;
+    @BindView(R.id.activity_product_add)
+    View add;
     @BindView(R.id.activity_product_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.activity_product_done)
@@ -65,7 +69,9 @@ public class ProductsActivity extends BaseActivity {
 
         subscription.set(Subscriptions.from(
                 presenter.getSubscription(),
-                presenter.getSuggestedProductsObservable().subscribe(adapter)
+                presenter.getSuggestedProductsObservable().subscribe(adapter),
+                presenter.getAddedItemForSnackbarObservable().subscribe(RxSnackbar.showSnackbar(rootView)),
+                presenter.closeActivityObservable().subscribe(o -> finish())
         ));
 
     }
@@ -108,9 +114,16 @@ public class ProductsActivity extends BaseActivity {
 
         @Nonnull
         @Provides
-        @Named("AddItemClickObservable")
-        Observable<Void> provideAddItemClickObservable() {
-            return RxView.clicks(done);
+        @Named("AddClickObservable")
+        Observable<Void> provideAddClickObservable() {
+            return RxView.clicks(add);
+        }
+
+        @Nonnull
+        @Provides
+        @Named("DoneClickObservable")
+        Observable<Void> provideDoneClickObservable() {
+            return RxView.clicks(done).share();
         }
 
         @Nonnull
