@@ -71,7 +71,8 @@ public class ProductsActivity extends BaseActivity {
                 presenter.getSubscription(),
                 presenter.getSuggestedProductsObservable().subscribe(adapter),
                 presenter.getAddedItemForSnackbarObservable().subscribe(RxSnackbar.showSnackbar(rootView)),
-                presenter.closeActivityObservable().subscribe(o -> finish())
+                presenter.closeActivityObservable().subscribe(o -> finish()),
+                presenter.clearInputObservable().subscribe(input::setText)
         ));
 
     }
@@ -116,7 +117,7 @@ public class ProductsActivity extends BaseActivity {
         @Provides
         @Named("AddClickObservable")
         Observable<Void> provideAddClickObservable() {
-            return RxView.clicks(add);
+            return RxView.clicks(add).share();
         }
 
         @Nonnull

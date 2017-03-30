@@ -1,8 +1,6 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
-import android.util.Log;
-
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.ProductsDao;
@@ -18,9 +16,6 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
@@ -41,6 +36,8 @@ public class ProductsPresenter {
     private final Observable<String> addedItemForSnackbarObservable;
     @Nonnull
     private final Observable<Void> doneClickObservable;
+    @Nonnull
+    private final Observable<Void> addClickObservable;
 
     @Inject
     public ProductsPresenter(@Nonnull @Named("DoneClickObservable") final Observable<Void> doneClickObservable,
@@ -49,6 +46,7 @@ public class ProductsPresenter {
                              @Nonnull final ProductsDao dao,
                              @Nonnull final UserPreferences userPreferences) {
         this.doneClickObservable = doneClickObservable;
+        this.addClickObservable = addClickObservable;
 
         final Observable<List<BaseAdapterItem>> itemsObservable = Observable.fromCallable(() -> {
             final Set<String> suggestedProducts = userPreferences.getSuggestedProducts();
@@ -68,11 +66,11 @@ public class ProductsPresenter {
 
         addedItemForSnackbarObservable =
                 Observable.merge(addClick, clickItemSubject)
-                .filter(name -> !name.isEmpty())
-                .doOnNext(userPreferences::addSuggestedProduct)
-                .flatMap(input -> dao.addNewItemObservable(input)
-                        .map(o -> input))
-                .doOnNext(s -> refreshSubject.onNext(null));
+                        .filter(name -> !name.isEmpty())
+                        .doOnNext(userPreferences::addSuggestedProduct)
+                        .flatMap(input -> dao.addNewItemObservable(input)
+                                .map(o -> input))
+                        .doOnNext(s -> refreshSubject.onNext(null));
 
         subscription.set(Subscriptions.from(
 //                todo add removing items from suggested
@@ -85,9 +83,15 @@ public class ProductsPresenter {
         return doneClickObservable;
     }
 
+
+    @Nonnull
+    public Observable<String> clearInputObservable() {
+        return addClickObservable.map(v -> "");
+    }
+
     @Nonnull
     public Observable<String> getAddedItemForSnackbarObservable() {
-        return addedItemForSnackbarObservable;
+        return addedItemForSnackbarObservable.map(s -> s + " added");
     }
 
     @Nonnull
