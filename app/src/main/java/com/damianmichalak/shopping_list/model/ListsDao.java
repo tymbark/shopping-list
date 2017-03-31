@@ -49,6 +49,14 @@ public class ListsDao {
         });
     }
 
+    public Observable<Object> removeListObservable(final String key) {
+        return Observable.fromCallable(() -> {
+            database.userListsReference().child(key).removeValue();
+            database.allListsReference().child(key).removeValue();
+            return null;
+        });
+    }
+
     @Nonnull
     public Observable<Map<String, String>> getCurrentListObservable() {
         return currentListObservable;

@@ -1,6 +1,7 @@
 package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.helper.guava.Lists;
+import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
@@ -10,10 +11,10 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -30,6 +31,10 @@ public class DrawerFragmentPresenter {
     private final PublishSubject<String> setCurrentListSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<String> removeListClickSubject = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<Object> refreshList = PublishSubject.create();
 
     @Inject
     public DrawerFragmentPresenter(@Nonnull final ListsDao listsDao,
@@ -41,6 +46,9 @@ public class DrawerFragmentPresenter {
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
                         .flatMap(listsDao::addNewListObservable)
+                        .subscribe(),
+                removeListClickSubject
+                        .flatMap(listsDao::removeListObservable)
                         .subscribe(),
                 setCurrentListSubject
                         .subscribe(currentListDao.saveCurrentListIdObserver())
@@ -74,6 +82,10 @@ public class DrawerFragmentPresenter {
         return subscription;
     }
 
+    public Observer<Object> refreshList() {
+        return refreshList;
+    }
+
     public class ShoppingListItem implements BaseAdapterItem {
 
         private final String name;
@@ -99,16 +111,34 @@ public class DrawerFragmentPresenter {
 
         @Override
         public boolean matches(@Nonnull BaseAdapterItem item) {
-            return false;
+            return item instanceof ShoppingListItem;
         }
 
         @Override
         public boolean same(@Nonnull BaseAdapterItem item) {
-            return false;
+            return equals(item);
         }
 
         public Observer<Void> clickObserver() {
             return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
+        }
+
+        public Observer<Void> removeObserver() {
+            return Observers.create(aVoid -> removeListClickSubject.onNext(key));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ShoppingListItem)) return false;
+            ShoppingListItem that = (ShoppingListItem) o;
+            return Objects.equal(name, that.name) &&
+                    Objects.equal(key, that.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(name, key);
         }
     }
 

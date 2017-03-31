@@ -1,5 +1,6 @@
 package com.damianmichalak.shopping_list.view;
 
+import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
@@ -33,6 +35,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
     @BindView(R.id.main_drawer_layout)
     DrawerLayout drawerLayout;
+
+    private DrawerFragment drawerFragment;
 
     private ActionBarDrawerToggle drawerToggle;
     private final SerialSubscription subscription = new SerialSubscription();
@@ -66,7 +70,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 R.string.drawer_close
 
         );
+
+        drawerFragment = (DrawerFragment) getSupportFragmentManager().findFragmentById(R.id.main_navigation_drawer);
         drawerLayout.addDrawerListener(drawerToggle);
+        drawerLayout.addDrawerListener(drawerFragment);
 
         supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -85,6 +92,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     protected void onDestroy() {
         super.onDestroy();
         subscription.set(Subscriptions.empty());
+        drawerLayout.removeDrawerListener(drawerToggle);
+        drawerLayout.removeDrawerListener(drawerFragment);
     }
 
     @Override

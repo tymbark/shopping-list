@@ -3,6 +3,7 @@ package com.damianmichalak.shopping_list.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ import rx.functions.Action1;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
-public class DrawerFragment extends BaseFragment {
+public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerListener{
 
     @BindView(R.id.drawer_username)
     TextView username;
@@ -85,6 +86,27 @@ public class DrawerFragment extends BaseFragment {
                 .drawerFragmentModule(new DrawerFragmentModule())
                 .build()
                 .inject(this);
+    }
+
+//todo find a better solution for passing this event to presenter
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        presenter.refreshList().onNext(null);
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
     }
 
     @FragmentScope

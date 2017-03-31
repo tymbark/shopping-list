@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
+
 public class DrawerItemManager implements ViewHolderManager {
 
     @Inject
@@ -40,11 +41,14 @@ public class DrawerItemManager implements ViewHolderManager {
         @Nonnull
         private final TextView text;
         @Nonnull
+        private final View remove;
+        @Nonnull
         private final SerialSubscription subscription = new SerialSubscription();
 
         public ViewHolder(@Nonnull View itemView) {
             super(itemView);
-            text = (TextView) itemView;
+            text = (TextView) itemView.findViewById(R.id.drawer_item_text);
+            remove = itemView.findViewById(R.id.drawer_item_remove);
         }
 
         @Override
@@ -57,10 +61,15 @@ public class DrawerItemManager implements ViewHolderManager {
         public void bind(@Nonnull BaseAdapterItem item) {
             final DrawerFragmentPresenter.ShoppingListItem adapterItem = (DrawerFragmentPresenter.ShoppingListItem) item;
             text.setText(adapterItem.getName());
+            remove.setVisibility(View.GONE);
 
             subscription.set(Subscriptions.from(
                     RxView.clicks(text)
-                            .subscribe(adapterItem.clickObserver())
+                            .subscribe(adapterItem.clickObserver()),
+                    RxView.clicks(remove)
+                            .subscribe(adapterItem.removeObserver()),
+                    RxView.longClicks(text)
+                            .subscribe(aVoid -> remove.setVisibility(View.VISIBLE))
             ));
 
         }
