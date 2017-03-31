@@ -4,6 +4,8 @@ import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,17 +22,17 @@ public class RxUtils {
 
     @Nonnull
     public static <T> Observable<T> createObservableForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
-        return Observable.fromEmitter((Action1<AsyncEmitter<T>>) asyncEmitter -> {
+        return Observable.fromEmitter((Action1<AsyncEmitter<T>>) emitter -> {
             eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     final T item = dataSnapshot.getValue(type);
-                    asyncEmitter.onNext(item);
+                    emitter.onNext(item);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    asyncEmitter.onError(new Throwable(databaseError.getMessage()));
+                    emitter.onError(new Throwable(databaseError.getMessage()));
                 }
             });
             reference.addValueEventListener(eventsWrapper.getFirebaseListener());
@@ -40,7 +42,7 @@ public class RxUtils {
 
     @Nonnull
     public static <T> Observable<List<T>> createObservableListForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
-        return Observable.fromEmitter((Action1<AsyncEmitter<List<T>>>) asyncEmitter -> {
+        return Observable.fromEmitter((Action1<AsyncEmitter<List<T>>>) emitter -> {
             eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -48,12 +50,12 @@ public class RxUtils {
                     for (DataSnapshot next : dataSnapshot.getChildren()) {
                         output.add(next.getValue(type));
                     }
-                    asyncEmitter.onNext(output);
+                    emitter.onNext(output);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    asyncEmitter.onError(new Throwable(databaseError.getMessage()));
+                    emitter.onError(new Throwable(databaseError.getMessage()));
                 }
             });
             reference.addValueEventListener(eventsWrapper.getFirebaseListener());
@@ -63,7 +65,7 @@ public class RxUtils {
 
     @Nonnull
     public static <T> Observable<Map<String, T>> createObservableMapForReference(@Nonnull final DatabaseReference reference, @Nonnull final EventsWrapper eventsWrapper, final Class<T> type) {
-        return Observable.fromEmitter((Action1<AsyncEmitter<Map<String, T>>>) asyncEmitter -> {
+        return Observable.fromEmitter((Action1<AsyncEmitter<Map<String, T>>>) emitter -> {
             eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -71,12 +73,12 @@ public class RxUtils {
                     for (DataSnapshot next : dataSnapshot.getChildren()) {
                         output.put(next.getKey(), next.getValue(type));
                     }
-                    asyncEmitter.onNext(output);
+                    emitter.onNext(output);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    asyncEmitter.onError(new Throwable(databaseError.getMessage()));
+                    emitter.onError(new Throwable(databaseError.getMessage()));
                 }
             });
             reference.addValueEventListener(eventsWrapper.getFirebaseListener());

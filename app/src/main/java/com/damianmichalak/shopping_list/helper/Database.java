@@ -51,8 +51,16 @@ public class Database {
         return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID);
     }
 
+    public DatabaseReference singleListNameReference(String listUID) {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID + "/name");
+    }
+
     public DatabaseReference productsReference(String listUID) {
         return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID + "/products");
+    }
+
+    public DatabaseReference rootReference() {
+        return firebaseDatabase.getReference();
     }
 
     public DatabaseReference shoppingListReference(String listUID) {

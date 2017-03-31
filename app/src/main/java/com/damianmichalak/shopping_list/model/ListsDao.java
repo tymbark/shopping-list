@@ -3,15 +3,9 @@ package com.damianmichalak.shopping_list.model;
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -47,14 +41,13 @@ public class ListsDao {
     }
 
     public Observable<Object> addNewListObservable(final String itemName) {
-//        todo use Database.path() to get children, then make a transaction
-//        todo adding names to new lists should be done in transaction
-        return Observable.fromCallable(() -> database.userListsReference().push().setValue(itemName));
+        return Observable.fromCallable(() -> {
+            final DatabaseReference newObject = database.userListsReference().push();
+            newObject.setValue(itemName);
+            database.singleListNameReference(newObject.getKey()).setValue(itemName);
+            return null;
+        });
     }
-
-//    public Observable<Object> removeListByKeyObservable(final String key) {
-//        return Observable.fromCallable(() -> database.DEPRECATEDproductsReference().child(key).removeValue());
-//    }
 
     @Nonnull
     public Observable<Map<String, String>> getCurrentListObservable() {
