@@ -7,9 +7,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
@@ -117,6 +117,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         drawerToggle.syncState();
     }
 
+//    todo move this actions to fragment not MainActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -128,10 +129,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                     presenter.getRemoveListClickSubject().onNext(null);
                     return true;
                 case R.id.rename_list:
-                    Log.d("CHUJ", "rename list clicked");
+//                    todo implement it
+                    Toast.makeText(this, "not implemented", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.share_list:
-                    Log.d("CHUJ", "share list clicked");
+//                    todo implement it
+                    Toast.makeText(this, "not implemented", Toast.LENGTH_SHORT).show();
                     return true;
             }
         }
