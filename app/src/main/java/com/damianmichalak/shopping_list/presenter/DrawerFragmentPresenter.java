@@ -14,7 +14,6 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -42,7 +41,7 @@ public class DrawerFragmentPresenter {
 
         listObservable = refreshList
                 .startWith((Object) null)
-                .flatMap(o -> listsDao.getCurrentListObservable().map(toAdapterItems()));
+                .flatMap(o -> listsDao.getAllListsObservable().map(toAdapterItems()));
 
         subscription.set(Subscriptions.from(
                 addNewListClickSubject

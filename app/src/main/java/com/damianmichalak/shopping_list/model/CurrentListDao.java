@@ -1,8 +1,6 @@
 package com.damianmichalak.shopping_list.model;
 
 
-import android.util.Log;
-
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
@@ -56,8 +54,6 @@ public class CurrentListDao {
     }
 
     @Nonnull
-
-    @Deprecated //not sure
     public Observable<ShoppingList> getCurrentListObservable() {
         return currentListObservable;
     }

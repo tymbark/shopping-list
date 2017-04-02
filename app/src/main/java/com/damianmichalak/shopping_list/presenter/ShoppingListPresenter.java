@@ -3,7 +3,10 @@ package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
+import com.damianmichalak.shopping_list.model.CurrentListDao;
+import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;
+import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
@@ -22,20 +25,25 @@ import rx.subjects.PublishSubject;
 
 public class ShoppingListPresenter {
 
-
+    @Nonnull
+    private final Observable<String> listNameObservable;
     @Nonnull
     private final Observable<List<BaseAdapterItem>> shoppingListObservable;
     @Nonnull
     private final PublishSubject<String> removeItemSubject = PublishSubject.create();
 
     @Inject
-    ShoppingListPresenter(@Nonnull final ProductsDao dao) {
+    ShoppingListPresenter(@Nonnull final ProductsDao productsDao,
+                          @Nonnull final CurrentListDao currentListDao) {
 
-        shoppingListObservable = dao.getProductsObservable()
+        listNameObservable = currentListDao.getCurrentListObservable()
+                .map(ShoppingList::getName);
+
+        shoppingListObservable = productsDao.getProductsObservable()
                 .map(toAdapterItems());
 
         removeItemSubject
-                .flatMap(dao::removeItemByKeyObservable)
+                .flatMap(productsDao::removeItemByKeyObservable)
                 .subscribe();
 
     }
@@ -52,6 +60,11 @@ public class ShoppingListPresenter {
 
             return items;
         };
+    }
+
+    @Nonnull
+    public Observable<String> getListNameObservable() {
+        return listNameObservable;
     }
 
     @Nonnull

@@ -17,7 +17,7 @@ import rx.Observable;
 public class ListsDao {
 
     @Nonnull
-    private final Observable<Map<String, String>> currentListObservable;
+    private final Observable<Map<String, String>> allListsObservable;
     @Nonnull
     private final Database database;
     @Nonnull
@@ -31,7 +31,7 @@ public class ListsDao {
         this.database = database;
         this.userPreferences = userPreferences;
 
-        currentListObservable = userDao.getUidObservable()
+        allListsObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableMapForReference(
                         database.userListsReference(), listEventsWrapper, String.class))
@@ -58,7 +58,7 @@ public class ListsDao {
     }
 
     @Nonnull
-    public Observable<Map<String, String>> getCurrentListObservable() {
-        return currentListObservable;
+    public Observable<Map<String, String>> getAllListsObservable() {
+        return allListsObservable;
     }
 }

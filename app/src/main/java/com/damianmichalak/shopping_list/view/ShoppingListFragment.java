@@ -65,7 +65,9 @@ public class ShoppingListFragment extends BaseFragment {
 
         subscription.set(Subscriptions.from(
                 presenter.getShoppingListObservable()
-                        .subscribe(adapter)
+                        .subscribe(adapter),
+                presenter.getListNameObservable()
+                        .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name))
         ));
 
         add.setOnClickListener(v -> startActivity(ProductsActivity.newIntent(getActivity())));
