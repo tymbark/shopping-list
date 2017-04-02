@@ -1,9 +1,6 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
-import android.util.Log;
-
-import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ShoppingList;
@@ -13,8 +10,6 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
@@ -48,15 +43,12 @@ public class MainActivityPresenter {
                         .subscribe()
         ));
 
-        qrCodeListSuccess = Observable.never();
-                qrCodeShoppingListSubject
+        qrCodeListSuccess = qrCodeShoppingListSubject
                 .flatMap(qrCodeKey -> listsDao.getObservableForSingleList(qrCodeKey)
-                        .first()
                         .filter(shoppingList -> shoppingList != null)
                         .flatMap(shoppingList -> listsDao.addNewAvailableListObservable(qrCodeKey, shoppingList.getName())
                                 .map(o -> shoppingList.getName())));
 
-//        todo this one is not working properly...
         qrCodeListError = qrCodeShoppingListSubject
                 .flatMap(listsDao::getObservableForSingleList)
                 .filter(shoppingList -> shoppingList == null);

@@ -71,6 +71,6 @@ public class ListsDao {
 
     @Nonnull
     public Observable<ShoppingList> getObservableForSingleList(String key) {
-        return RxUtils.createObservableForReference(database.singleListReference(key), singleListEW, ShoppingList.class);
+        return RxUtils.createObservableForReference(database.singleListReference(key), new EventsWrapper(), ShoppingList.class);
     }
 }

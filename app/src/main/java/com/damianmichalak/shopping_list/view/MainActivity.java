@@ -67,9 +67,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         subscription.set(Subscriptions.from(
                 presenter.getCloseDrawerObservable()
                         .subscribe(o -> drawerLayout.closeDrawers()),
-                // todo handle errors
-//                presenter.getQrCodeListError()
-//                        .subscribe(o -> Snackbar.make(rootView, R.string.main_activity_list_dont_exist_after_qr, Snackbar.LENGTH_LONG).show()),
+                presenter.getQrCodeListError()
+                        .subscribe(o -> Snackbar.make(rootView, R.string.main_activity_list_dont_exist_after_qr, Snackbar.LENGTH_LONG).show()),
                 presenter.getQrCodeListSuccess()
                         .subscribe(s -> Snackbar.make(rootView, getString(R.string.main_activity_list_added_qr, s), Snackbar.LENGTH_LONG).show()),
                 presenter.getSubscription()
