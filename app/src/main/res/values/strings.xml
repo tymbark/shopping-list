@@ -4,7 +4,6 @@
     <string name="title_shopping">Shopping</string>
     <string name="title_history">History</string>
 
-    <string name="add_products_done">done</string>
 
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
@@ -14,11 +13,19 @@
 
     <string name="new_list_dialog">My shopping list</string>
 
+    <!-- Products Activity -->
+    <string name="add_products_done">done</string>
+    <string name="products_activity_title">Add products</string>
+
     <!-- Shopping list overflow menu -->
     <string name="shopping_list_share">Share</string>
     <string name="shopping_list_delete">Delete</string>
     <string name="shopping_list_rename">Rename</string>
 
     <string name="shopping_list_empty_text">No items</string>
+
+    <!-- Share Activity (generate QR) -->
+    <string name="activity_share_qr_label">Scan this image</string>
+    <string name="activity_share_title">Generate QR</string>
 
 </resources>

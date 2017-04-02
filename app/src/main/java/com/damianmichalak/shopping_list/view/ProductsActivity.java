@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -74,6 +75,12 @@ public class ProductsActivity extends BaseActivity {
                 presenter.closeActivityObservable().subscribe(o -> finish()),
                 presenter.clearInputObservable().subscribe(input::setText)
         ));
+
+        final ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setTitle(R.string.products_activity_title);
+        }
 
     }
 

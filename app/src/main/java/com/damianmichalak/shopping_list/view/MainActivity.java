@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         drawerToggle.syncState();
     }
 
-//    todo move this actions to fragment not MainActivity
+    //    todo move this actions to fragment not MainActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -133,8 +133,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                     Toast.makeText(this, "not implemented", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.share_list:
-//                    todo implement it
-                    Toast.makeText(this, "not implemented", Toast.LENGTH_SHORT).show();
+                    startActivity(ShareActivity.newIntent(this));
                     return true;
             }
         }
