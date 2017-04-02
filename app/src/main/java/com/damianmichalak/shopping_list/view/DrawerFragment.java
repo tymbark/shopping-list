@@ -1,8 +1,10 @@
 package com.damianmichalak.shopping_list.view;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
 import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.DrawerFragmentPresenter;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -26,11 +31,13 @@ import javax.inject.Named;
 import butterknife.BindView;
 import dagger.Provides;
 import rx.Observable;
-import rx.functions.Action1;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
-public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerListener{
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
+public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerListener {
 
     @BindView(R.id.drawer_username)
     TextView username;
@@ -38,6 +45,8 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
     RecyclerView recyclerView;
     @BindView(R.id.drawer_add_new_list)
     View addNew;
+    @BindView(R.id.drawer_scan_qr)
+    View scanQR;
 
     @Inject
     DrawerFragmentPresenter presenter;
@@ -67,9 +76,19 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
                         .subscribe(adapter),
                 presenter.getSubscription(),
                 RxView.clicks(addNew)
-                        .subscribe(aVoid -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getAddNewListClickSubject()))
+                        .subscribe(aVoid -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getAddNewListClickSubject())),
+                RxView.clicks(scanQR)
+                        .subscribe(o -> scanQR())
         ));
 
+    }
+
+    private void scanQR() {
+        new IntentIntegrator(getActivity())
+                .setBeepEnabled(false)
+                .setPrompt(getString(R.string.scanner_label))
+                .initiateScan();
+        // result is handled in MainActivity class -> onActivityResult()
     }
 
     @Override
@@ -88,7 +107,7 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
                 .inject(this);
     }
 
-//todo find a better solution for passing this event to presenter
+    //todo find a better solution for passing this event to presenter
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
 

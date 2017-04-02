@@ -45,6 +45,15 @@
             android:text="@string/drawer_add_new_list"
             app:srcCompat="@drawable/ic_action_add_black"/>
 
+        <ImageView
+            android:id="@+id/drawer_scan_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:text="@string/drawer_scan_qr_list"
+            app:srcCompat="@drawable/ic_camera"/>
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

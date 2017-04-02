@@ -1,14 +1,17 @@
 package com.damianmichalak.shopping_list.view;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.damianmichalak.shopping_list.R;
@@ -16,6 +19,8 @@ import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.helper.AuthHelper;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.presenter.MainActivityPresenter;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +40,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     @Inject
     AuthHelper authHelper;
 
+    @BindView(R.id.main_root_view)
+    View rootView;
     @BindView(R.id.main_drawer_layout)
     DrawerLayout drawerLayout;
 
@@ -60,6 +67,11 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         subscription.set(Subscriptions.from(
                 presenter.getCloseDrawerObservable()
                         .subscribe(o -> drawerLayout.closeDrawers()),
+                // todo handle errors
+//                presenter.getQrCodeListError()
+//                        .subscribe(o -> Snackbar.make(rootView, R.string.main_activity_list_dont_exist_after_qr, Snackbar.LENGTH_LONG).show()),
+                presenter.getQrCodeListSuccess()
+                        .subscribe(s -> Snackbar.make(rootView, getString(R.string.main_activity_list_added_qr, s), Snackbar.LENGTH_LONG).show()),
                 presenter.getSubscription()
         ));
 
@@ -152,6 +164,20 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     public void onStop() {
         super.onStop();
         authHelper.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, R.string.scanner_failed, Toast.LENGTH_LONG).show();
+            } else {
+                presenter.getQrCodeShoppingListSubject().onNext(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

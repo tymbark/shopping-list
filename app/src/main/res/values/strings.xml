@@ -4,13 +4,17 @@
     <string name="title_shopping">Shopping</string>
     <string name="title_history">History</string>
 
+    <!-- Main -->
+    <string name="main_activity_list_dont_exist_after_qr">This list does not exist</string>
+    <string name="main_activity_list_added_qr">Added new list: %1$s</string>
 
+    <!-- Drawer Items -->
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="drawer_name_header">name</string>
     <string name="drawer_lists_header">your lists</string>
     <string name="drawer_add_new_list">add new list</string>
-
+    <string name="drawer_scan_qr_list">scan qr</string>
     <string name="new_list_dialog">My shopping list</string>
 
     <!-- Products Activity -->
@@ -27,5 +31,9 @@
     <!-- Share Activity (generate QR) -->
     <string name="activity_share_qr_label">Scan this image</string>
     <string name="activity_share_title">Generate QR</string>
+
+    <!-- Scanner -->
+    <string name="scanner_label">Scan QR code from different device</string>
+    <string name="scanner_failed">Could not read this QR code</string>
 
 </resources>

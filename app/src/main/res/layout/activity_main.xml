@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/main_drawer_layout"
+<FrameLayout
+    android:id="@+id/main_root_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.damianmichalak.shopping_list.view.MainActivity"
-    tools:openDrawer="start">
+    tools:context="com.damianmichalak.shopping_list.view.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/content"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/main_drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <fragment
-        android:id="@+id/main_navigation_drawer"
-        android:name="com.damianmichalak.shopping_list.view.DrawerFragment"
-        android:layout_width="260dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        tools:layout="@layout/fragment_drawer_layout"/>
+        tools:openDrawer="start">
 
-</android.support.v4.widget.DrawerLayout>
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <fragment
+            android:id="@+id/main_navigation_drawer"
+            android:name="com.damianmichalak.shopping_list.view.DrawerFragment"
+            android:layout_width="260dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            tools:layout="@layout/fragment_drawer_layout"/>
+
+    </android.support.v4.widget.DrawerLayout>
+
+</FrameLayout>

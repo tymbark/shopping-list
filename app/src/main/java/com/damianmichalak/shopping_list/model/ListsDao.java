@@ -17,29 +17,30 @@ import rx.Observable;
 public class ListsDao {
 
     @Nonnull
-    private final Observable<Map<String, String>> allListsObservable;
+    private final Observable<Map<String, String>> availableListsObservable;
     @Nonnull
     private final Database database;
     @Nonnull
-    private final UserPreferences userPreferences;
+    private final EventsWrapper singleListEW;
 
     @Inject
     public ListsDao(@Nonnull final Database database,
-                    @Nonnull final EventsWrapper listEventsWrapper,
-                    @Nonnull final UserPreferences userPreferences,
+                    @Nonnull final EventsWrapper singleListEW,
+                    @Nonnull final EventsWrapper availableListsEW,
                     @Nonnull final UserDao userDao) {
         this.database = database;
-        this.userPreferences = userPreferences;
+        this.singleListEW = singleListEW;
 
-        allListsObservable = userDao.getUidObservable()
+        availableListsObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableMapForReference(
-                        database.userListsReference(), listEventsWrapper, String.class))
+                        database.userListsReference(), availableListsEW, String.class))
                 .replay(1)
                 .refCount();
 
     }
 
+    @Nonnull
     public Observable<Object> addNewListObservable(final String itemName) {
         return Observable.fromCallable(() -> {
             final DatabaseReference newObject = database.userListsReference().push();
@@ -49,6 +50,12 @@ public class ListsDao {
         });
     }
 
+    @Nonnull
+    public Observable<Object> addNewAvailableListObservable(final String existingListKey, final String existingListName) {
+        return Observable.fromCallable(() -> database.userListsReference().child(existingListKey).setValue(existingListName));
+    }
+
+    @Nonnull
     public Observable<Object> removeListObservable(final String key) {
         return Observable.fromCallable(() -> {
             database.userListsReference().child(key).removeValue();
@@ -58,7 +65,12 @@ public class ListsDao {
     }
 
     @Nonnull
-    public Observable<Map<String, String>> getAllListsObservable() {
-        return allListsObservable;
+    public Observable<Map<String, String>> getAvailableListsObservable() {
+        return availableListsObservable;
+    }
+
+    @Nonnull
+    public Observable<ShoppingList> getObservableForSingleList(String key) {
+        return RxUtils.createObservableForReference(database.singleListReference(key), singleListEW, ShoppingList.class);
     }
 }

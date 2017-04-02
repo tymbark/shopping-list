@@ -41,7 +41,7 @@ public class DrawerFragmentPresenter {
 
         listObservable = refreshList
                 .startWith((Object) null)
-                .flatMap(o -> listsDao.getAllListsObservable().map(toAdapterItems()));
+                .flatMap(o -> listsDao.getAvailableListsObservable().map(toAdapterItems()));
 
         subscription.set(Subscriptions.from(
                 addNewListClickSubject

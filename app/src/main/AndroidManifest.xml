@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.damianmichalak.shopping_list"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name=".view.MainApplication"
@@ -23,6 +24,13 @@
         <activity android:name=".view.ProductsActivity"/>
 
         <activity android:name=".view.ShareActivity"/>
+
+        <activity android:name=".view.ScannerActivity"/>
+
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation"/>
 
     </application>
 

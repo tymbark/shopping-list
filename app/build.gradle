@@ -65,7 +65,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     // QR code scan
-    compile 'com.google.zxing:core:3.2.1'
+    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
 
     // Tests
     testCompile 'junit:junit:4.12'
