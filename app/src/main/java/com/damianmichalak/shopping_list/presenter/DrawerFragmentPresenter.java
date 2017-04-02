@@ -40,8 +40,9 @@ public class DrawerFragmentPresenter {
     public DrawerFragmentPresenter(@Nonnull final ListsDao listsDao,
                                    @Nonnull final CurrentListDao currentListDao) {
 
-        listObservable = listsDao.getCurrentListObservable()
-                .map(toAdapterItems());
+        listObservable = refreshList
+                .startWith((Object) null)
+                .flatMap(o -> listsDao.getCurrentListObservable().map(toAdapterItems()));
 
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
@@ -116,7 +117,7 @@ public class DrawerFragmentPresenter {
 
         @Override
         public boolean same(@Nonnull BaseAdapterItem item) {
-            return equals(item);
+            return false;
         }
 
         public Observer<Void> clickObserver() {
