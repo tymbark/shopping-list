@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">shopping-list</string>
+    <string name="app_name">Shopping list</string>
 
     <string name="title_shopping">Shopping</string>
     <string name="title_history">History</string>
@@ -13,5 +13,12 @@
     <string name="drawer_add_new_list">add new list</string>
 
     <string name="new_list_dialog">My shopping list</string>
+
+    <!-- Shopping list overflow menu -->
+    <string name="shopping_list_share">Share</string>
+    <string name="shopping_list_delete">Delete</string>
+    <string name="shopping_list_rename">Rename</string>
+
+    <string name="shopping_list_empty_text">No items</string>
 
 </resources>

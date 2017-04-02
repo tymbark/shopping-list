@@ -4,10 +4,8 @@ package com.damianmichalak.shopping_list.presenter;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
-import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.ShoppingList;
-import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -18,7 +16,6 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -31,16 +28,21 @@ public class ShoppingListPresenter {
     private final Observable<List<BaseAdapterItem>> shoppingListObservable;
     @Nonnull
     private final PublishSubject<String> removeItemSubject = PublishSubject.create();
+    @Nonnull
+    private final Observable<Boolean> emptyListObservable;
 
     @Inject
     ShoppingListPresenter(@Nonnull final ProductsDao productsDao,
                           @Nonnull final CurrentListDao currentListDao) {
 
         listNameObservable = currentListDao.getCurrentListObservable()
+                .filter(list -> list != null)
                 .map(ShoppingList::getName);
 
         shoppingListObservable = productsDao.getProductsObservable()
                 .map(toAdapterItems());
+
+        emptyListObservable = shoppingListObservable.map(List::isEmpty);
 
         removeItemSubject
                 .flatMap(productsDao::removeItemByKeyObservable)
@@ -65,6 +67,11 @@ public class ShoppingListPresenter {
     @Nonnull
     public Observable<String> getListNameObservable() {
         return listNameObservable;
+    }
+
+    @Nonnull
+    public Observable<Boolean> getEmptyListObservable() {
+        return emptyListObservable;
     }
 
     @Nonnull

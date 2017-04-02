@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/share_list"
+        android:icon="@drawable/ic_share"
+        android:title="@string/shopping_list_share"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/delete_list"
+        android:title="@string/shopping_list_delete"/>
+
+    <item
+        android:id="@+id/rename_list"
+        android:title="@string/shopping_list_rename"/>
+
+</menu>

@@ -14,10 +14,8 @@ import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
-import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
-
-import java.util.List;
+import com.jakewharton.rxbinding.view.RxView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,14 +30,14 @@ public class ShoppingListFragment extends BaseFragment {
     @Inject
     ShoppingListPresenter presenter;
     @Inject
-    ShoppingListManager manager;
-    @Inject
-    ShoppingListManagerSecond manager2;
+    ShoppingListManagerSecond manager;
 
     @BindView(R.id.shopping_list_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.shopping_list_add_button)
     View add;
+    @BindView(R.id.shopping_list_empty_view)
+    View emptyView;
 
     @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();
@@ -59,13 +57,14 @@ public class ShoppingListFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        final List<ViewHolderManager> managers = Lists.newArrayList(manager, manager2);
-        final RxUniversalAdapter adapter = new RxUniversalAdapter(managers);
+        final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.newArrayList(manager));
         recyclerView.setAdapter(adapter);
 
         subscription.set(Subscriptions.from(
                 presenter.getShoppingListObservable()
                         .subscribe(adapter),
+                presenter.getEmptyListObservable()
+                        .subscribe(RxView.visibility(emptyView)),
                 presenter.getListNameObservable()
                         .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name))
         ));

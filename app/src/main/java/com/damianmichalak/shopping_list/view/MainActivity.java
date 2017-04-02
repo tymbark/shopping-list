@@ -1,6 +1,5 @@
 package com.damianmichalak.shopping_list.view;
 
-import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,15 +7,18 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.helper.AuthHelper;
+import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.presenter.MainActivityPresenter;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -57,7 +59,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         subscription.set(Subscriptions.from(
                 presenter.getCloseDrawerObservable()
-                        .subscribe(o -> drawerLayout.closeDrawers())
+                        .subscribe(o -> drawerLayout.closeDrawers()),
+                presenter.getSubscription()
         ));
 
     }
@@ -82,9 +85,15 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }
     }
 
-    public void setToolbarTitle(String title) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.shopping_list_share, menu);
+        return true;
+    }
+
+    public void setToolbarTitle(@Nullable String title) {
         if (supportActionBar != null) {
-            supportActionBar.setTitle(title);
+            supportActionBar.setTitle(Strings.isNullOrEmpty(title) ? getString(R.string.app_name) : title);
         }
     }
 
@@ -110,12 +119,22 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
+        } else {
+            switch (item.getItemId()) {
+                case R.id.delete_list:
+//                    todo add dialog are you sure
+                    presenter.getRemoveListClickSubject().onNext(null);
+                    return true;
+                case R.id.rename_list:
+                    Log.d("CHUJ", "rename list clicked");
+                    return true;
+                case R.id.share_list:
+                    Log.d("CHUJ", "share list clicked");
+                    return true;
+            }
         }
-        // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
     }
