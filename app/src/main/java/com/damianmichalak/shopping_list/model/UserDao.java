@@ -42,7 +42,9 @@ public class UserDao {
                 .refCount();
 
         userObservable = Observable.merge(userRefreshSubject, uidObservable.filter(o -> o != null))
-                .switchMap(f -> RxUtils.createObservableForReference(database.userReference(), eventsWrapper, User.class));
+                .switchMap(f -> RxUtils.createObservableForReference(database.userReference(), eventsWrapper, User.class))
+                .replay(1)
+                .refCount();
 
     }
 
