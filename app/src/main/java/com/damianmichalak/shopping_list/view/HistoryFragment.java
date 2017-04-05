@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import rx.functions.Action1;
 
+@Deprecated
 public class HistoryFragment extends BaseFragment {
 
     public static HistoryFragment newInstance() {
@@ -39,12 +40,7 @@ public class HistoryFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        userDao.getUserObservable().subscribe(new Action1<User>() {
-            @Override
-            public void call(User user) {
-                Log.d("CHUJ", "available lists" + user.getListIDs());
-            }
-        });
+        userDao.getUserObservable().subscribe();
 
         view.findViewById(R.id.add_list)
                 .setOnClickListener(new View.OnClickListener() {
