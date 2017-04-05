@@ -1,10 +1,8 @@
 package com.damianmichalak.shopping_list.view;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
@@ -20,7 +17,6 @@ import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.DrawerFragmentPresenter;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -33,9 +29,6 @@ import dagger.Provides;
 import rx.Observable;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerListener {
 
@@ -50,7 +43,6 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
 
     @Inject
     DrawerFragmentPresenter presenter;
-
     @Inject
     DrawerItemManager manager;
 
@@ -72,6 +64,8 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
         recyclerView.setAdapter(adapter);
 
         subscription.set(Subscriptions.from(
+                presenter.getUsernameObservable()
+                        .subscribe(username::setText),
                 presenter.getListObservable()
                         .subscribe(adapter),
                 presenter.getSubscription(),

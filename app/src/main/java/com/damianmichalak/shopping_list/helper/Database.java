@@ -43,6 +43,10 @@ public class Database {
         return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid());
     }
 
+    public DatabaseReference userNameReference() {
+        return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid() + "/name");
+    }
+
     public DatabaseReference userListsReference() {
         return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid() + "/shopping_list_access/");
     }

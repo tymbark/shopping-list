@@ -15,7 +15,6 @@
     <string name="drawer_lists_header">your lists</string>
     <string name="drawer_add_new_list">add new list</string>
     <string name="drawer_scan_qr_list">scan qr</string>
-    <string name="new_list_dialog">My shopping list</string>
 
     <!-- Products Activity -->
     <string name="add_products_done">done</string>
@@ -35,5 +34,12 @@
     <!-- Scanner -->
     <string name="scanner_label">Scan QR code from different device</string>
     <string name="scanner_failed">Could not read this QR code</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_label_username">What\'s your name?</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_positive_button">Okay</string>
+    <string name="dialog_new_list_hint">New shopping list name</string>
+    <string name="dialog_username_hint">No name</string>
 
 </resources>

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.helper.AuthHelper;
+import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.presenter.MainActivityPresenter;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -71,6 +72,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                         .subscribe(o -> Snackbar.make(rootView, R.string.main_activity_list_dont_exist_after_qr, Snackbar.LENGTH_LONG).show()),
                 presenter.getQrCodeListSuccess()
                         .subscribe(s -> Snackbar.make(rootView, getString(R.string.main_activity_list_added_qr, s), Snackbar.LENGTH_LONG).show()),
+                presenter.getEmptyUserNameObservable()
+                        .subscribe(o -> DialogHelper.showUserNameInputDialog(MainActivity.this, presenter.getNewUserNameSubject())),
                 presenter.getSubscription()
         ));
 

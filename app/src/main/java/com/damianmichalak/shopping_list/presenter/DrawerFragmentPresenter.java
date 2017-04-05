@@ -2,8 +2,11 @@ package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
+import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
+import com.damianmichalak.shopping_list.model.User;
+import com.damianmichalak.shopping_list.model.UserDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -25,8 +28,6 @@ public class DrawerFragmentPresenter {
     @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();
     @Nonnull
-    private final Observable<List<BaseAdapterItem>> listObservable;
-    @Nonnull
     private final PublishSubject<String> setCurrentListSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
@@ -34,14 +35,21 @@ public class DrawerFragmentPresenter {
     private final PublishSubject<String> removeListClickSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<Object> refreshList = PublishSubject.create();
+    @Nonnull
+    private final Observable<String> usernameObservable;
+    @Nonnull
+    private final Observable<List<BaseAdapterItem>> listObservable;
 
     @Inject
     public DrawerFragmentPresenter(@Nonnull final ListsDao listsDao,
-                                   @Nonnull final CurrentListDao currentListDao) {
+                                   @Nonnull final CurrentListDao currentListDao,
+                                   @Nonnull final UserDao userDao) {
 
         listObservable = refreshList
                 .startWith((Object) null)
                 .flatMap(o -> listsDao.getAvailableListsObservable().map(toAdapterItems()));
+
+        usernameObservable = userDao.getUserObservable().map(User::getName).filter(Strings::isNotNullAndNotEmpty);
 
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
@@ -68,6 +76,11 @@ public class DrawerFragmentPresenter {
     }
 
     @Nonnull
+    public Observable<String> getUsernameObservable() {
+        return usernameObservable;
+    }
+
+    @Nonnull
     public Observable<List<BaseAdapterItem>> getListObservable() {
         return listObservable;
     }
@@ -82,6 +95,7 @@ public class DrawerFragmentPresenter {
         return subscription;
     }
 
+    @Nonnull
     public Observer<Object> refreshList() {
         return refreshList;
     }

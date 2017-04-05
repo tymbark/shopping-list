@@ -17,13 +17,16 @@ import rx.subjects.PublishSubject;
 public class UserDao {
 
     @Nonnull
-    private final Observable<User> userNameObservable;
+    private final Observable<User> userObservable;
     @Nonnull
     private final Observable<String> uidObservable;
     @Nonnull
     private final PublishSubject<Object> uidRefreshSubject = PublishSubject.create();
     @Nonnull
+    private final PublishSubject<Object> userRefreshSubject = PublishSubject.create();
+    @Nonnull
     private final Database database;
+    @Nonnull
     private UserPreferences userPreferences;
 
     @Inject
@@ -38,7 +41,7 @@ public class UserDao {
                 .replay(1)
                 .refCount();
 
-        userNameObservable = uidObservable.filter(o -> o != null)
+        userObservable = Observable.merge(userRefreshSubject, uidObservable.filter(o -> o != null))
                 .switchMap(f -> RxUtils.createObservableForReference(database.userReference(), eventsWrapper, User.class));
 
     }
@@ -50,7 +53,7 @@ public class UserDao {
 
     @Nonnull
     public Observable<User> getUserObservable() {
-        return userNameObservable;
+        return userObservable;
     }
 
     @Nonnull
@@ -60,4 +63,13 @@ public class UserDao {
             uidRefreshSubject.onNext(null);
         });
     }
+
+    @Nonnull
+    public Observer<String> usernameObserver() {
+        return Observers.create(username -> {
+            database.userNameReference().setValue(username);
+            userRefreshSubject.onNext(null);
+        });
+    }
+
 }

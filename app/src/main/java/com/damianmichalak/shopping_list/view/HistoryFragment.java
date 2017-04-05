@@ -40,8 +40,6 @@ public class HistoryFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        userDao.getUserObservable().subscribe();
-
         view.findViewById(R.id.add_list)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
