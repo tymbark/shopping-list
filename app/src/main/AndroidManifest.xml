@@ -25,8 +25,6 @@
 
         <activity android:name=".view.ShareActivity"/>
 
-        <activity android:name=".view.ScannerActivity"/>
-
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
