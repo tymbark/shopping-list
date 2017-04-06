@@ -18,9 +18,7 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
@@ -55,9 +53,14 @@ public class DrawerFragmentPresenter {
 
         listObservable = refreshList
                 .startWith((Object) null)
-                .flatMap(o -> listsDao.getAvailableListsObservable().map(toAdapterItems()));
+                .flatMap(o -> listsDao.getAvailableListsObservable())
+                .map(toAdapterItems());
 
-        usernameObservable = userDao.getUserObservable().map(User::getName).filter(Strings::isNotNullAndNotEmpty);
+        usernameObservable = userDao
+                .getUserObservable()
+                .filter(user -> user != null)
+                .map(User::getName)
+                .filter(Strings::isNotNullAndNotEmpty);
         this.userDao = userDao;
 
         showChangeUsernameDialogObservable = changeUsernameClickObservable

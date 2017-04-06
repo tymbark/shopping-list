@@ -63,6 +63,7 @@ public class UserDao {
         return Observers.create(uid -> {
             userPreferences.setUid(uid);
             uidRefreshSubject.onNext(null);
+            database.userCreatedReference().setValue(true);
         });
     }
 

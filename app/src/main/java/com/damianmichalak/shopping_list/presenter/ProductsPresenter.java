@@ -60,7 +60,7 @@ public class ProductsPresenter {
                             adapterItems.add(new SuggestedProductItem(product));
                         }
                     }
-                    
+
                     return adapterItems;
                 });
 

@@ -7,26 +7,24 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.helper.guava.Strings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import rx.Observer;
 
 public class DialogHelper {
 
     static public void showNewListNameDialog(@Nonnull final Context context, @Nonnull final Observer<String> observer) {
-        showInputDialog(context, observer, R.layout.input_dialog_list, true);
+        showInputDialog(context, observer, R.layout.input_dialog_list, true, null);
     }
 
-    static public void showUserNameInputDialog(@Nonnull final Context context, final Observer<String> observer) {
-        showInputDialog(context, observer, R.layout.input_dialog_username);
+    static public void showUserNameInputDialog(@Nonnull final Context context, final Observer<String> observer, @Nullable final String hint) {
+        showInputDialog(context, observer, R.layout.input_dialog_username, false, hint);
     }
 
-    private static void showInputDialog(@Nonnull final Context context, @Nonnull final Observer<String> observer, int resourceId) {
-        showInputDialog(context, observer, resourceId, false);
-    }
-
-    private static void showInputDialog(@Nonnull final Context context, @Nonnull final Observer<String> observer, int resourceId, boolean isCancelEnabled) {
+    private static void showInputDialog(@Nonnull final Context context, @Nonnull final Observer<String> observer, int resourceId, boolean isCancelEnabled, @Nullable String hint) {
         final AlertDialog dialog = new AlertDialog.Builder(context)
                 .setView(resourceId)
                 .create();
@@ -48,6 +46,11 @@ public class DialogHelper {
         }
 
         dialog.show();
+
+        final EditText input = (EditText) dialog.findViewById(R.id.dialog_new_list_name);
+        if (input != null && Strings.isNotNullAndNotEmpty(hint)) {
+            input.setText(hint);
+        }
     }
 
 }

@@ -72,7 +72,7 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
                         .subscribe(adapter),
                 presenter.getSubscription(),
                 presenter.getShowChangeUsernameDialogObservable()
-                        .subscribe(oldUsername -> DialogHelper.showUserNameInputDialog(getActivity(), presenter.newUsernameObserver())),
+                        .subscribe(oldUsername -> DialogHelper.showUserNameInputDialog(getActivity(), presenter.newUsernameObserver(), oldUsername)),
                 RxView.clicks(addNew)
                         .subscribe(aVoid -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getAddNewListClickSubject())),
                 RxView.clicks(scanQR)

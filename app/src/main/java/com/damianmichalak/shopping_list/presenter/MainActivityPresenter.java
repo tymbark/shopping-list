@@ -13,8 +13,6 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
-import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
@@ -58,13 +56,15 @@ public class MainActivityPresenter {
                 .flatMap(qrCodeKey -> listsDao.getObservableForSingleList(qrCodeKey)
                         .filter(shoppingList -> shoppingList != null)
                         .flatMap(shoppingList -> listsDao.addNewAvailableListObservable(qrCodeKey, shoppingList.getName())
-                                .map(o -> shoppingList.getName())));
+                                .map(o -> shoppingList.getName())))
+                .distinctUntilChanged();
 
         qrCodeListError = qrCodeShoppingListSubject
                 .flatMap(listsDao::getObservableForSingleList)
                 .filter(shoppingList -> shoppingList == null);
 
         emptyUserNameObservable = userDao.getUserObservable()
+                .filter(user -> user != null)
                 .filter(user -> Strings.isNullOrEmpty(user.getName()))
                 .first();
 

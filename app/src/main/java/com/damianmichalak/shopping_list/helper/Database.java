@@ -43,6 +43,10 @@ public class Database {
         return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid());
     }
 
+    public DatabaseReference userCreatedReference() {
+        return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid() + "/created");
+    }
+
     public DatabaseReference userNameReference() {
         return firebaseDatabase.getReference(DB_USERS + userPreferences.getUid() + "/name");
     }

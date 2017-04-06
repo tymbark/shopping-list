@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 presenter.getQrCodeListSuccess()
                         .subscribe(s -> Snackbar.make(rootView, getString(R.string.main_activity_list_added_qr, s), Snackbar.LENGTH_LONG).show()),
                 presenter.getEmptyUserNameObservable()
-                        .subscribe(o -> DialogHelper.showUserNameInputDialog(MainActivity.this, presenter.getNewUserNameSubject())),
+                        .subscribe(o -> DialogHelper.showUserNameInputDialog(MainActivity.this, presenter.getNewUserNameSubject(), null)),
                 presenter.getSubscription()
         ));
 
