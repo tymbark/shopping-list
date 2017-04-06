@@ -14,15 +14,19 @@ import rx.Observer;
 
 public class DialogHelper {
 
-    static public void showNewListNameDialog(@Nonnull final Context context, final Observer<String> observer) {
+    static public void showNewListNameDialog(@Nonnull final Context context, @Nonnull final Observer<String> observer) {
         showInputDialog(context, observer, R.layout.input_dialog_list, true);
     }
 
     static public void showUserNameInputDialog(@Nonnull final Context context, final Observer<String> observer) {
-        showInputDialog(context, observer, R.layout.input_dialog_username, false);
+        showInputDialog(context, observer, R.layout.input_dialog_username);
     }
 
-    private static void showInputDialog(@Nonnull Context context, Observer<String> observer, int resourceId, boolean isCancelEnabled) {
+    private static void showInputDialog(@Nonnull final Context context, @Nonnull final Observer<String> observer, int resourceId) {
+        showInputDialog(context, observer, resourceId, false);
+    }
+
+    private static void showInputDialog(@Nonnull final Context context, @Nonnull final Observer<String> observer, int resourceId, boolean isCancelEnabled) {
         final AlertDialog dialog = new AlertDialog.Builder(context)
                 .setView(resourceId)
                 .create();

@@ -14,10 +14,13 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
+import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
@@ -36,6 +39,10 @@ public class DrawerFragmentPresenter {
     @Nonnull
     private final PublishSubject<Object> refreshList = PublishSubject.create();
     @Nonnull
+    private final UserDao userDao;
+    @Nonnull
+    private final Observable<String> showChangeUsernameDialogObservable;
+    @Nonnull
     private final Observable<String> usernameObservable;
     @Nonnull
     private final Observable<List<BaseAdapterItem>> listObservable;
@@ -43,13 +50,18 @@ public class DrawerFragmentPresenter {
     @Inject
     public DrawerFragmentPresenter(@Nonnull final ListsDao listsDao,
                                    @Nonnull final CurrentListDao currentListDao,
-                                   @Nonnull final UserDao userDao) {
+                                   @Nonnull final UserDao userDao,
+                                   @Nonnull @Named("changeUsernameClickObservable") final Observable<Void> changeUsernameClickObservable) {
 
         listObservable = refreshList
                 .startWith((Object) null)
                 .flatMap(o -> listsDao.getAvailableListsObservable().map(toAdapterItems()));
 
         usernameObservable = userDao.getUserObservable().map(User::getName).filter(Strings::isNotNullAndNotEmpty);
+        this.userDao = userDao;
+
+        showChangeUsernameDialogObservable = changeUsernameClickObservable
+                .withLatestFrom(usernameObservable, (v, username) -> username);
 
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
@@ -73,6 +85,16 @@ public class DrawerFragmentPresenter {
 
             return output;
         };
+    }
+
+    @Nonnull
+    public Observer<String> newUsernameObserver() {
+        return userDao.usernameObserver();
+    }
+
+    @Nonnull
+    public Observable<String> getShowChangeUsernameDialogObservable() {
+        return showChangeUsernameDialogObservable;
     }
 
     @Nonnull

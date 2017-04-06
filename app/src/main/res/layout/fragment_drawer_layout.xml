@@ -7,13 +7,28 @@
               android:background="@android:color/white"
               android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/drawer_name_header"
-        android:textAllCaps="true"
-        android:textColor="@android:color/black"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/drawer_name_header"
+            android:textAllCaps="true"
+            android:textColor="@android:color/black"/>
+
+        <ImageView
+            android:id="@+id/drawer_change_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            app:srcCompat="@drawable/ic_edit"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/drawer_username"
@@ -42,7 +57,6 @@
             android:layout_height="wrap_content"
             android:background="?selectableItemBackgroundBorderless"
             android:padding="10dp"
-            android:text="@string/drawer_add_new_list"
             app:srcCompat="@drawable/ic_action_add_black"/>
 
         <ImageView
@@ -51,7 +65,6 @@
             android:layout_height="wrap_content"
             android:background="?selectableItemBackgroundBorderless"
             android:padding="10dp"
-            android:text="@string/drawer_scan_qr_list"
             app:srcCompat="@drawable/ic_camera"/>
 
     </LinearLayout>

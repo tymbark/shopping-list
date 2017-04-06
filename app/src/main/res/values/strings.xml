@@ -38,7 +38,7 @@
     <!-- Dialogs -->
     <string name="dialog_label_username">What\'s your name?</string>
     <string name="dialog_cancel_button">Cancel</string>
-    <string name="dialog_positive_button">Okay</string>
+    <string name="dialog_positive_button">Done</string>
     <string name="dialog_new_list_hint">New shopping list name</string>
     <string name="dialog_username_hint">No name</string>
 

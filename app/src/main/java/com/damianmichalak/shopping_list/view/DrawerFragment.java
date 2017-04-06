@@ -38,6 +38,8 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
     RecyclerView recyclerView;
     @BindView(R.id.drawer_add_new_list)
     View addNew;
+    @BindView(R.id.drawer_change_username)
+    View editUsername;
     @BindView(R.id.drawer_scan_qr)
     View scanQR;
 
@@ -69,6 +71,8 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
                 presenter.getListObservable()
                         .subscribe(adapter),
                 presenter.getSubscription(),
+                presenter.getShowChangeUsernameDialogObservable()
+                        .subscribe(oldUsername -> DialogHelper.showUserNameInputDialog(getActivity(), presenter.newUsernameObserver())),
                 RxView.clicks(addNew)
                         .subscribe(aVoid -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getAddNewListClickSubject())),
                 RxView.clicks(scanQR)
@@ -134,9 +138,9 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
     class DrawerFragmentModule {
 
         @Provides
-        @Named("AddNewListClickObservable")
-        Observable<Void> provideAddNewListClickObservable() {
-            return Observable.empty();
+        @Named("changeUsernameClickObservable")
+        Observable<Void> changeUsernameClickObservable() {
+            return RxView.clicks(editUsername);
         }
 
 
