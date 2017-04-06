@@ -48,18 +48,25 @@ public class ProductsPresenter {
         this.doneClickObservable = doneClickObservable;
         this.addClickObservable = addClickObservable;
 
-        final Observable<List<BaseAdapterItem>> itemsObservable = Observable.fromCallable(() -> {
-            final Set<String> suggestedProducts = userPreferences.getSuggestedProducts();
-            final List<BaseAdapterItem> adapterItems = Lists.newArrayList();
+        final Observable<Set<String>> savedItems = Observable.fromCallable(userPreferences::getSuggestedProducts);
 
-            for (String product : suggestedProducts) {
-                adapterItems.add(new SuggestedProductItem(product));
-            }
+        final Observable<List<BaseAdapterItem>> itemsObservable =
+                Observable.combineLatest(textChanges, savedItems, (query, strings) -> {
+                    final Set<String> suggestedProducts = userPreferences.getSuggestedProducts();
+                    final List<BaseAdapterItem> adapterItems = Lists.newArrayList();
 
-            return adapterItems;
-        });
+                    for (String product : suggestedProducts) {
+                        if (product.contains(query)) {
+                            adapterItems.add(new SuggestedProductItem(product));
+                        }
+                    }
+                    
+                    return adapterItems;
+                });
 
-        suggestedProductsObservable = refreshSubject.startWith((Object) null).concatMap(o -> itemsObservable);
+        suggestedProductsObservable = refreshSubject
+                .startWith((Object) null)
+                .flatMap(o -> itemsObservable);
 
         final Observable<String> addClick = Observable.merge(doneClickObservable, addClickObservable)
                 .withLatestFrom(textChanges, (aVoid, charSequence) -> charSequence.toString());
@@ -125,7 +132,7 @@ public class ProductsPresenter {
 
         @Override
         public boolean matches(@Nonnull BaseAdapterItem item) {
-            return equals(item);
+            return item instanceof SuggestedProductItem;
         }
 
         @Override
