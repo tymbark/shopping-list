@@ -4,6 +4,7 @@ package com.damianmichalak.shopping_list.presenter;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
+import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
@@ -13,41 +14,65 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
+import rx.subscriptions.SerialSubscription;
+import rx.subscriptions.Subscriptions;
 
 public class ShoppingListPresenter {
 
     @Nonnull
     private final Observable<String> listNameObservable;
     @Nonnull
-    private final Observable<List<BaseAdapterItem>> shoppingListObservable;
+    private final Observable<List<BaseAdapterItem>> currentShoppingListObservable;
     @Nonnull
     private final PublishSubject<String> removeItemSubject = PublishSubject.create();
     @Nonnull
+    private final PublishSubject<String> newShoppingListObserver = PublishSubject.create();
+    @Nonnull
     private final Observable<Boolean> emptyListObservable;
+    @Nonnull
+    private final Observable<Boolean> noListsObservable;
+    @Nonnull
+    private final Observable<Object> showNewListDialogObservable;
+    @Nonnull
+    private final SerialSubscription subscription = new SerialSubscription();
 
     @Inject
     ShoppingListPresenter(@Nonnull final ProductsDao productsDao,
-                          @Nonnull final CurrentListDao currentListDao) {
+                          @Nonnull final CurrentListDao currentListDao,
+                          @Nonnull final ListsDao listsDao,
+                          @Named("AddListClickObservable") Observable<Void> addListClickObservable) {
 
         listNameObservable = currentListDao.getCurrentListObservable()
                 .filter(list -> list != null)
                 .map(ShoppingList::getName);
 
-        shoppingListObservable = productsDao.getProductsObservable()
+        showNewListDialogObservable = addListClickObservable.map(v -> null);
+
+        currentShoppingListObservable = productsDao.getProductsObservable()
                 .map(toAdapterItems());
 
-        emptyListObservable = shoppingListObservable.map(List::isEmpty);
+        noListsObservable = listsDao.getAvailableListsObservable().map(Map::isEmpty);
 
-        removeItemSubject
-                .flatMap(productsDao::removeItemByKeyObservable)
-                .subscribe();
+        emptyListObservable = Observable
+                .combineLatest(currentShoppingListObservable.map(List::isEmpty), noListsObservable,
+                        (currentListEmpty, noLists) -> currentListEmpty && !noLists)
+                .share();
 
+        subscription.set(Subscriptions.from(
+                removeItemSubject
+                        .flatMap(productsDao::removeItemByKeyObservable)
+                        .subscribe(),
+                newShoppingListObserver
+                        .flatMap(listsDao::addNewListObservable)
+                        .subscribe()
+        ));
     }
 
     private Func1<Map<String, String>, List<BaseAdapterItem>> toAdapterItems() {
@@ -65,6 +90,21 @@ public class ShoppingListPresenter {
     }
 
     @Nonnull
+    public SerialSubscription getSubscription() {
+        return subscription;
+    }
+
+    @Nonnull
+    public Observable<Object> getShowNewListDialogObservable() {
+        return showNewListDialogObservable;
+    }
+
+    @Nonnull
+    public Observable<Boolean> getNoListsObservable() {
+        return noListsObservable;
+    }
+
+    @Nonnull
     public Observable<String> getListNameObservable() {
         return listNameObservable;
     }
@@ -75,8 +115,18 @@ public class ShoppingListPresenter {
     }
 
     @Nonnull
-    public Observable<List<BaseAdapterItem>> getShoppingListObservable() {
-        return shoppingListObservable;
+    public Observable<Boolean> getFloatingActionButtonObservable() {
+        return noListsObservable.map(o -> !o);
+    }
+
+    @Nonnull
+    public Observable<List<BaseAdapterItem>> getCurrentShoppingListObservable() {
+        return currentShoppingListObservable;
+    }
+
+    @Nonnull
+    public Observer<String> getNewShoppingListObserver() {
+        return newShoppingListObserver;
     }
 
     public class ShoppingListItem implements BaseAdapterItem {

@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         } else {
             switch (item.getItemId()) {
                 case R.id.delete_list:
-//                    todo add dialog are you sure
+//                    todo floatingActionButtonAdd dialog are you sure
                     presenter.getRemoveListClickSubject().onNext(null);
                     return true;
                 case R.id.rename_list:

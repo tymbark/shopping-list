@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
+import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
@@ -19,9 +20,11 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import dagger.Provides;
+import rx.Observable;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
@@ -35,9 +38,11 @@ public class ShoppingListFragment extends BaseFragment {
     @BindView(R.id.shopping_list_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.shopping_list_add_button)
-    View add;
+    View floatingActionButtonAdd;
     @BindView(R.id.shopping_list_empty_view)
-    View emptyView;
+    View noListsView;
+    @BindView(R.id.shopping_list_empty_products_view)
+    View emptyListView;
 
     @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();
@@ -61,15 +66,22 @@ public class ShoppingListFragment extends BaseFragment {
         recyclerView.setAdapter(adapter);
 
         subscription.set(Subscriptions.from(
-                presenter.getShoppingListObservable()
+                presenter.getCurrentShoppingListObservable()
                         .subscribe(adapter),
                 presenter.getEmptyListObservable()
-                        .subscribe(RxView.visibility(emptyView)),
+                        .subscribe(RxView.visibility(emptyListView)),
+                presenter.getFloatingActionButtonObservable()
+                        .subscribe(RxView.visibility(floatingActionButtonAdd)),
+                presenter.getNoListsObservable()
+                        .subscribe(RxView.visibility(noListsView)),
+                presenter.getShowNewListDialogObservable()
+                        .subscribe(o -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getNewShoppingListObserver())),
                 presenter.getListNameObservable()
-                        .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name))
+                        .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name)),
+                presenter.getSubscription()
         ));
 
-        add.setOnClickListener(v -> startActivity(ProductsActivity.newIntent(getActivity())));
+        floatingActionButtonAdd.setOnClickListener(v -> startActivity(ProductsActivity.newIntent(getActivity())));
 
     }
 
@@ -110,9 +122,18 @@ public class ShoppingListFragment extends BaseFragment {
         }
 
         @Provides
+        @Nonnull
         public LayoutInflater provideLayoutInflater() {
             return fragment.getActivity().getLayoutInflater();
         }
+
+        @Provides
+        @Nonnull
+        @Named("AddListClickObservable")
+        Observable<Void> provideAddListClickObservable() {
+            return RxView.clicks(noListsView).share();
+        }
+
     }
 
 }
