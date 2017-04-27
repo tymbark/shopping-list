@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Shopping list</string>
 
-    <string name="title_shopping">Shopping</string>
-    <string name="title_history">History</string>
+    <string name="navigation_title_lists">Lists</string>
+    <string name="navigation_title_products">Products</string>
+    <string name="navigation_title_history">History</string>
 
     <!-- Main -->
     <string name="main_activity_list_dont_exist_after_qr">This list does not exist</string>

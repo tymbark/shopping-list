@@ -61,9 +61,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         ButterKnife.bind(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, ProductsListFragment.newInstance()).commit();
 
         setupDrawerAndToolbar();
+        setupBottomNavigation();
 
         subscription.set(Subscriptions.from(
                 presenter.getCloseDrawerObservable()
@@ -77,6 +78,11 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 presenter.getSubscription()
         ));
 
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(this);
     }
 
     private void setupDrawerAndToolbar() {
@@ -185,10 +191,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.shopping_list:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance()).commit();
+            case R.id.navigation_products:
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, ProductsListFragment.newInstance()).commit();
                 return true;
-            case R.id.history:
+            case R.id.navigation_history:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, HistoryFragment.newInstance()).commit();
                 return true;
         }

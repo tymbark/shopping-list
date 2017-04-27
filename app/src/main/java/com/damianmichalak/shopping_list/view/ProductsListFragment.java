@@ -28,7 +28,7 @@ import rx.Observable;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
-public class ShoppingListFragment extends BaseFragment {
+public class ProductsListFragment extends BaseFragment {
 
     @Inject
     ShoppingListPresenter presenter;
@@ -47,8 +47,8 @@ public class ShoppingListFragment extends BaseFragment {
     @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();
 
-    public static ShoppingListFragment newInstance() {
-        return new ShoppingListFragment();
+    public static ProductsListFragment newInstance() {
+        return new ProductsListFragment();
     }
 
     @Nullable
@@ -109,7 +109,7 @@ public class ShoppingListFragment extends BaseFragment {
     )
     public interface Component {
 
-        void inject(ShoppingListFragment shoppingListFragment);
+        void inject(ProductsListFragment productsListFragment);
     }
 
     @dagger.Module
