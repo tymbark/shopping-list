@@ -5,8 +5,6 @@ import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
-import com.damianmichalak.shopping_list.model.ProductsDao;
-import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -27,71 +25,46 @@ import rx.subscriptions.Subscriptions;
 public class ShoppingListPresenter {
 
     @Nonnull
-    private final Observable<String> listNameObservable;
-    @Nonnull
-    private final Observable<List<BaseAdapterItem>> currentShoppingListObservable;
-    @Nonnull
-    private final PublishSubject<String> removeItemSubject = PublishSubject.create();
-    @Nonnull
-    private final PublishSubject<String> newShoppingListObserver = PublishSubject.create();
+    private final SerialSubscription subscription = new SerialSubscription();
     @Nonnull
     private final Observable<Boolean> emptyListObservable;
     @Nonnull
-    private final Observable<Boolean> noListsObservable;
+    private final Observable<List<BaseAdapterItem>> listObservable;
     @Nonnull
     private final Observable<Object> showNewListDialogObservable;
     @Nonnull
-    private final SerialSubscription subscription = new SerialSubscription();
+    private final PublishSubject<Object> refreshList = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<String> setCurrentListSubject = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
 
     @Inject
-    ShoppingListPresenter(@Nonnull final ProductsDao productsDao,
-                          @Nonnull final CurrentListDao currentListDao,
+    ShoppingListPresenter(@Nonnull final CurrentListDao currentListDao,
                           @Nonnull final ListsDao listsDao,
+                          @Named("AddListEmptyClickObservable") Observable<Void> addListEmptyClickObservable,
                           @Named("AddListClickObservable") Observable<Void> addListClickObservable) {
 
-        listNameObservable = currentListDao.getCurrentListObservable()
-                .filter(list -> list != null)
-                .map(ShoppingList::getName);
+        listObservable = refreshList
+                .startWith((Object) null)
+                .flatMap(o -> listsDao.getAvailableListsObservable())
+                .map(toAdapterItems())
+                .replay(1)
+                .refCount();
 
-        showNewListDialogObservable = addListClickObservable.map(v -> null);
+        emptyListObservable = listObservable.map(List::isEmpty);
 
-        currentShoppingListObservable = productsDao.getProductsObservable()
-                .map(toAdapterItems());
-
-        noListsObservable = listsDao.getAvailableListsObservable().map(Map::isEmpty);
-
-        emptyListObservable = Observable
-                .combineLatest(currentShoppingListObservable.map(List::isEmpty), noListsObservable,
-                        (currentListEmpty, noLists) -> currentListEmpty && !noLists)
-                .share();
+        showNewListDialogObservable = Observable.merge(addListEmptyClickObservable, addListClickObservable)
+                .map(v -> null);
 
         subscription.set(Subscriptions.from(
-                removeItemSubject
-                        .flatMap(productsDao::removeItemByKeyObservable)
-                        .subscribe(),
-                newShoppingListObserver
+                addNewListClickSubject
                         .flatMap(listsDao::addNewListObservable)
-                        .subscribe()
+                        .subscribe(),
+                setCurrentListSubject
+                        .subscribe(currentListDao.saveCurrentListIdObserver())
         ));
-    }
 
-    private Func1<Map<String, String>, List<BaseAdapterItem>> toAdapterItems() {
-        return products -> {
-            final List<BaseAdapterItem> items = Lists.newArrayList();
-
-            if (products != null) {
-                for (String key : products.keySet()) {
-                    items.add(new ShoppingListItemWithKey(key, products.get(key)));
-                }
-            }
-
-            return items;
-        };
-    }
-
-    @Nonnull
-    public SerialSubscription getSubscription() {
-        return subscription;
     }
 
     @Nonnull
@@ -100,13 +73,13 @@ public class ShoppingListPresenter {
     }
 
     @Nonnull
-    public Observable<Boolean> getNoListsObservable() {
-        return noListsObservable;
+    public SerialSubscription getSubscription() {
+        return subscription;
     }
 
     @Nonnull
-    public Observable<String> getListNameObservable() {
-        return listNameObservable;
+    public Observer<String> getAddNewListClickSubject() {
+        return addNewListClickSubject;
     }
 
     @Nonnull
@@ -115,32 +88,38 @@ public class ShoppingListPresenter {
     }
 
     @Nonnull
-    public Observable<Boolean> getFloatingActionButtonObservable() {
-        return noListsObservable.map(o -> !o);
+    public Observable<List<BaseAdapterItem>> getListObservable() {
+        return listObservable;
     }
 
-    @Nonnull
-    public Observable<List<BaseAdapterItem>> getCurrentShoppingListObservable() {
-        return currentShoppingListObservable;
-    }
+    private Func1<Map<String, String>, List<BaseAdapterItem>> toAdapterItems() {
+        return shoppingList -> {
+            final List<BaseAdapterItem> output = Lists.newArrayList();
 
-    @Nonnull
-    public Observer<String> getNewShoppingListObserver() {
-        return newShoppingListObserver;
+            for (String key : shoppingList.keySet()) {
+                output.add(new ShoppingListItem(shoppingList.get(key), key));
+            }
+
+            return output;
+        };
     }
 
     public class ShoppingListItem implements BaseAdapterItem {
 
-        @Nonnull
-        private final String product;
+        private final String name;
+        private final String key;
 
-        public ShoppingListItem(@Nonnull String product) {
-            this.product = product;
+        public ShoppingListItem(String name, String key) {
+            this.name = name;
+            this.key = key;
         }
 
-        @Nonnull
-        public String getProduct() {
-            return product;
+        public String getName() {
+            return name;
+        }
+
+        public String getKey() {
+            return key;
         }
 
         @Override
@@ -150,7 +129,16 @@ public class ShoppingListPresenter {
 
         @Override
         public boolean matches(@Nonnull BaseAdapterItem item) {
-            return item instanceof ShoppingListItem;
+            return item instanceof DrawerFragmentPresenter.ShoppingListItem;
+        }
+
+        @Override
+        public boolean same(@Nonnull BaseAdapterItem item) {
+            return false;
+        }
+
+        public Observer<Void> clickObserver() {
+            return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
         }
 
         @Override
@@ -158,74 +146,13 @@ public class ShoppingListPresenter {
             if (this == o) return true;
             if (!(o instanceof ShoppingListItem)) return false;
             ShoppingListItem that = (ShoppingListItem) o;
-            return Objects.equal(product, that.product);
+            return Objects.equal(name, that.name) &&
+                    Objects.equal(key, that.key);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(product);
-        }
-
-        @Override
-        public boolean same(@Nonnull BaseAdapterItem item) {
-            return equals(item);
+            return Objects.hashCode(name, key);
         }
     }
-
-    public class ShoppingListItemWithKey implements BaseAdapterItem {
-
-        @Nonnull
-        private final String id;
-        @Nonnull
-        private final String name;
-
-        @Nonnull
-        public String getId() {
-            return name;
-        }
-
-        @Nonnull
-        public String getName() {
-            return name;
-        }
-
-        public ShoppingListItemWithKey(@Nonnull String id, @Nonnull String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof ShoppingListItemWithKey)) return false;
-            ShoppingListItemWithKey that = (ShoppingListItemWithKey) o;
-            return Objects.equal(id, that.id) &&
-                    Objects.equal(name, that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(id, name);
-        }
-
-        @Override
-        public long adapterId() {
-            return 0;
-        }
-
-        @Override
-        public boolean matches(@Nonnull BaseAdapterItem item) {
-            return this.equals(item);
-        }
-
-        @Override
-        public boolean same(@Nonnull BaseAdapterItem item) {
-            return this.equals(item);
-        }
-
-        public Observer<Object> removeItem() {
-            return Observers.create(o -> removeItemSubject.onNext(id));
-        }
-    }
-
 }

@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
-import com.damianmichalak.shopping_list.presenter.ProductsPresenter;
+import com.damianmichalak.shopping_list.presenter.AddProductsPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jakewharton.rxbinding.view.RxView;
@@ -28,7 +28,7 @@ public class ProductsListManager implements ViewHolderManager {
 
     @Override
     public boolean matches(@Nonnull BaseAdapterItem baseAdapterItem) {
-        return baseAdapterItem instanceof ProductsPresenter.SuggestedProductItem;
+        return baseAdapterItem instanceof AddProductsPresenter.SuggestedProductItem;
     }
 
     @Nonnull
@@ -58,7 +58,7 @@ public class ProductsListManager implements ViewHolderManager {
 
         @Override
         public void bind(@Nonnull BaseAdapterItem item) {
-            final ProductsPresenter.SuggestedProductItem productItem = (ProductsPresenter.SuggestedProductItem) item;
+            final AddProductsPresenter.SuggestedProductItem productItem = (AddProductsPresenter.SuggestedProductItem) item;
             productName.setText(productItem.getProduct());
 
             subscription.set(Subscriptions.from(

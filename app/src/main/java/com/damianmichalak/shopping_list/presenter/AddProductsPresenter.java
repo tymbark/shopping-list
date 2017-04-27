@@ -21,7 +21,7 @@ import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
-public class ProductsPresenter {
+public class AddProductsPresenter {
 
 
     @Nonnull
@@ -40,11 +40,11 @@ public class ProductsPresenter {
     private final Observable<Void> addClickObservable;
 
     @Inject
-    public ProductsPresenter(@Nonnull @Named("DoneClickObservable") final Observable<Void> doneClickObservable,
-                             @Nonnull @Named("AddClickObservable") final Observable<Void> addClickObservable,
-                             @Nonnull @Named("ProductTextInputObservable") final Observable<CharSequence> textChanges,
-                             @Nonnull final ProductsDao dao,
-                             @Nonnull final UserPreferences userPreferences) {
+    public AddProductsPresenter(@Nonnull @Named("DoneClickObservable") final Observable<Void> doneClickObservable,
+                                @Nonnull @Named("AddClickObservable") final Observable<Void> addClickObservable,
+                                @Nonnull @Named("ProductTextInputObservable") final Observable<CharSequence> textChanges,
+                                @Nonnull final ProductsDao dao,
+                                @Nonnull final UserPreferences userPreferences) {
         this.doneClickObservable = doneClickObservable;
         this.addClickObservable = addClickObservable;
 

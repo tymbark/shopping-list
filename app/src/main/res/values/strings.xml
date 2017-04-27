@@ -17,6 +17,10 @@
     <string name="drawer_add_new_list">add new list</string>
     <string name="drawer_scan_qr_list">scan qr</string>
 
+    <!-- Shopping Lists Fragment -->
+    <string name="shopping_list_toolbar_title">Your lists</string>
+    <string name="shopping_list_empty_text">You dont have any shopping lists yet.\nClick here to add a new one!</string>
+
     <!-- Products Activity -->
     <string name="add_products_done">done</string>
     <string name="products_activity_title">Add products</string>
@@ -25,7 +29,6 @@
     <string name="shopping_list_share">Share</string>
     <string name="shopping_list_delete">Delete</string>
     <string name="shopping_list_rename">Rename</string>
-    <string name="shopping_list_empty_text">You dont have any shopping lists yet.\nClick here to add a new one!</string>
     <string name="shopping_list_empty_products_text">This list is empty</string>
 
     <!-- Share Activity (generate QR) -->

@@ -15,7 +15,7 @@ import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.helper.RxSnackbar;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
-import com.damianmichalak.shopping_list.presenter.ProductsPresenter;
+import com.damianmichalak.shopping_list.presenter.AddProductsPresenter;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
@@ -33,7 +33,7 @@ import rx.Observable;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
-public class ProductsActivity extends BaseActivity {
+public class AddProductsActivity extends BaseActivity {
 
     @BindView(R.id.activity_product_root_view)
     View rootView;
@@ -47,14 +47,14 @@ public class ProductsActivity extends BaseActivity {
     Button done;
 
     @Inject
-    ProductsPresenter presenter;
+    AddProductsPresenter presenter;
     @Inject
     ProductsListManager manager;
 
     private final SerialSubscription subscription = new SerialSubscription();
 
     public static Intent newIntent(Context context) {
-        return new Intent(context, ProductsActivity.class);
+        return new Intent(context, AddProductsActivity.class);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ProductsActivity extends BaseActivity {
 
     @Override
     protected void initDagger() {
-        final Component component = DaggerProductsActivity_Component.builder()
+        final Component component = DaggerAddProductsActivity_Component.builder()
                 .applicationComponent(getApplicationComponent())
                 .module(new Module(this))
                 .build();
@@ -107,17 +107,17 @@ public class ProductsActivity extends BaseActivity {
     )
     public interface Component {
 
-        void inject(@Nonnull final ProductsActivity activity);
+        void inject(@Nonnull final AddProductsActivity activity);
 
     }
 
     @dagger.Module
     class Module {
 
-        private final ProductsActivity productsActivity;
+        private final AddProductsActivity addProductsActivity;
 
-        public Module(ProductsActivity productsActivity) {
-            this.productsActivity = productsActivity;
+        public Module(AddProductsActivity addProductsActivity) {
+            this.addProductsActivity = addProductsActivity;
         }
 
         @Nonnull

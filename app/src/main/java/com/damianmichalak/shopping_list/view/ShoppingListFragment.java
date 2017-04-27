@@ -14,7 +14,7 @@ import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
 import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
-import com.damianmichalak.shopping_list.presenter.ProductsListPresenter;
+import com.damianmichalak.shopping_list.presenter.ShoppingListPresenter;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -28,60 +28,60 @@ import rx.Observable;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
-public class ProductsListFragment extends BaseFragment {
+public class ShoppingListFragment extends BaseFragment {
 
     @Inject
-    ProductsListPresenter presenter;
+    ShoppingListPresenter presenter;
     @Inject
-    ShoppingListManagerSecond manager;
+    ShoppingListItemManager manager;
 
-    @BindView(R.id.products_list_recycler_view)
+    @BindView(R.id.shopping_list_recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.products_list_add_button)
+    @BindView(R.id.shopping_list_add_button)
     View floatingActionButtonAdd;
-    @BindView(R.id.products_list_empty_view)
+    @BindView(R.id.shopping_list_empty_view)
     View noListsView;
-    @BindView(R.id.products_list_empty_products_view)
+    @BindView(R.id.shopping_list_empty_products_view)
     View emptyListView;
 
     @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();
 
-    public static ProductsListFragment newInstance() {
-        return new ProductsListFragment();
+    public static ShoppingListFragment newInstance() {
+        return new ShoppingListFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_products_list, container, false);
+        return inflater.inflate(R.layout.fragment_shopping_list, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.shopping_list_toolbar_title));
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.newArrayList(manager));
         recyclerView.setAdapter(adapter);
 
         subscription.set(Subscriptions.from(
-                presenter.getCurrentShoppingListObservable()
+                presenter.getListObservable()
                         .subscribe(adapter),
                 presenter.getEmptyListObservable()
                         .subscribe(RxView.visibility(emptyListView)),
-                presenter.getFloatingActionButtonObservable()
-                        .subscribe(RxView.visibility(floatingActionButtonAdd)),
-                presenter.getNoListsObservable()
-                        .subscribe(RxView.visibility(noListsView)),
+//                presenter.getFloatingActionButtonObservable()
+//                        .subscribe(RxView.visibility(floatingActionButtonAdd)),
+//                presenter.getNoListsObservable()
+//                        .subscribe(RxView.visibility(noListsView)),
                 presenter.getShowNewListDialogObservable()
-                        .subscribe(o -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getNewShoppingListObserver())),
-                presenter.getListNameObservable()
-                        .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name)),
+                        .subscribe(o -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getAddNewListClickSubject())),
+//                presenter.getListNameObservable()
+//                        .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name)),
                 presenter.getSubscription()
         ));
-
-        floatingActionButtonAdd.setOnClickListener(v -> startActivity(AddProductsActivity.newIntent(getActivity())));
 
     }
 
@@ -93,7 +93,7 @@ public class ProductsListFragment extends BaseFragment {
 
     @Override
     protected void initDagger() {
-        final Component component = DaggerProductsListFragment_Component
+        final Component component = DaggerShoppingListFragment_Component
                 .builder()
                 .module(new Module(this))
                 .applicationComponent(((BaseActivity) getActivity()).getApplicationComponent())
@@ -109,7 +109,7 @@ public class ProductsListFragment extends BaseFragment {
     )
     public interface Component {
 
-        void inject(ProductsListFragment productsListFragment);
+        void inject(ShoppingListFragment shoppingListFragment);
     }
 
     @dagger.Module
@@ -129,9 +129,16 @@ public class ProductsListFragment extends BaseFragment {
 
         @Provides
         @Nonnull
+        @Named("AddListEmptyClickObservable")
+        Observable<Void> provideAddListEmptyClickObservable() {
+            return RxView.clicks(noListsView).share();
+        }
+
+        @Provides
+        @Nonnull
         @Named("AddListClickObservable")
         Observable<Void> provideAddListClickObservable() {
-            return RxView.clicks(noListsView).share();
+            return RxView.clicks(floatingActionButtonAdd).share();
         }
 
     }

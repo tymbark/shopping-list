@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.ProductsActivity"/>
+        <activity android:name=".view.AddProductsActivity"/>
 
         <activity android:name=".view.ShareActivity"/>
 

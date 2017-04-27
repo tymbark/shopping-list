@@ -191,6 +191,9 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.navigation_shopping_list:
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance()).commit();
+                return true;
             case R.id.navigation_products:
                 getSupportFragmentManager().beginTransaction().replace(R.id.content, ProductsListFragment.newInstance()).commit();
                 return true;
