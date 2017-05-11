@@ -1,11 +1,12 @@
 package com.damianmichalak.shopping_list.presenter;
 
+import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.dagger.StringResources;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
-import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.damianmichalak.shopping_list.model.User;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
@@ -52,6 +53,7 @@ public class DrawerFragmentPresenter {
     public DrawerFragmentPresenter(@Nonnull final ListsDao listsDao,
                                    @Nonnull final CurrentListDao currentListDao,
                                    @Nonnull final UserDao userDao,
+                                   @Nonnull StringResources stringResources,
                                    @Nonnull @Named("changeUsernameClickObservable") final Observable<Void> changeUsernameClickObservable) {
         this.userDao = userDao;
 
@@ -68,7 +70,13 @@ public class DrawerFragmentPresenter {
 
         currentListNameObservable = currentListDao
                 .getCurrentListObservable()
-                .map(ShoppingList::getName);
+                .map(shoppingList -> {
+                    if (shoppingList != null) {
+                        return shoppingList.getName();
+                    } else {
+                        return stringResources.getString(R.string.drawer_current_list_empty);
+                    }
+                });
 
         showChangeUsernameDialogObservable = changeUsernameClickObservable
                 .withLatestFrom(usernameObservable, (v, username) -> username);

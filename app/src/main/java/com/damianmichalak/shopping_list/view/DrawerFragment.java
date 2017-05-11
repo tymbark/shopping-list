@@ -1,6 +1,7 @@
 package com.damianmichalak.shopping_list.view;
 
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.dagger.FragmentModule;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
 import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.presenter.DrawerFragmentPresenter;
@@ -23,6 +25,7 @@ import javax.inject.Named;
 import butterknife.BindView;
 import dagger.Provides;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
@@ -92,7 +95,7 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
         DaggerDrawerFragment_DrawerFragmentComponent
                 .builder()
                 .applicationComponent(((BaseActivity) getActivity()).getApplicationComponent())
-                .drawerFragmentModule(new DrawerFragmentModule())
+                .drawerFragmentModule(new DrawerFragmentModule(this))
                 .build()
                 .inject(this);
     }
@@ -127,7 +130,11 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
     }
 
     @dagger.Module
-    class DrawerFragmentModule {
+    class DrawerFragmentModule extends FragmentModule {
+
+        public DrawerFragmentModule(BaseFragment fragment) {
+            super(fragment);
+        }
 
         @Provides
         @Named("changeUsernameClickObservable")

@@ -16,6 +16,7 @@
     <string name="drawer_current_list_header">Current list</string>
     <string name="drawer_add_new_list">Add new list</string>
     <string name="drawer_scan_qr_code">Scan QR code</string>
+    <string name="drawer_current_list_empty">Nothing is picked</string>
 
     <!-- Shopping Lists Fragment -->
     <string name="shopping_list_toolbar_title">Your lists</string>
@@ -32,7 +33,7 @@
     <string name="shopping_list_empty_products_text">This list is empty</string>
 
     <!-- Share Activity (generate QR) -->
-    <string name="activity_share_qr_label">Please scan this unique QR code \ngenerated for the shopping list</string>
+    <string name="activity_share_qr_label">Please scan this unique QR code \ngenerated for the shopping list:\n%1$s</string>
     <string name="activity_share_title">Generate QR</string>
 
     <!-- Scanner -->

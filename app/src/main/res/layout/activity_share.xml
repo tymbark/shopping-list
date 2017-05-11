@@ -2,17 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
               android:background="@android:color/white"
               android:gravity="center"
               android:orientation="vertical">
 
     <TextView
+        android:id="@+id/activity_share_qr_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="16dp"
         android:layout_marginBottom="20dp"
-        android:text="@string/activity_share_qr_label"
+        tools:text="Please scan this unique QR code \ngenerated for the shopping list:\nParty list"
         android:textColor="@android:color/black"
         android:textSize="16sp"/>
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
@@ -25,6 +26,8 @@ public class ShareActivity extends BaseActivity {
 
     @BindView(R.id.activity_share_qr_view)
     ImageView qrView;
+    @BindView(R.id.activity_share_qr_list_name)
+    TextView name;
 
     @Inject
     ShareActivityPresenter presenter;
@@ -41,7 +44,10 @@ public class ShareActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         subscription.set(Subscriptions.from(
-                presenter.getCurrentListKeyObservable().subscribe(listId -> QRHelper.generateQR(listId, qrView))
+                presenter.getCurrentListKeyObservable()
+                        .subscribe(listId -> QRHelper.generateQR(listId, qrView)),
+                presenter.getCurrentListNameObservable()
+                        .subscribe(listName -> ShareActivity.this.name.setText(getResources().getString(R.string.activity_share_qr_label, listName)))
         ));
 
         final ActionBar supportActionBar = getSupportActionBar();
