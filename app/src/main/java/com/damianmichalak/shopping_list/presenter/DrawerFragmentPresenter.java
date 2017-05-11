@@ -5,6 +5,7 @@ import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
+import com.damianmichalak.shopping_list.model.ShoppingList;
 import com.damianmichalak.shopping_list.model.User;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
@@ -43,6 +44,8 @@ public class DrawerFragmentPresenter {
     @Nonnull
     private final Observable<String> usernameObservable;
     @Nonnull
+    private final Observable<String> currentListNameObservable;
+    @Nonnull
     private final Observable<List<BaseAdapterItem>> listObservable;
 
     @Inject
@@ -50,6 +53,7 @@ public class DrawerFragmentPresenter {
                                    @Nonnull final CurrentListDao currentListDao,
                                    @Nonnull final UserDao userDao,
                                    @Nonnull @Named("changeUsernameClickObservable") final Observable<Void> changeUsernameClickObservable) {
+        this.userDao = userDao;
 
         listObservable = refreshList
                 .startWith((Object) null)
@@ -61,7 +65,10 @@ public class DrawerFragmentPresenter {
                 .filter(user -> user != null)
                 .map(User::getName)
                 .filter(Strings::isNotNullAndNotEmpty);
-        this.userDao = userDao;
+
+        currentListNameObservable = currentListDao
+                .getCurrentListObservable()
+                .map(ShoppingList::getName);
 
         showChangeUsernameDialogObservable = changeUsernameClickObservable
                 .withLatestFrom(usernameObservable, (v, username) -> username);
@@ -88,6 +95,11 @@ public class DrawerFragmentPresenter {
 
             return output;
         };
+    }
+
+    @Nonnull
+    public Observable<String> getCurrentListNameObservable() {
+        return currentListNameObservable;
     }
 
     @Nonnull

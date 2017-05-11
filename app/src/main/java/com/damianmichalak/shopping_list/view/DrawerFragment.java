@@ -30,6 +30,8 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
 
     @BindView(R.id.drawer_username)
     TextView username;
+    @BindView(R.id.drawer_current_list_name)
+    TextView currentListName;
     @BindView(R.id.drawer_add_new_list)
     View addNew;
     @BindView(R.id.drawer_change_username)
@@ -56,6 +58,8 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
         super.onViewCreated(view, savedInstanceState);
 
         subscription.set(Subscriptions.from(
+                presenter.getCurrentListNameObservable()
+                        .subscribe(currentListName::setText),
                 presenter.getUsernameObservable()
                         .subscribe(username::setText),
                 presenter.getSubscription(),
