@@ -13,9 +13,8 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="drawer_name_header">name</string>
-    <string name="drawer_lists_header">your lists</string>
-    <string name="drawer_add_new_list">add new list</string>
-    <string name="drawer_scan_qr_list">scan qr</string>
+    <string name="drawer_add_new_list">Add new list</string>
+    <string name="drawer_scan_qr_code">Scan QR code</string>
 
     <!-- Shopping Lists Fragment -->
     <string name="shopping_list_toolbar_title">Your lists</string>

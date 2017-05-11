@@ -34,47 +34,30 @@
         android:id="@+id/drawer_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"/>
+        android:padding="16dp"
+        tools:text="Damian"/>
 
-
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/drawer_add_new_list"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:padding="16dp"
+        android:text="@string/drawer_add_new_list"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/drawer_lists_header"
-            android:textAllCaps="true"
-            android:textColor="@android:color/black"/>
-
-        <ImageView
-            android:id="@+id/drawer_add_new_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_action_add_black"/>
-
-        <ImageView
-            android:id="@+id/drawer_scan_qr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_camera"/>
-
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/drawer_shopping_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/drawer_list_item"/>
-
+    <TextView
+        android:id="@+id/drawer_scan_qr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/drawer_scan_qr_code"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"/>
 
 </LinearLayout>

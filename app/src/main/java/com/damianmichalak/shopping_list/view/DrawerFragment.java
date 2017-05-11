@@ -4,8 +4,6 @@ package com.damianmichalak.shopping_list.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,8 @@ import android.widget.TextView;
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
 import com.damianmichalak.shopping_list.helper.DialogHelper;
-import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.presenter.DrawerFragmentPresenter;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
 import com.jakewharton.rxbinding.view.RxView;
 
 import javax.annotation.Nonnull;
@@ -34,8 +30,6 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
 
     @BindView(R.id.drawer_username)
     TextView username;
-    @BindView(R.id.drawer_shopping_list)
-    RecyclerView recyclerView;
     @BindView(R.id.drawer_add_new_list)
     View addNew;
     @BindView(R.id.drawer_change_username)
@@ -61,15 +55,9 @@ public class DrawerFragment extends BaseFragment implements DrawerLayout.DrawerL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.newArrayList(manager));
-        recyclerView.setAdapter(adapter);
-
         subscription.set(Subscriptions.from(
                 presenter.getUsernameObservable()
                         .subscribe(username::setText),
-                presenter.getListObservable()
-                        .subscribe(adapter),
                 presenter.getSubscription(),
                 presenter.getShowChangeUsernameDialogObservable()
                         .subscribe(oldUsername -> DialogHelper.showUserNameInputDialog(getActivity(), presenter.newUsernameObserver(), oldUsername)),
