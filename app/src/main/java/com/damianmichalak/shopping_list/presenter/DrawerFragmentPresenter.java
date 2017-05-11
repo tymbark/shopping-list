@@ -37,8 +37,6 @@ public class DrawerFragmentPresenter {
     @Nonnull
     private final PublishSubject<String> removeListClickSubject = PublishSubject.create();
     @Nonnull
-    private final PublishSubject<Object> refreshList = PublishSubject.create();
-    @Nonnull
     private final UserDao userDao;
     @Nonnull
     private final Observable<String> showChangeUsernameDialogObservable;
@@ -57,9 +55,7 @@ public class DrawerFragmentPresenter {
                                    @Nonnull @Named("changeUsernameClickObservable") final Observable<Void> changeUsernameClickObservable) {
         this.userDao = userDao;
 
-        listObservable = refreshList
-                .startWith((Object) null)
-                .flatMap(o -> listsDao.getAvailableListsObservable())
+        listObservable = listsDao.getAvailableListsObservable()
                 .map(toAdapterItems());
 
         usernameObservable = userDao
@@ -138,11 +134,6 @@ public class DrawerFragmentPresenter {
     @Nonnull
     public SerialSubscription getSubscription() {
         return subscription;
-    }
-
-    @Nonnull
-    public Observer<Object> refreshList() {
-        return refreshList;
     }
 
     public class ShoppingListItem implements BaseAdapterItem {

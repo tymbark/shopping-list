@@ -81,8 +81,9 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     }
 
     private void setupBottomNavigation() {
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        final BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
+        navigation.setSelectedItemId(R.id.navigation_shopping_list);
     }
 
     private void setupDrawerAndToolbar() {
@@ -96,7 +97,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         drawerFragment = (DrawerFragment) getSupportFragmentManager().findFragmentById(R.id.main_navigation_drawer);
         drawerLayout.addDrawerListener(drawerToggle);
-        drawerLayout.addDrawerListener(drawerFragment);
 
         supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -122,7 +122,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         super.onDestroy();
         subscription.set(Subscriptions.empty());
         drawerLayout.removeDrawerListener(drawerToggle);
-        drawerLayout.removeDrawerListener(drawerFragment);
     }
 
     @Override
