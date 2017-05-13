@@ -1,7 +1,7 @@
 package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.model.CurrentListDao;
-import com.damianmichalak.shopping_list.model.ShoppingList;
+import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 
 import javax.inject.Inject;
 

@@ -3,7 +3,7 @@ package com.damianmichalak.shopping_list;
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
-import com.damianmichalak.shopping_list.model.ShoppingList;
+import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;

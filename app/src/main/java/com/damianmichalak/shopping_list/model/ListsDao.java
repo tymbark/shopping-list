@@ -3,6 +3,7 @@ package com.damianmichalak.shopping_list.model;
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
+import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.Map;

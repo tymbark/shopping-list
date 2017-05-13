@@ -1,4 +1,4 @@
-package com.damianmichalak.shopping_list.model;
+package com.damianmichalak.shopping_list.model.api_models;
 
 import com.google.firebase.database.PropertyName;
 

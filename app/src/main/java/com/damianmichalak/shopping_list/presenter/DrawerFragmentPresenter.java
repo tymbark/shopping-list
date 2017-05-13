@@ -7,7 +7,7 @@ import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
-import com.damianmichalak.shopping_list.model.User;
+import com.damianmichalak.shopping_list.model.api_models.User;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 

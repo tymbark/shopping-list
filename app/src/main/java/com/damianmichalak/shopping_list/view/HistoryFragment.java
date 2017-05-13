@@ -2,23 +2,14 @@ package com.damianmichalak.shopping_list.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.damianmichalak.shopping_list.R;
-import com.damianmichalak.shopping_list.model.ShoppingList;
-import com.damianmichalak.shopping_list.model.User;
 import com.damianmichalak.shopping_list.model.UserDao;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
-
-import rx.functions.Action1;
 
 @Deprecated
 public class HistoryFragment extends BaseFragment {

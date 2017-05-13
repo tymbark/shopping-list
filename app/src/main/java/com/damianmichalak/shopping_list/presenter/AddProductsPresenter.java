@@ -5,6 +5,7 @@ import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
+import com.damianmichalak.shopping_list.model.api_models.Product;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class AddProductsPresenter {
     @Nonnull
     private final PublishSubject<Object> refreshSubject = PublishSubject.create();
     @Nonnull
-    private final Observable<String> addedItemForSnackbarObservable;
+    private final Observable<Product> addedItemForSnackbarObservable;
     @Nonnull
     private final Observable<Void> doneClickObservable;
     @Nonnull
@@ -75,7 +76,9 @@ public class AddProductsPresenter {
                 Observable.merge(addClick, clickItemSubject)
                         .filter(name -> !name.isEmpty())
                         .doOnNext(userPreferences::addSuggestedProduct)
+                        .map(name -> new Product(name, "", System.currentTimeMillis(), 0))
                         .flatMap(input -> dao.addNewItemObservable(input)
+                                .filter(bool -> bool) // todo add error 
                                 .map(o -> input))
                         .doOnNext(s -> refreshSubject.onNext(null));
 
@@ -98,7 +101,7 @@ public class AddProductsPresenter {
 
     @Nonnull
     public Observable<String> getAddedItemForSnackbarObservable() {
-        return addedItemForSnackbarObservable.map(s -> s + " added");
+        return addedItemForSnackbarObservable.map(Product::getName);
     }
 
     @Nonnull

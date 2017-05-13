@@ -2,7 +2,9 @@ package com.damianmichalak.shopping_list.model;
 
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
+import com.damianmichalak.shopping_list.helper.ProductsDatabase;
 import com.damianmichalak.shopping_list.helper.RxUtils;
+import com.damianmichalak.shopping_list.model.api_models.Product;
 
 import java.util.Map;
 
@@ -16,17 +18,21 @@ import rx.Observable;
 public class ProductsDao {
 
     @Nonnull
-    private final Observable<Map<String, String>> productsObservable;
+    private final Observable<Map<String, Product>> productsObservable;
     @Nonnull
     private final Database database;
+    @Nonnull
+    private final ProductsDatabase productsDatabase;
+    @Nonnull
     private final Observable<String> currentListKeyObservable;
 
     @Inject
     public ProductsDao(@Nonnull final Database database,
+                       @Nonnull final ProductsDatabase productsDatabase,
                        @Nonnull final EventsWrapper productsEventWrapper,
-                       @Nonnull final UserDao userDao,
                        @Nonnull final CurrentListDao dao) {
         this.database = database;
+        this.productsDatabase = productsDatabase;
 
         currentListKeyObservable = dao.getCurrentListKeyObservable()
                 .filter(uid -> uid != null)
@@ -35,24 +41,22 @@ public class ProductsDao {
 
         productsObservable = currentListKeyObservable
                 .switchMap(uid -> RxUtils.createObservableMapForReference
-                        (database.productsReference(uid), productsEventWrapper, String.class))
+                        (database.productsReference(uid), productsEventWrapper, Product.class))
                 .replay(1)
                 .refCount();
 
     }
 
-    public Observable<Object> addNewItemObservable(final String itemName) {
-        return currentListKeyObservable.flatMap(uid -> Observable.fromCallable(
-                () -> database.productsReference(uid).push().setValue(itemName)));
+    public Observable<Boolean> addNewItemObservable(final Product product) {
+        return currentListKeyObservable.flatMap(uid -> productsDatabase.put(product, uid));
     }
 
-    public Observable<Object> removeItemByKeyObservable(final String key) {
-        return currentListKeyObservable.flatMap(uid -> Observable.fromCallable(
-                () -> database.productsReference(uid).child(key).removeValue()));
+    public Observable<Boolean> removeItemByKeyObservable(final String key) {
+        return currentListKeyObservable.flatMap(uid -> productsDatabase.remove(key, uid));
     }
 
     @Nonnull
-    public Observable<Map<String, String>> getProductsObservable() {
+    public Observable<Map<String, Product>> getProductsObservable() {
         return productsObservable;
     }
 }

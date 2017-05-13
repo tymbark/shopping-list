@@ -4,8 +4,8 @@ package com.damianmichalak.shopping_list.presenter;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
-import com.damianmichalak.shopping_list.model.ShoppingList;
-import com.damianmichalak.shopping_list.model.User;
+import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
+import com.damianmichalak.shopping_list.model.api_models.User;
 import com.damianmichalak.shopping_list.model.UserDao;
 
 import javax.annotation.Nonnull;
