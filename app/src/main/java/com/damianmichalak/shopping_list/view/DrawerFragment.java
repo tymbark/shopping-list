@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
-import com.damianmichalak.shopping_list.dagger.FragmentModule;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
+import com.damianmichalak.shopping_list.dagger.StringResources;
 import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.presenter.DrawerFragmentPresenter;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -92,7 +92,7 @@ public class DrawerFragment extends BaseFragment {
         DaggerDrawerFragment_DrawerFragmentComponent
                 .builder()
                 .applicationComponent(((BaseActivity) getActivity()).getApplicationComponent())
-                .drawerFragmentModule(new DrawerFragmentModule(this))
+                .drawerFragmentModule(new DrawerFragmentModule())
                 .build()
                 .inject(this);
     }
@@ -106,11 +106,7 @@ public class DrawerFragment extends BaseFragment {
     }
 
     @dagger.Module
-    class DrawerFragmentModule extends FragmentModule {
-
-        public DrawerFragmentModule(BaseFragment fragment) {
-            super(fragment);
-        }
+    class DrawerFragmentModule {
 
         @Provides
         @Named("changeUsernameClickObservable")
@@ -118,6 +114,10 @@ public class DrawerFragment extends BaseFragment {
             return RxView.clicks(editUsername);
         }
 
+        @Provides
+        StringResources provideResources() {
+            return id -> getResources().getString(id);
+        }
 
     }
 

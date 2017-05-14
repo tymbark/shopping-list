@@ -1,9 +1,6 @@
 package com.damianmichalak.shopping_list.model;
 
-import com.damianmichalak.shopping_list.helper.Database;
-import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.ProductsDatabase;
-import com.damianmichalak.shopping_list.helper.RxUtils;
 import com.damianmichalak.shopping_list.model.api_models.Product;
 
 import java.util.Map;
@@ -20,18 +17,13 @@ public class ProductsDao {
     @Nonnull
     private final Observable<Map<String, Product>> productsObservable;
     @Nonnull
-    private final Database database;
-    @Nonnull
     private final ProductsDatabase productsDatabase;
     @Nonnull
     private final Observable<String> currentListKeyObservable;
 
     @Inject
-    public ProductsDao(@Nonnull final Database database,
-                       @Nonnull final ProductsDatabase productsDatabase,
-                       @Nonnull final EventsWrapper productsEventWrapper,
+    public ProductsDao(@Nonnull final ProductsDatabase productsDatabase,
                        @Nonnull final CurrentListDao dao) {
-        this.database = database;
         this.productsDatabase = productsDatabase;
 
         currentListKeyObservable = dao.getCurrentListKeyObservable()
@@ -40,8 +32,7 @@ public class ProductsDao {
                 .refCount();
 
         productsObservable = currentListKeyObservable
-                .switchMap(uid -> RxUtils.createObservableMapForReference
-                        (database.productsReference(uid), productsEventWrapper, Product.class))
+                .switchMap(productsDatabase::products)
                 .replay(1)
                 .refCount();
 

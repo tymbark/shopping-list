@@ -3,6 +3,8 @@ package com.damianmichalak.shopping_list.helper;
 
 import com.damianmichalak.shopping_list.model.api_models.Product;
 
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
@@ -13,10 +15,14 @@ public class ProductsDatabase {
 
     @Nonnull
     private final Database database;
+    @Nonnull
+    private final EventsWrapper eventsWrapper;
 
     @Inject
-    public ProductsDatabase(@Nonnull Database database) {
+    ProductsDatabase(@Nonnull Database database,
+                     @Nonnull EventsWrapper eventsWrapper) {
         this.database = database;
+        this.eventsWrapper = eventsWrapper;
     }
 
     public Observable<Boolean> put(Product product, String listId) {
@@ -48,6 +54,10 @@ public class ProductsDatabase {
                             }
                         }),
                 AsyncEmitter.BackpressureMode.LATEST);
+    }
+
+    public Observable<Map<String, Product>> products(String listId) {
+        return RxUtils.createObservableMapForReference(database.productsReference(listId), eventsWrapper, Product.class);
     }
 
 }

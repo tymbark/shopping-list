@@ -6,6 +6,7 @@ import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;
+import com.damianmichalak.shopping_list.model.api_models.Product;
 import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
@@ -75,13 +76,13 @@ public class ProductsListPresenter {
         ));
     }
 
-    private Func1<Map<String, String>, List<BaseAdapterItem>> toAdapterItems() {
+    private Func1<Map<String, Product>, List<BaseAdapterItem>> toAdapterItems() {
         return products -> {
             final List<BaseAdapterItem> items = Lists.newArrayList();
 
             if (products != null) {
                 for (String key : products.keySet()) {
-                    items.add(new ShoppingListItemWithKey(key, products.get(key)));
+                    items.add(new ShoppingListItemWithKey(key, products.get(key).getName()));
                 }
             }
 
