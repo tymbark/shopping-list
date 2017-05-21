@@ -22,37 +22,37 @@ public class ShoppingListDao {
     @Nonnull
     private final Observable<Map<String, String>> productsObservable;
     @Nonnull
-    private final References References;
+    private final References references;
 
     @Inject
-    public ShoppingListDao(@Nonnull final References References,
+    public ShoppingListDao(@Nonnull final References references,
                            @Nonnull final EventsWrapper listEventsWrapper,
                            @Nonnull final EventsWrapper productsEventWrapper,
                            @Nonnull final UserDao userDao) {
-        this.References = References;
+        this.references = references;
 
         shoppingListObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableForReference
-                        (References.DEPRECATEDshoppingListReference(), listEventsWrapper, ShoppingList.class))
+                        (references.DEPRECATEDshoppingListReference(), listEventsWrapper, ShoppingList.class))
                 .replay(1)
                 .refCount();
 
         productsObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableMapForReference
-                        (References.DEPRECATEDproductsReference(), productsEventWrapper, String.class))
+                        (references.DEPRECATEDproductsReference(), productsEventWrapper, String.class))
                 .replay(1)
                 .refCount();
 
     }
 
     public Observable<Object> addNewItemObservable(final String itemName) {
-        return Observable.fromCallable(() -> References.DEPRECATEDproductsReference().push().setValue(itemName));
+        return Observable.fromCallable(() -> references.DEPRECATEDproductsReference().push().setValue(itemName));
     }
 
     public Observable<Object> removeItemByKeyObservable(final String key) {
-        return Observable.fromCallable(() -> References.DEPRECATEDproductsReference().child(key).removeValue());
+        return Observable.fromCallable(() -> references.DEPRECATEDproductsReference().child(key).removeValue());
     }
 
     @Nonnull

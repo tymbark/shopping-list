@@ -26,15 +26,15 @@ public class UserDao {
     @Nonnull
     private final PublishSubject<Object> userRefreshSubject = PublishSubject.create();
     @Nonnull
-    private final References References;
+    private final References references;
     @Nonnull
     private UserPreferences userPreferences;
 
     @Inject
-    public UserDao(@Nonnull final References References,
+    public UserDao(@Nonnull final References references,
                    @Nonnull final EventsWrapper eventsWrapper,
                    @Nonnull final UserPreferences userPreferences) {
-        this.References = References;
+        this.references = references;
         this.userPreferences = userPreferences;
 
         uidObservable = uidRefreshSubject.startWith((Object) null)
@@ -43,7 +43,7 @@ public class UserDao {
                 .refCount();
 
         userObservable = Observable.merge(userRefreshSubject, uidObservable.filter(o -> o != null))
-                .switchMap(f -> RxUtils.createObservableForReference(References.userReference(), eventsWrapper, User.class))
+                .switchMap(f -> RxUtils.createObservableForReference(references.userReference(), eventsWrapper, User.class))
                 .replay(1)
                 .refCount();
 
@@ -64,14 +64,14 @@ public class UserDao {
         return Observers.create(uid -> {
             userPreferences.setUid(uid);
             uidRefreshSubject.onNext(null);
-            References.userCreatedReference().setValue(true);
+            references.userCreatedReference().setValue(true);
         });
     }
 
     @Nonnull
     public Observer<String> usernameObserver() {
         return Observers.create(username -> {
-            References.userNameReference().setValue(username);
+            references.userNameReference().setValue(username);
             userRefreshSubject.onNext(null);
         });
     }

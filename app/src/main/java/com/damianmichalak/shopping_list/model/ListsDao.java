@@ -25,17 +25,17 @@ public class ListsDao {
     private final EventsWrapper singleListEW;
 
     @Inject
-    public ListsDao(@Nonnull final References References,
+    public ListsDao(@Nonnull final References references,
                     @Nonnull final EventsWrapper singleListEW,
                     @Nonnull final EventsWrapper availableListsEW,
                     @Nonnull final UserDao userDao) {
-        this.references = References;
+        this.references = references;
         this.singleListEW = singleListEW;
 
         availableListsObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableMapForReference(
-                        References.userListsReference(), availableListsEW, String.class))
+                        references.userListsReference(), availableListsEW, String.class))
                 .replay(1)
                 .refCount();
 

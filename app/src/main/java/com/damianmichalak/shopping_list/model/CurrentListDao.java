@@ -25,21 +25,18 @@ public class CurrentListDao {
     @Nonnull
     private final UserPreferences userPreferences;
     @Nonnull
-    private final References References;
-    @Nonnull
     private final PublishSubject<Object> currentListRefreshSubject = PublishSubject.create();
 
     @Inject
     public CurrentListDao(@Nonnull final UserPreferences userPreferences,
-                          @Nonnull final References References,
+                          @Nonnull final References references,
                           @Nonnull final EventsWrapper wrapper) {
         this.userPreferences = userPreferences;
-        this.References = References;
 
         currentListObservable = currentListRefreshSubject.startWith(((Object) null))
                 .flatMap(o -> Observable.fromCallable(userPreferences::getCurrentList))
                 .filter(uid -> uid != null)
-                .flatMap(uid -> RxUtils.createObservableForReference(References.singleListReference(uid), wrapper, ShoppingList.class))
+                .flatMap(uid -> RxUtils.createObservableForReference(references.singleListReference(uid), wrapper, ShoppingList.class))
                 .replay(1)
                 .refCount();
 
