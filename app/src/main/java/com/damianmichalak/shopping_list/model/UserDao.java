@@ -1,6 +1,6 @@
 package com.damianmichalak.shopping_list.model;
 
-import com.damianmichalak.shopping_list.helper.Database;
+import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
 import com.damianmichalak.shopping_list.model.api_models.User;
@@ -26,15 +26,15 @@ public class UserDao {
     @Nonnull
     private final PublishSubject<Object> userRefreshSubject = PublishSubject.create();
     @Nonnull
-    private final Database database;
+    private final References References;
     @Nonnull
     private UserPreferences userPreferences;
 
     @Inject
-    public UserDao(@Nonnull final Database database,
+    public UserDao(@Nonnull final References References,
                    @Nonnull final EventsWrapper eventsWrapper,
                    @Nonnull final UserPreferences userPreferences) {
-        this.database = database;
+        this.References = References;
         this.userPreferences = userPreferences;
 
         uidObservable = uidRefreshSubject.startWith((Object) null)
@@ -43,7 +43,7 @@ public class UserDao {
                 .refCount();
 
         userObservable = Observable.merge(userRefreshSubject, uidObservable.filter(o -> o != null))
-                .switchMap(f -> RxUtils.createObservableForReference(database.userReference(), eventsWrapper, User.class))
+                .switchMap(f -> RxUtils.createObservableForReference(References.userReference(), eventsWrapper, User.class))
                 .replay(1)
                 .refCount();
 
@@ -64,14 +64,14 @@ public class UserDao {
         return Observers.create(uid -> {
             userPreferences.setUid(uid);
             uidRefreshSubject.onNext(null);
-            database.userCreatedReference().setValue(true);
+            References.userCreatedReference().setValue(true);
         });
     }
 
     @Nonnull
     public Observer<String> usernameObserver() {
         return Observers.create(username -> {
-            database.userNameReference().setValue(username);
+            References.userNameReference().setValue(username);
             userRefreshSubject.onNext(null);
         });
     }

@@ -1,6 +1,6 @@
 package com.damianmichalak.shopping_list;
 
-import com.damianmichalak.shopping_list.helper.Database;
+import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
@@ -27,7 +27,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-public class ShoppingListsDaoTest {
+public class ShoppingListsProductDaoTest {
 
     @Mock
     private DatabaseReference reference;
@@ -42,7 +42,7 @@ public class ShoppingListsDaoTest {
     @Mock
     private FirebaseDatabase firebaseDatabase;
 
-    private Database database;
+    private References References;
     private PublishSubject<String> uidSubject;
 
     @Before
@@ -52,14 +52,14 @@ public class ShoppingListsDaoTest {
         when(userDao.getUidObservable()).thenReturn(uidSubject);
         when(firebaseDatabase.getReference(anyString())).thenReturn(reference);
 
-        database = new Database(userPreferences, firebaseDatabase);
+        References = new References(userPreferences, firebaseDatabase);
 
     }
 
     @Test
     public void testPushingOneEventShoppingList_isSuccess() throws Exception {
         final EventsWrapper eventsWrapper = new EventsWrapper();
-        final ShoppingListDao dao = new ShoppingListDao(database, eventsWrapper, new EventsWrapper(), userDao);
+        final ShoppingListDao dao = new ShoppingListDao(References, eventsWrapper, new EventsWrapper(), userDao);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
         dao.getShoppingListObservable().subscribe(subscriber);
@@ -71,7 +71,7 @@ public class ShoppingListsDaoTest {
     @Test
     public void testPushingOneEventShoppingList_isNotError() throws Exception {
         final EventsWrapper eventsWrapper = new EventsWrapper();
-        final ShoppingListDao dao = new ShoppingListDao(database, eventsWrapper, new EventsWrapper(), userDao);
+        final ShoppingListDao dao = new ShoppingListDao(References, eventsWrapper, new EventsWrapper(), userDao);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
         dao.getShoppingListObservable().subscribe(subscriber);
@@ -83,7 +83,7 @@ public class ShoppingListsDaoTest {
     @Test
     public void testPushingOneErrorEventShoppingList_isError() throws Exception {
         final EventsWrapper eventsWrapper = new EventsWrapper();
-        final ShoppingListDao dao = new ShoppingListDao(database, eventsWrapper, new EventsWrapper(), userDao);
+        final ShoppingListDao dao = new ShoppingListDao(References, eventsWrapper, new EventsWrapper(), userDao);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
         dao.getShoppingListObservable().subscribe(subscriber);
@@ -95,7 +95,7 @@ public class ShoppingListsDaoTest {
     @Test
     public void testPushingOneErrorEventShoppingList_isNotSuccess() throws Exception {
         final EventsWrapper eventsWrapper = new EventsWrapper();
-        final ShoppingListDao dao = new ShoppingListDao(database, eventsWrapper, new EventsWrapper(), userDao);
+        final ShoppingListDao dao = new ShoppingListDao(References, eventsWrapper, new EventsWrapper(), userDao);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
         dao.getShoppingListObservable().subscribe(subscriber);
@@ -107,7 +107,7 @@ public class ShoppingListsDaoTest {
     @Test
     public void testPushingSomeValue_returnsThisValue() throws Exception {
         final EventsWrapper eventsWrapper = new EventsWrapper();
-        final ShoppingListDao dao = new ShoppingListDao(database, eventsWrapper, new EventsWrapper(), userDao);
+        final ShoppingListDao dao = new ShoppingListDao(References, eventsWrapper, new EventsWrapper(), userDao);
         final TestSubscriber<ShoppingList> subscriber = new TestSubscriber<>();
 
         final ShoppingList value = new ShoppingList();
@@ -122,7 +122,7 @@ public class ShoppingListsDaoTest {
     @Test
     public void testWhenUIDExistsAndValuePushed_isSuccess() throws Exception {
         final EventsWrapper eventsWrapper = new EventsWrapper();
-        final ShoppingListDao dao = new ShoppingListDao(database, new EventsWrapper(), eventsWrapper, userDao);
+        final ShoppingListDao dao = new ShoppingListDao(References, new EventsWrapper(), eventsWrapper, userDao);
         final TestSubscriber<Map<String, String>> subscriber1 = new TestSubscriber<>();
 
         when(dataSnapshot.getChildren()).thenReturn(Lists.newArrayList());
@@ -138,7 +138,7 @@ public class ShoppingListsDaoTest {
     @Test
     public void testWhenUIDNotExistsAndValuePushed_isEmpty() throws Exception {
         final EventsWrapper eventsWrapper = new EventsWrapper();
-        final ShoppingListDao dao = new ShoppingListDao(database, new EventsWrapper(), eventsWrapper, userDao);
+        final ShoppingListDao dao = new ShoppingListDao(References, new EventsWrapper(), eventsWrapper, userDao);
         final TestSubscriber<Map<String, String>> subscriber1 = new TestSubscriber<>();
 
         when(dataSnapshot.getChildren()).thenReturn(Lists.newArrayList());

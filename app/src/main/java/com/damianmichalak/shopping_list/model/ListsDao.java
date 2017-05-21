@@ -1,6 +1,6 @@
 package com.damianmichalak.shopping_list.model;
 
-import com.damianmichalak.shopping_list.helper.Database;
+import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
 import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
@@ -20,22 +20,22 @@ public class ListsDao {
     @Nonnull
     private final Observable<Map<String, String>> availableListsObservable;
     @Nonnull
-    private final Database database;
+    private final References References;
     @Nonnull
     private final EventsWrapper singleListEW;
 
     @Inject
-    public ListsDao(@Nonnull final Database database,
+    public ListsDao(@Nonnull final References References,
                     @Nonnull final EventsWrapper singleListEW,
                     @Nonnull final EventsWrapper availableListsEW,
                     @Nonnull final UserDao userDao) {
-        this.database = database;
+        this.References = References;
         this.singleListEW = singleListEW;
 
         availableListsObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableMapForReference(
-                        database.userListsReference(), availableListsEW, String.class))
+                        References.userListsReference(), availableListsEW, String.class))
                 .replay(1)
                 .refCount();
 
@@ -44,23 +44,23 @@ public class ListsDao {
     @Nonnull
     public Observable<Object> addNewListObservable(final String itemName) {
         return Observable.fromCallable(() -> {
-            final DatabaseReference newObject = database.userListsReference().push();
+            final DatabaseReference newObject = References.userListsReference().push();
             newObject.setValue(itemName);
-            database.singleListNameReference(newObject.getKey()).setValue(itemName);
+            References.singleListNameReference(newObject.getKey()).setValue(itemName);
             return null;
         });
     }
 
     @Nonnull
     public Observable<Object> addNewAvailableListObservable(final String existingListKey, final String existingListName) {
-        return Observable.fromCallable(() -> database.userListsReference().child(existingListKey).setValue(existingListName));
+        return Observable.fromCallable(() -> References.userListsReference().child(existingListKey).setValue(existingListName));
     }
 
     @Nonnull
     public Observable<Object> removeListObservable(final String key) {
         return Observable.fromCallable(() -> {
-            database.userListsReference().child(key).removeValue();
-            database.allListsReference().child(key).removeValue();
+            References.userListsReference().child(key).removeValue();
+            References.allListsReference().child(key).removeValue();
             return null;
         });
     }
@@ -72,6 +72,6 @@ public class ListsDao {
 
     @Nonnull
     public Observable<ShoppingList> getObservableForSingleList(String key) {
-        return RxUtils.createObservableForReference(database.singleListReference(key), new EventsWrapper(), ShoppingList.class);
+        return RxUtils.createObservableForReference(References.singleListReference(key), new EventsWrapper(), ShoppingList.class);
     }
 }

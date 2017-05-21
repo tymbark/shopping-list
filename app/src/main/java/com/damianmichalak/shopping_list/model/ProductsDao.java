@@ -1,7 +1,9 @@
 package com.damianmichalak.shopping_list.model;
 
-import com.damianmichalak.shopping_list.helper.ProductsDatabase;
+import com.damianmichalak.shopping_list.helper.References;
+import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.model.api_models.Product;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.Map;
 
@@ -15,35 +17,35 @@ import rx.Observable;
 public class ProductsDao {
 
     @Nonnull
+    private final Database<Product> methods;
+    @Nonnull
+    private final Observable<DatabaseReference> referenceObservable;
+    @Nonnull
     private final Observable<Map<String, Product>> productsObservable;
-    @Nonnull
-    private final ProductsDatabase productsDatabase;
-    @Nonnull
-    private final Observable<String> currentListKeyObservable;
 
     @Inject
-    public ProductsDao(@Nonnull final ProductsDatabase productsDatabase,
-                       @Nonnull final CurrentListDao dao) {
-        this.productsDatabase = productsDatabase;
+    public ProductsDao(@Nonnull final References references,
+                       @Nonnull final Database<Product> database,
+                       @Nonnull final CurrentListDao currentListDao) {
+        this.methods = database;
 
-        currentListKeyObservable = dao.getCurrentListKeyObservable()
+        referenceObservable = currentListDao.getCurrentListKeyObservable()
                 .filter(uid -> uid != null)
+                .map(references::productsReference)
                 .replay(1)
                 .refCount();
 
-        productsObservable = currentListKeyObservable
-                .switchMap(productsDatabase::products)
+        productsObservable = referenceObservable.switchMap(database::products)
                 .replay(1)
                 .refCount();
-
     }
 
     public Observable<Boolean> addNewItemObservable(final Product product) {
-        return currentListKeyObservable.flatMap(uid -> productsDatabase.put(product, uid));
+        return referenceObservable.switchMap(reference -> methods.put(product, reference));
     }
 
     public Observable<Boolean> removeItemByKeyObservable(final String key) {
-        return currentListKeyObservable.flatMap(uid -> productsDatabase.remove(key, uid));
+        return referenceObservable.switchMap(reference -> methods.remove(key, reference));
     }
 
     @Nonnull

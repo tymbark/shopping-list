@@ -1,7 +1,7 @@
 package com.damianmichalak.shopping_list.model;
 
 
-import com.damianmichalak.shopping_list.helper.Database;
+import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
 import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
@@ -25,21 +25,21 @@ public class CurrentListDao {
     @Nonnull
     private final UserPreferences userPreferences;
     @Nonnull
-    private final Database database;
+    private final References References;
     @Nonnull
     private final PublishSubject<Object> currentListRefreshSubject = PublishSubject.create();
 
     @Inject
     public CurrentListDao(@Nonnull final UserPreferences userPreferences,
-                          @Nonnull final Database database,
+                          @Nonnull final References References,
                           @Nonnull final EventsWrapper wrapper) {
         this.userPreferences = userPreferences;
-        this.database = database;
+        this.References = References;
 
         currentListObservable = currentListRefreshSubject.startWith(((Object) null))
                 .flatMap(o -> Observable.fromCallable(userPreferences::getCurrentList))
                 .filter(uid -> uid != null)
-                .flatMap(uid -> RxUtils.createObservableForReference(database.singleListReference(uid), wrapper, ShoppingList.class))
+                .flatMap(uid -> RxUtils.createObservableForReference(References.singleListReference(uid), wrapper, ShoppingList.class))
                 .replay(1)
                 .refCount();
 

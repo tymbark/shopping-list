@@ -1,6 +1,6 @@
 package com.damianmichalak.shopping_list.model;
 
-import com.damianmichalak.shopping_list.helper.Database;
+import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.EventsWrapper;
 import com.damianmichalak.shopping_list.helper.RxUtils;
 import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
@@ -22,37 +22,37 @@ public class ShoppingListDao {
     @Nonnull
     private final Observable<Map<String, String>> productsObservable;
     @Nonnull
-    private final Database database;
+    private final References References;
 
     @Inject
-    public ShoppingListDao(@Nonnull final Database database,
+    public ShoppingListDao(@Nonnull final References References,
                            @Nonnull final EventsWrapper listEventsWrapper,
                            @Nonnull final EventsWrapper productsEventWrapper,
                            @Nonnull final UserDao userDao) {
-        this.database = database;
+        this.References = References;
 
         shoppingListObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableForReference
-                        (database.DEPRECATEDshoppingListReference(), listEventsWrapper, ShoppingList.class))
+                        (References.DEPRECATEDshoppingListReference(), listEventsWrapper, ShoppingList.class))
                 .replay(1)
                 .refCount();
 
         productsObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
                 .switchMap(o -> RxUtils.createObservableMapForReference
-                        (database.DEPRECATEDproductsReference(), productsEventWrapper, String.class))
+                        (References.DEPRECATEDproductsReference(), productsEventWrapper, String.class))
                 .replay(1)
                 .refCount();
 
     }
 
     public Observable<Object> addNewItemObservable(final String itemName) {
-        return Observable.fromCallable(() -> database.DEPRECATEDproductsReference().push().setValue(itemName));
+        return Observable.fromCallable(() -> References.DEPRECATEDproductsReference().push().setValue(itemName));
     }
 
     public Observable<Object> removeItemByKeyObservable(final String key) {
-        return Observable.fromCallable(() -> database.DEPRECATEDproductsReference().child(key).removeValue());
+        return Observable.fromCallable(() -> References.DEPRECATEDproductsReference().child(key).removeValue());
     }
 
     @Nonnull

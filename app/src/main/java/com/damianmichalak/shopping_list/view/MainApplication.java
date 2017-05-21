@@ -3,11 +3,8 @@ package com.damianmichalak.shopping_list.view;
 import android.app.Application;
 import android.content.Context;
 
-import com.damianmichalak.shopping_list.dagger.DaoComponent;
 import com.damianmichalak.shopping_list.dagger.ForApplication;
 import com.damianmichalak.shopping_list.dagger.NetworkModule;
-import com.damianmichalak.shopping_list.dagger.SchedulersModule;
-import com.damianmichalak.shopping_list.dagger.TokenModule;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;

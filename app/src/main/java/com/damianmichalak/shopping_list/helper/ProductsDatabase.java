@@ -14,20 +14,20 @@ import rx.Observable;
 public class ProductsDatabase {
 
     @Nonnull
-    private final Database database;
+    private final References References;
     @Nonnull
     private final EventsWrapper eventsWrapper;
 
     @Inject
-    ProductsDatabase(@Nonnull Database database,
+    ProductsDatabase(@Nonnull References References,
                      @Nonnull EventsWrapper eventsWrapper) {
-        this.database = database;
+        this.References = References;
         this.eventsWrapper = eventsWrapper;
     }
 
     public Observable<Boolean> put(Product product, String listId) {
         return Observable.fromEmitter(
-                emitter -> database.productsReference(listId)
+                emitter -> References.productsReference(listId)
                         .push()
                         .setValue(product)
                         .addOnCompleteListener(task -> {
@@ -42,7 +42,7 @@ public class ProductsDatabase {
 
     public Observable<Boolean> remove(String key, String listId) {
         return Observable.fromEmitter(
-                emitter -> database
+                emitter -> References
                         .productsReference(listId)
                         .child(key)
                         .removeValue()
@@ -57,7 +57,7 @@ public class ProductsDatabase {
     }
 
     public Observable<Map<String, Product>> products(String listId) {
-        return RxUtils.createObservableMapForReference(database.productsReference(listId), eventsWrapper, Product.class);
+        return RxUtils.createObservableMapForReference(References.productsReference(listId), eventsWrapper, Product.class);
     }
 
 }
