@@ -1,6 +1,7 @@
 package com.damianmichalak.shopping_list.view;
 
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -132,6 +133,11 @@ public class ProductsListFragment extends BaseFragment {
         @Named("AddListClickObservable")
         Observable<Void> provideAddListClickObservable() {
             return RxView.clicks(noListsView).share();
+        }
+
+        @Provides
+        Resources provideResources() {
+            return fragment.getResources();
         }
 
     }

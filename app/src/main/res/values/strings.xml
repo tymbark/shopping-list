@@ -21,6 +21,7 @@
     <!-- Shopping Lists Fragment -->
     <string name="shopping_list_toolbar_title">Your lists</string>
     <string name="shopping_list_empty_text">You dont have any shopping lists yet.\nClick here to add a new one!</string>
+    <string name="shopping_list_date_string">added %1$s</string>
 
     <!-- Products Activity -->
     <string name="add_products_done">done</string>
@@ -46,5 +47,8 @@
     <string name="dialog_positive_button">Done</string>
     <string name="dialog_new_list_hint">New shopping list name</string>
     <string name="dialog_username_hint">No name</string>
+
+    <!-- History -->
+    <string name="history_date_string">bought %1$s</string>
 
 </resources>

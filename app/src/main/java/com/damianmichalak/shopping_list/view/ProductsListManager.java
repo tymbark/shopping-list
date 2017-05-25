@@ -1,7 +1,7 @@
 package com.damianmichalak.shopping_list.view;
 
 
-import android.util.Log;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +22,19 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Action1;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
 public class ProductsListManager implements ViewHolderManager {
 
-    private DateFormat dateFormat = DateFormat.getDateTimeInstance();
+    @Nonnull
+    private final DateFormat dateFormat = DateFormat.getDateTimeInstance();
+    @Nonnull
+    private final Resources resources;
 
     @Inject
-    public ProductsListManager() {
-
+    public ProductsListManager(@Nonnull Resources resources) {
+        this.resources = resources;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class ProductsListManager implements ViewHolderManager {
             final ProductsListPresenter.ShoppingListItemWithKey adapterItem = (ProductsListPresenter.ShoppingListItemWithKey) item;
             final Product product = adapterItem.getProduct();
             itemName.setText(product.getName());
-            itemDate.setText(dateFormat.format(new Date(product.getDateAdded())));
+            itemDate.setText(resources.getString(R.string.shopping_list_date_string, dateFormat.format(new Date(product.getDateAdded()))));
 
             subscription.set(Subscriptions.from(
                     RxView.clicks(done)
