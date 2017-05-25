@@ -7,8 +7,8 @@ import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
-import com.damianmichalak.shopping_list.model.api_models.User;
 import com.damianmichalak.shopping_list.model.UserDao;
+import com.damianmichalak.shopping_list.model.api_models.User;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -72,7 +72,8 @@ public class DrawerFragmentPresenter {
                     } else {
                         return stringResources.getString(R.string.drawer_current_list_empty);
                     }
-                });
+                })
+                .startWith(stringResources.getString(R.string.drawer_current_list_empty));
 
         showChangeUsernameDialogObservable = changeUsernameClickObservable
                 .withLatestFrom(usernameObservable, (v, username) -> username);

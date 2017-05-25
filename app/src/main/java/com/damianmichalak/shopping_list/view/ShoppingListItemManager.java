@@ -43,12 +43,15 @@ public class ShoppingListItemManager implements ViewHolderManager {
         @Nonnull
         private final View remove;
         @Nonnull
+        private final View currentListCheckbox;
+        @Nonnull
         private final SerialSubscription subscription = new SerialSubscription();
 
         public ViewHolder(@Nonnull View itemView) {
             super(itemView);
-            text = (TextView) itemView.findViewById(R.id.drawer_item_text);
-            remove = itemView.findViewById(R.id.drawer_item_remove);
+            text = (TextView) itemView.findViewById(R.id.shopping_list_item_name);
+            remove = itemView.findViewById(R.id.shopping_list_item_remove);
+            currentListCheckbox = itemView.findViewById(R.id.shopping_list_item_current);
         }
 
         @Override
@@ -66,8 +69,8 @@ public class ShoppingListItemManager implements ViewHolderManager {
             subscription.set(Subscriptions.from(
                     RxView.clicks(text)
                             .subscribe(adapterItem.clickObserver()),
-//                    RxView.clicks(remove)
-//                            .subscribe(adapterItem.removeObserver()),
+                    adapterItem.isCurrentList()
+                            .subscribe(RxView.visibility(currentListCheckbox)),
                     RxView.longClicks(text)
                             .subscribe(aVoid -> remove.setVisibility(View.VISIBLE))
             ));

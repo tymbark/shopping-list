@@ -20,6 +20,7 @@
 
     <!-- Shopping Lists Fragment -->
     <string name="shopping_list_toolbar_title">Your lists</string>
+    <string name="shopping_list_current_list">current list</string>
     <string name="shopping_list_empty_text">You dont have any shopping lists yet.\nClick here to add a new one!</string>
     <string name="shopping_list_date_string">added %1$s</string>
 

@@ -29,6 +29,8 @@ public class ShoppingListPresenter {
     @Nonnull
     private final Observable<Boolean> emptyListObservable;
     @Nonnull
+    private final CurrentListDao currentListDao;
+    @Nonnull
     private final Observable<List<BaseAdapterItem>> listObservable;
     @Nonnull
     private final Observable<Object> showNewListDialogObservable;
@@ -44,6 +46,7 @@ public class ShoppingListPresenter {
                           @Nonnull final ListsDao listsDao,
                           @Named("AddListEmptyClickObservable") Observable<Void> addListEmptyClickObservable,
                           @Named("AddListClickObservable") Observable<Void> addListClickObservable) {
+        this.currentListDao = currentListDao;
 
         listObservable = refreshList
                 .startWith((Object) null)
@@ -139,6 +142,12 @@ public class ShoppingListPresenter {
 
         public Observer<Void> clickObserver() {
             return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
+        }
+
+        public Observable<Boolean> isCurrentList() {
+            return currentListDao.getCurrentListKeyObservable()
+                    .map(key::equals)
+                    .startWith(false);
         }
 
         @Override
