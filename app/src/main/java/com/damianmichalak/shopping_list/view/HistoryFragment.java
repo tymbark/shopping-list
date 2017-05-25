@@ -50,6 +50,8 @@ public class HistoryFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.history_toolbar_title));
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.newArrayList(manager));
         recyclerView.setAdapter(adapter);

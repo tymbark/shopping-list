@@ -5,6 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@android:color/white"
+              android:clickable="true"
               android:orientation="vertical">
 
     <LinearLayout
@@ -35,7 +36,7 @@
 
     <TextView
         android:id="@+id/drawer_username"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         tools:text="Damian"/>
@@ -46,7 +47,7 @@
         android:background="@android:color/black"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="0dp"
         android:paddingLeft="16dp"
@@ -58,7 +59,7 @@
 
     <TextView
         android:id="@+id/drawer_current_list_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         tools:text="Shopping list party"/>
@@ -70,7 +71,7 @@
 
     <TextView
         android:id="@+id/drawer_add_new_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/drawer_add_new_list"
@@ -79,7 +80,7 @@
 
     <TextView
         android:id="@+id/drawer_scan_qr"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/drawer_scan_qr_code"

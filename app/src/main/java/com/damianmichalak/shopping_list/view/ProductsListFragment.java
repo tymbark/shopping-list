@@ -62,6 +62,8 @@ public class ProductsListFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.products_toolbar_title));
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final RxUniversalAdapter adapter = new RxUniversalAdapter(Lists.newArrayList(manager));
         recyclerView.setAdapter(adapter);
@@ -77,8 +79,6 @@ public class ProductsListFragment extends BaseFragment {
                         .subscribe(RxView.visibility(noListsView)),
                 presenter.getShowNewListDialogObservable()
                         .subscribe(o -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getNewShoppingListObserver())),
-                presenter.getListNameObservable()
-                        .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name)),
                 presenter.getSubscription()
         ));
 

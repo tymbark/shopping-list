@@ -26,6 +26,7 @@
     <!-- Products Activity -->
     <string name="add_products_done">done</string>
     <string name="products_activity_title">Add products</string>
+    <string name="products_toolbar_title">Products</string>
 
     <!-- Shopping list overflow menu -->
     <string name="shopping_list_share">Share</string>
@@ -50,5 +51,6 @@
 
     <!-- History -->
     <string name="history_date_string">bought %1$s</string>
+    <string name="history_toolbar_title">History</string>
 
 </resources>
