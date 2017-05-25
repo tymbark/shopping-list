@@ -1,11 +1,10 @@
-package com.damianmichalak.shopping_list;
+package com.damianmichalak.shopping_list.model;
 
 
+import com.damianmichalak.shopping_list.Mocks;
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.guava.Maps;
-import com.damianmichalak.shopping_list.model.CurrentListDao;
-import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.api_models.Product;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,6 +21,7 @@ import rx.observers.TestSubscriber;
 import static com.google.common.truth.Truth.assert_;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 public class ProductsDaosTest {
@@ -36,6 +36,8 @@ public class ProductsDaosTest {
     private References references;
     @Mock
     private Database<Product> database;
+    @Mock
+    private HistoryDao historyDao;
 
     @Before
     public void setUp() {
@@ -46,7 +48,7 @@ public class ProductsDaosTest {
     @Test
     public void testWhenAddingNewItem_databaseIsCalled() throws Exception {
         when(database.put(any(Product.class), any(DatabaseReference.class))).thenReturn(Observable.just(true));
-        final ProductsDao dao = new ProductsDao(references, database, currentListDao);
+        final ProductsDao dao = new ProductsDao(references, database, currentListDao, historyDao);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
 
         dao.addNewItemObservable(Mocks.product()).subscribe(subscriber);
@@ -58,10 +60,11 @@ public class ProductsDaosTest {
     @Test
     public void testWhenRemovingItem_databaseIsCalled() throws Exception {
         when(database.remove(anyString(), any(DatabaseReference.class))).thenReturn(Observable.just(true));
-        final ProductsDao dao = new ProductsDao(references, database, currentListDao);
+        when(historyDao.addNewItemObservable(any(Product.class))).thenReturn(Observable.just(true));
+        final ProductsDao dao = new ProductsDao(references, database, currentListDao, historyDao);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
 
-        dao.removeItemByKeyObservable("product_ID").subscribe(subscriber);
+        dao.removeItemByKeyObservable(Mocks.product()).subscribe(subscriber);
 
         assert_().that(subscriber.getOnNextEvents()).hasSize(1);
         assert_().that(subscriber.getOnNextEvents().get(0)).isEqualTo(true);
@@ -70,8 +73,8 @@ public class ProductsDaosTest {
 
     @Test
     public void testWhenGettingItems_databaseIsCalled() throws Exception {
-        when(database.itemsAsMap(any(DatabaseReference.class), Product.class)).thenReturn(Observable.just(Maps.newHashMap()));
-        final ProductsDao dao = new ProductsDao(references, database, currentListDao);
+        when(database.itemsAsMap(any(DatabaseReference.class), eq(Product.class))).thenReturn(Observable.just(Maps.newHashMap()));
+        final ProductsDao dao = new ProductsDao(references, database, currentListDao, historyDao);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
 
         dao.getProductsObservable().subscribe(subscriber);
