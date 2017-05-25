@@ -70,7 +70,7 @@ public class ProductsDaosTest {
 
     @Test
     public void testWhenGettingItems_databaseIsCalled() throws Exception {
-        when(database.itemsAsMap(any(DatabaseReference.class))).thenReturn(Observable.just(Maps.newHashMap()));
+        when(database.itemsAsMap(any(DatabaseReference.class), Product.class)).thenReturn(Observable.just(Maps.newHashMap()));
         final ProductsDao dao = new ProductsDao(references, database, currentListDao);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
 

@@ -12,6 +12,7 @@ import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ public class ProductsListPresenter {
     @Nonnull
     private final Observable<List<BaseAdapterItem>> currentShoppingListObservable;
     @Nonnull
-    private final PublishSubject<String> removeItemSubject = PublishSubject.create();
+    private final PublishSubject<Product> removeItemSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> newShoppingListObserver = PublishSubject.create();
     @Nonnull
@@ -76,13 +77,13 @@ public class ProductsListPresenter {
         ));
     }
 
-    private Func1<Map<String, Product>, List<BaseAdapterItem>> toAdapterItems() {
+    private Func1<List<Product>, List<BaseAdapterItem>> toAdapterItems() {
         return products -> {
             final List<BaseAdapterItem> items = Lists.newArrayList();
 
             if (products != null) {
-                for (String key : products.keySet()) {
-                    items.add(new ShoppingListItemWithKey(key, products.get(key)));
+                for (Product product : products) {
+                    items.add(new ShoppingListItemWithKey(product));
                 }
             }
 
@@ -133,22 +134,14 @@ public class ProductsListPresenter {
     public class ShoppingListItemWithKey implements BaseAdapterItem {
 
         @Nonnull
-        private final String id;
-        @Nonnull
         private final Product product;
-
-        @Nonnull
-        public String getId() {
-            return id;
-        }
 
         @Nonnull
         public Product getProduct() {
             return product;
         }
 
-        public ShoppingListItemWithKey(@Nonnull String id, @Nonnull Product product) {
-            this.id = id;
+        public ShoppingListItemWithKey(@Nonnull Product product) {
             this.product = product;
         }
 
@@ -157,13 +150,12 @@ public class ProductsListPresenter {
             if (this == o) return true;
             if (!(o instanceof ShoppingListItemWithKey)) return false;
             ShoppingListItemWithKey that = (ShoppingListItemWithKey) o;
-            return Objects.equal(id, that.id) &&
-                    Objects.equal(product, that.product);
+            return Objects.equal(product, that.product);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(id, product);
+            return Objects.hashCode(product);
         }
 
         @Override
@@ -173,7 +165,7 @@ public class ProductsListPresenter {
 
         @Override
         public boolean matches(@Nonnull BaseAdapterItem item) {
-            return item instanceof ShoppingListItemWithKey && ((ShoppingListItemWithKey) item).id.equals(id);
+            return item instanceof ShoppingListItemWithKey && ((ShoppingListItemWithKey) item).product.getId().equals(product.getId());
         }
 
         @Override
@@ -182,7 +174,7 @@ public class ProductsListPresenter {
         }
 
         public Observer<Object> removeItem() {
-            return Observers.create(o -> removeItemSubject.onNext(id));
+            return Observers.create(o -> removeItemSubject.onNext(product));
         }
     }
 

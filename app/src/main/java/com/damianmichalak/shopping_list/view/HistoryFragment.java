@@ -2,6 +2,7 @@ package com.damianmichalak.shopping_list.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +12,16 @@ import com.damianmichalak.shopping_list.model.UserDao;
 
 import javax.inject.Inject;
 
-@Deprecated
+import butterknife.BindView;
+
 public class HistoryFragment extends BaseFragment {
+
+    @BindView(R.id.history_list_recycler_view)
+    RecyclerView recyclerView;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
     }
-
-    @Inject
-    UserDao userDao;
 
     @Nullable
     @Override
@@ -30,41 +32,6 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        view.findViewById(R.id.add_list)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-
-        view.findViewById(R.id.obj_save)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
-
-        view.findViewById(R.id.user_test)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
-
-//        FirebaseDatabase.getInstance().getReference("shopping_lists/0").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
 
     }
 

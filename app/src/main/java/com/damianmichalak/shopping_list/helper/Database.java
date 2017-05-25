@@ -8,7 +8,6 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import rx.AsyncEmitter;
@@ -17,11 +16,10 @@ import rx.functions.Action1;
 
 public class Database<T> {
 
-    private final EventsWrapper eventsWrapper;
+    private final EventsWrapper mapEventsWrapper = new EventsWrapper();
 
     @Inject
-    public Database(@Nonnull final EventsWrapper eventsWrapper) {
-        this.eventsWrapper = eventsWrapper;
+    public Database() {
     }
 
     public Observable<Boolean> put(T obj, DatabaseReference reference) {
@@ -54,13 +52,30 @@ public class Database<T> {
                 AsyncEmitter.BackpressureMode.LATEST);
     }
 
-    public Observable<T> get(String key, String path) {
-        return Observable.never();
+    public Observable<T> get(String key, DatabaseReference reference, Class<T> type) {
+        final EventsWrapper singleEventsWrapper = new EventsWrapper();
+        return Observable.fromEmitter((Action1<AsyncEmitter<T>>) emitter -> {
+            singleEventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final T object = dataSnapshot.getValue(type);
+                    emitter.onNext(object);
+                    emitter.onCompleted();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    emitter.onError(new Throwable(databaseError.getMessage()));
+                }
+            });
+            reference.child(key).addValueEventListener(singleEventsWrapper.getFirebaseListener());
+        }, AsyncEmitter.BackpressureMode.LATEST)
+                .doOnUnsubscribe(() -> reference.child(key).removeEventListener(singleEventsWrapper.getFirebaseListener()));
     }
 
     public Observable<Map<String, T>> itemsAsMap(DatabaseReference reference, Class<T> type) {
         return Observable.fromEmitter((Action1<AsyncEmitter<Map<String, T>>>) emitter -> {
-            eventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
+            mapEventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     final LinkedHashMap<String, T> output = new LinkedHashMap<>();
@@ -73,12 +88,13 @@ public class Database<T> {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+                    reference.removeEventListener(mapEventsWrapper.getFirebaseListener());
                     emitter.onError(new Throwable(databaseError.getMessage()));
                 }
             });
-            reference.addValueEventListener(eventsWrapper.getFirebaseListener());
+            reference.addValueEventListener(mapEventsWrapper.getFirebaseListener());
         }, AsyncEmitter.BackpressureMode.LATEST)
-                .doOnUnsubscribe(() -> reference.removeEventListener(eventsWrapper.getFirebaseListener()));
+                .doOnUnsubscribe(() -> reference.removeEventListener(mapEventsWrapper.getFirebaseListener()));
     }
 
 }

@@ -67,6 +67,10 @@ public class References {
         return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID + "/products");
     }
 
+    public DatabaseReference historyReference(String listUID) {
+        return firebaseDatabase.getReference(DB_SHOPPING_LIST + listUID + "/history");
+    }
+
     public DatabaseReference rootReference() {
         return firebaseDatabase.getReference();
     }
