@@ -76,7 +76,7 @@ public class AddProductsPresenter {
                 Observable.merge(addClick, clickItemSubject)
                         .filter(name -> !name.isEmpty())
                         .doOnNext(userPreferences::addSuggestedProduct)
-                        .map(name -> new Product(name, "", System.currentTimeMillis(), 0))
+                        .map(name -> new Product(name, System.currentTimeMillis(), 0))
                         .flatMap(input -> dao.addNewItemObservable(input)
                                 .filter(bool -> bool) // todo add error 
                                 .map(o -> input))

@@ -33,7 +33,7 @@ public class ProductsListFragment extends BaseFragment {
     @Inject
     ProductsListPresenter presenter;
     @Inject
-    ShoppingListManagerSecond manager;
+    ShoppingListProductsManager manager;
 
     @BindView(R.id.products_list_recycler_view)
     RecyclerView recyclerView;

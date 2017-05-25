@@ -7,14 +7,16 @@ import javax.annotation.Nonnull;
 public class ShoppingList {
 
     @Nonnull
-    @PropertyName("created_at")
-    private long createdAt;
-
+    @PropertyName("date_created")
+    private long dateCreated;
     @Nonnull
     private String name;
+    @Nonnull
+    private String id;
 
-    public long getCreatedAt() {
-        return createdAt;
+    @Nonnull
+    public long getDateCreated() {
+        return dateCreated;
     }
 
     public String getName() {

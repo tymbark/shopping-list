@@ -21,10 +21,18 @@
             android:id="@+id/shopping_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             tools:text="Bread"/>
+
+        <TextView
+            android:id="@+id/shopping_item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:textColor="@color/shopping_item_product_date_color"
+            android:textSize="12sp"
+            tools:text="added today at 18:20"/>
 
     </LinearLayout>
 

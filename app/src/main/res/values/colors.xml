@@ -8,4 +8,6 @@
     <color name="frame_color_products">#3c3c3c</color>
     <color name="button_next_color">#bb9157</color>
 
+    <color name="shopping_item_product_date_color">#6a6a6a</color>
+
 </resources>

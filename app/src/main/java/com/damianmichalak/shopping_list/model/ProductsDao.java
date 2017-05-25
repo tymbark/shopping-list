@@ -1,7 +1,7 @@
 package com.damianmichalak.shopping_list.model;
 
-import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.Database;
+import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.model.api_models.Product;
 import com.google.firebase.database.DatabaseReference;
 
@@ -35,7 +35,7 @@ public class ProductsDao {
                 .replay(1)
                 .refCount();
 
-        productsObservable = referenceObservable.switchMap(database::products)
+        productsObservable = referenceObservable.switchMap(reference -> database.itemsAsMap(reference, Product.class))
                 .replay(1)
                 .refCount();
     }

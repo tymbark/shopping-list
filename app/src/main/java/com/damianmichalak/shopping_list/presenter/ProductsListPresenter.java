@@ -82,7 +82,7 @@ public class ProductsListPresenter {
 
             if (products != null) {
                 for (String key : products.keySet()) {
-                    items.add(new ShoppingListItemWithKey(key, products.get(key).getName()));
+                    items.add(new ShoppingListItemWithKey(key, products.get(key)));
                 }
             }
 
@@ -130,69 +130,26 @@ public class ProductsListPresenter {
         return newShoppingListObserver;
     }
 
-    public class ShoppingListItem implements BaseAdapterItem {
-
-        @Nonnull
-        private final String product;
-
-        public ShoppingListItem(@Nonnull String product) {
-            this.product = product;
-        }
-
-        @Nonnull
-        public String getProduct() {
-            return product;
-        }
-
-        @Override
-        public long adapterId() {
-            return 0;
-        }
-
-        @Override
-        public boolean matches(@Nonnull BaseAdapterItem item) {
-            return item instanceof ShoppingListItem;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof ShoppingListItem)) return false;
-            ShoppingListItem that = (ShoppingListItem) o;
-            return Objects.equal(product, that.product);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(product);
-        }
-
-        @Override
-        public boolean same(@Nonnull BaseAdapterItem item) {
-            return equals(item);
-        }
-    }
-
     public class ShoppingListItemWithKey implements BaseAdapterItem {
 
         @Nonnull
         private final String id;
         @Nonnull
-        private final String name;
+        private final Product product;
 
         @Nonnull
         public String getId() {
-            return name;
+            return id;
         }
 
         @Nonnull
-        public String getName() {
-            return name;
+        public Product getProduct() {
+            return product;
         }
 
-        public ShoppingListItemWithKey(@Nonnull String id, @Nonnull String name) {
+        public ShoppingListItemWithKey(@Nonnull String id, @Nonnull Product product) {
             this.id = id;
-            this.name = name;
+            this.product = product;
         }
 
         @Override
@@ -201,12 +158,12 @@ public class ProductsListPresenter {
             if (!(o instanceof ShoppingListItemWithKey)) return false;
             ShoppingListItemWithKey that = (ShoppingListItemWithKey) o;
             return Objects.equal(id, that.id) &&
-                    Objects.equal(name, that.name);
+                    Objects.equal(product, that.product);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(id, name);
+            return Objects.hashCode(id, product);
         }
 
         @Override
@@ -216,12 +173,12 @@ public class ProductsListPresenter {
 
         @Override
         public boolean matches(@Nonnull BaseAdapterItem item) {
-            return this.equals(item);
+            return item instanceof ShoppingListItemWithKey && ((ShoppingListItemWithKey) item).id.equals(id);
         }
 
         @Override
         public boolean same(@Nonnull BaseAdapterItem item) {
-            return this.equals(item);
+            return equals(item);
         }
 
         public Observer<Object> removeItem() {

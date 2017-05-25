@@ -7,6 +7,6 @@ import java.util.Random;
 public class Mocks {
 
     public static Product product() {
-        return new Product("ID" + new Random().nextInt(10), "info", System.currentTimeMillis(), 0);
+        return new Product("ID" + new Random().nextInt(10), System.currentTimeMillis(), 0);
     }
 }
