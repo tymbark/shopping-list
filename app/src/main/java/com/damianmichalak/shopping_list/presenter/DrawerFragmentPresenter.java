@@ -35,8 +35,6 @@ public class DrawerFragmentPresenter {
     @Nonnull
     private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
     @Nonnull
-    private final PublishSubject<String> removeListClickSubject = PublishSubject.create();
-    @Nonnull
     private final UserDao userDao;
     @Nonnull
     private final Observable<String> showChangeUsernameDialogObservable;
@@ -44,8 +42,6 @@ public class DrawerFragmentPresenter {
     private final Observable<String> usernameObservable;
     @Nonnull
     private final Observable<String> currentListNameObservable;
-    @Nonnull
-    private final Observable<List<BaseAdapterItem>> listObservable;
 
     @Inject
     public DrawerFragmentPresenter(@Nonnull final ListsDao listsDao,
@@ -54,9 +50,6 @@ public class DrawerFragmentPresenter {
                                    @Nonnull StringResources stringResources,
                                    @Nonnull @Named("changeUsernameClickObservable") final Observable<Void> changeUsernameClickObservable) {
         this.userDao = userDao;
-
-        listObservable = listsDao.getAvailableListsObservable()
-                .map(toAdapterItems());
 
         usernameObservable = userDao
                 .getUserObservable()
@@ -82,25 +75,11 @@ public class DrawerFragmentPresenter {
                 addNewListClickSubject
                         .flatMap(listsDao::addNewListObservable)
                         .subscribe(),
-                removeListClickSubject
-                        .flatMap(listsDao::removeListObservable)
-                        .subscribe(),
                 setCurrentListSubject
                         .subscribe(currentListDao.saveCurrentListIdObserver())
         ));
     }
 
-    private Func1<Map<String, String>, List<BaseAdapterItem>> toAdapterItems() {
-        return shoppingList -> {
-            final List<BaseAdapterItem> output = Lists.newArrayList();
-
-            for (String key : shoppingList.keySet()) {
-                output.add(new ShoppingListItem(shoppingList.get(key), key));
-            }
-
-            return output;
-        };
-    }
 
     @Nonnull
     public Observable<String> getCurrentListNameObservable() {
@@ -123,11 +102,6 @@ public class DrawerFragmentPresenter {
     }
 
     @Nonnull
-    public Observable<List<BaseAdapterItem>> getListObservable() {
-        return listObservable;
-    }
-
-    @Nonnull
     public Observer<String> getAddNewListClickSubject() {
         return addNewListClickSubject;
     }
@@ -135,62 +109,6 @@ public class DrawerFragmentPresenter {
     @Nonnull
     public SerialSubscription getSubscription() {
         return subscription;
-    }
-
-    public class ShoppingListItem implements BaseAdapterItem {
-
-        private final String name;
-        private final String key;
-
-        public ShoppingListItem(String name, String key) {
-            this.name = name;
-            this.key = key;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        @Override
-        public long adapterId() {
-            return 0;
-        }
-
-        @Override
-        public boolean matches(@Nonnull BaseAdapterItem item) {
-            return item instanceof ShoppingListItem;
-        }
-
-        @Override
-        public boolean same(@Nonnull BaseAdapterItem item) {
-            return false;
-        }
-
-        public Observer<Void> clickObserver() {
-            return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
-        }
-
-        public Observer<Void> removeObserver() {
-            return Observers.create(aVoid -> removeListClickSubject.onNext(key));
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof ShoppingListItem)) return false;
-            ShoppingListItem that = (ShoppingListItem) o;
-            return Objects.equal(name, that.name) &&
-                    Objects.equal(key, that.key);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(name, key);
-        }
     }
 
 }

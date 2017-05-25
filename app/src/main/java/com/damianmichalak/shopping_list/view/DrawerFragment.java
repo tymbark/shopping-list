@@ -41,8 +41,6 @@ public class DrawerFragment extends BaseFragment {
 
     @Inject
     DrawerFragmentPresenter presenter;
-    @Inject
-    DrawerItemManager manager;
 
     @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();

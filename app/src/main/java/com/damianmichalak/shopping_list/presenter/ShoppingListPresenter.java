@@ -40,6 +40,8 @@ public class ShoppingListPresenter {
     private final PublishSubject<String> setCurrentListSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<String> removeListClickSubject = PublishSubject.create();
 
     @Inject
     ShoppingListPresenter(@Nonnull final CurrentListDao currentListDao,
@@ -63,6 +65,9 @@ public class ShoppingListPresenter {
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
                         .flatMap(listsDao::addNewListObservable)
+                        .subscribe(),
+                removeListClickSubject
+                        .flatMap(listsDao::removeListObservable)
                         .subscribe(),
                 setCurrentListSubject
                         .subscribe(currentListDao.saveCurrentListIdObserver())
@@ -132,7 +137,7 @@ public class ShoppingListPresenter {
 
         @Override
         public boolean matches(@Nonnull BaseAdapterItem item) {
-            return item instanceof DrawerFragmentPresenter.ShoppingListItem;
+            return item instanceof ShoppingListPresenter.ShoppingListItem && ((ShoppingListItem) item).key.equals(key);
         }
 
         @Override
@@ -142,6 +147,9 @@ public class ShoppingListPresenter {
 
         public Observer<Void> clickObserver() {
             return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
+        }
+        public Observer<Void> removeObserver() {
+            return Observers.create(aVoid -> removeListClickSubject.onNext(key));
         }
 
         public Observable<Boolean> isCurrentList() {

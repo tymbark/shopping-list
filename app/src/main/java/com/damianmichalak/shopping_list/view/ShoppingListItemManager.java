@@ -69,6 +69,8 @@ public class ShoppingListItemManager implements ViewHolderManager {
             subscription.set(Subscriptions.from(
                     RxView.clicks(text)
                             .subscribe(adapterItem.clickObserver()),
+                    RxView.clicks(remove)
+                            .subscribe(adapterItem.removeObserver()),
                     adapterItem.isCurrentList()
                             .subscribe(RxView.visibility(currentListCheckbox)),
                     RxView.longClicks(text)
