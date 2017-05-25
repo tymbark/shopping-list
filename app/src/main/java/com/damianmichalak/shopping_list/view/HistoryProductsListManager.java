@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.model.api_models.Product;
-import com.damianmichalak.shopping_list.presenter.ProductsListPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jakewharton.rxbinding.view.RxView;
@@ -24,27 +23,27 @@ import butterknife.ButterKnife;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
-public class ShoppingListProductsManager implements ViewHolderManager {
+public class HistoryProductsListManager implements ViewHolderManager {
 
     private DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
     @Inject
-    public ShoppingListProductsManager() {
+    public HistoryProductsListManager() {
 
     }
 
     @Override
     public boolean matches(@Nonnull BaseAdapterItem baseAdapterItem) {
-        return baseAdapterItem instanceof ProductsListPresenter.ShoppingListItemWithKey;
+        return baseAdapterItem instanceof HistoryPresenter.HistoryItem;
     }
 
     @Nonnull
     @Override
     public BaseViewHolder createViewHolder(@Nonnull ViewGroup parent, @Nonnull LayoutInflater inflater) {
-        return new ShoppingViewHolder(inflater.inflate(R.layout.list_item_shopping, parent, false));
+        return new HistoryViewHolder(inflater.inflate(R.layout.list_item_shopping, parent, false));
     }
 
-    class ShoppingViewHolder extends BaseViewHolder {
+    class HistoryViewHolder extends BaseViewHolder {
 
         @BindView(R.id.shopping_item_name)
         TextView itemName;
@@ -56,7 +55,7 @@ public class ShoppingListProductsManager implements ViewHolderManager {
         @Nonnull
         private final SerialSubscription subscription = new SerialSubscription();
 
-        public ShoppingViewHolder(@Nonnull View itemView) {
+        public HistoryViewHolder(@Nonnull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -69,7 +68,7 @@ public class ShoppingListProductsManager implements ViewHolderManager {
 
         @Override
         public void bind(@Nonnull BaseAdapterItem item) {
-            final ProductsListPresenter.ShoppingListItemWithKey adapterItem = (ProductsListPresenter.ShoppingListItemWithKey) item;
+            final HistoryPresenter.HistoryItem adapterItem = (HistoryPresenter.HistoryItem) item;
             final Product product = adapterItem.getProduct();
             itemName.setText(product.getName());
             itemDate.setText(dateFormat.format(new Date(product.getDateAdded())));

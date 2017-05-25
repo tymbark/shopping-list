@@ -6,6 +6,7 @@ import android.content.Context;
 import com.damianmichalak.shopping_list.dagger.ForApplication;
 import com.damianmichalak.shopping_list.dagger.NetworkModule;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
+import com.damianmichalak.shopping_list.model.HistoryDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.ShoppingListDao;
@@ -47,7 +48,7 @@ public class MainApplication extends Application {
 
         UserPreferences UserPreferences();
 
-        ShoppingListDao shoppingListDao();
+        HistoryDao historyDao();
 
         CurrentListDao currentListDao();
 

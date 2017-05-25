@@ -49,7 +49,7 @@ public class AddProductsActivity extends BaseActivity {
     @Inject
     AddProductsPresenter presenter;
     @Inject
-    ProductsListManager manager;
+    AddProductsManager manager;
 
     private final SerialSubscription subscription = new SerialSubscription();
 
