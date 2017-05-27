@@ -74,7 +74,9 @@ public class ShoppingListItemManager implements ViewHolderManager {
                     adapterItem.isCurrentList()
                             .subscribe(RxView.visibility(currentListCheckbox)),
                     RxView.longClicks(text)
-                            .subscribe(aVoid -> remove.setVisibility(View.VISIBLE))
+                            .subscribe(adapterItem.longClickObserver()),
+                    adapterItem.removeAllowedObservable()
+                            .subscribe(RxView.visibility(remove))
             ));
 
         }

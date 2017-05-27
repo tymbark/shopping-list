@@ -16,7 +16,9 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
+import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
@@ -36,6 +38,8 @@ public class ShoppingListPresenter {
     private final Observable<Object> showNewListDialogObservable;
     @Nonnull
     private final PublishSubject<Object> refreshList = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<String> allowedToRemoveSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> setCurrentListSubject = PublishSubject.create();
     @Nonnull
@@ -64,11 +68,9 @@ public class ShoppingListPresenter {
 
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
-                        .flatMap(listsDao::addNewListObservable)
-                        .subscribe(),
+                        .subscribe(listsDao::addNewListObservable),
                 removeListClickSubject
-                        .flatMap(listsDao::removeListObservable)
-                        .subscribe(),
+                        .subscribe(listsDao::removeListObservable),
                 setCurrentListSubject
                         .subscribe(currentListDao.saveCurrentListIdObserver())
         ));
@@ -148,8 +150,20 @@ public class ShoppingListPresenter {
         public Observer<Void> clickObserver() {
             return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
         }
+
         public Observer<Void> removeObserver() {
             return Observers.create(aVoid -> removeListClickSubject.onNext(key));
+        }
+
+        public Observer<Void> longClickObserver() {
+            return Observers.create(aVoid -> allowedToRemoveSubject.onNext(key));
+        }
+
+        public Observable<Boolean> removeAllowedObservable() {
+            return allowedToRemoveSubject
+                    .map(allowedToRemoveId -> allowedToRemoveId.equals(key))
+                    .withLatestFrom(isCurrentList(), (isLongClicked, isCurrentList)
+                            -> isLongClicked && !isCurrentList);
         }
 
         public Observable<Boolean> isCurrentList() {
