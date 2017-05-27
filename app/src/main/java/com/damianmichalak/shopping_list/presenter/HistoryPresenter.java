@@ -1,4 +1,4 @@
-package com.damianmichalak.shopping_list.view;
+package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
@@ -23,6 +23,8 @@ public class HistoryPresenter {
     @Nonnull
     private final Observable<List<BaseAdapterItem>> historyProductsForCurrentList;
     @Nonnull
+    private final Observable<Boolean> historyEmptyObservable;
+    @Nonnull
     private final PublishSubject<Product> removeItemSubject = PublishSubject.create();
     @Nonnull
     private final HistoryDao historyDao;
@@ -31,8 +33,14 @@ public class HistoryPresenter {
     public HistoryPresenter(@Nonnull final HistoryDao historyDao) {
 
         this.historyDao = historyDao;
-        historyProductsForCurrentList = historyDao.getProductsObservable().
-                map(toAdapterItems());
+        historyProductsForCurrentList = historyDao.getProductsObservable()
+                .map(toAdapterItems())
+                .replay(1)
+                .refCount();
+
+        historyEmptyObservable = historyProductsForCurrentList
+                .map(List::isEmpty);
+
     }
 
     private Func1<Map<String, Product>, List<BaseAdapterItem>> toAdapterItems() {
@@ -45,6 +53,11 @@ public class HistoryPresenter {
 
             return items;
         };
+    }
+
+    @Nonnull
+    public Observable<Boolean> getHistoryEmptyObservable() {
+        return historyEmptyObservable;
     }
 
     @Nonnull

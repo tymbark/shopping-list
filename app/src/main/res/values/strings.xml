@@ -53,5 +53,6 @@
     <!-- History -->
     <string name="history_date_string">bought %1$s</string>
     <string name="history_toolbar_title">History</string>
+    <string name="history_empty_text">This list has no history</string>
 
 </resources>

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.model.api_models.Product;
+import com.damianmichalak.shopping_list.presenter.HistoryPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 

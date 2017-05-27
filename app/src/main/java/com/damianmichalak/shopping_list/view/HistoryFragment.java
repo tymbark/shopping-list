@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.FragmentScope;
 import com.damianmichalak.shopping_list.helper.guava.Lists;
+import com.damianmichalak.shopping_list.presenter.HistoryPresenter;
 import com.jacekmarchwicki.universaladapter.rx.RxUniversalAdapter;
+import com.jakewharton.rxbinding.view.RxView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,6 +29,8 @@ public class HistoryFragment extends BaseFragment {
 
     @BindView(R.id.history_list_recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.history_empty_view)
+    View emptyView;
 
     @Inject
     HistoryPresenter presenter;
@@ -58,7 +62,9 @@ public class HistoryFragment extends BaseFragment {
 
         subscription.set(Subscriptions.from(
                 presenter.getHistoryProductsForCurrentList()
-                        .subscribe(adapter)
+                        .subscribe(adapter),
+                presenter.getHistoryEmptyObservable()
+                        .subscribe(RxView.visibility(emptyView))
         ));
 
     }
