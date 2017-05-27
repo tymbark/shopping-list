@@ -9,7 +9,6 @@ import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.HistoryDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;
-import com.damianmichalak.shopping_list.model.ShoppingListDao;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
 
