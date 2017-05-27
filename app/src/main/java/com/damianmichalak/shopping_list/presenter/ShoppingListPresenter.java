@@ -16,9 +16,7 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
@@ -68,9 +66,11 @@ public class ShoppingListPresenter {
 
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
-                        .subscribe(listsDao::addNewListObservable),
+                        .flatMap(listsDao::addNewListObservable)
+                        .subscribe(),
                 removeListClickSubject
-                        .subscribe(listsDao::removeListObservable),
+                        .flatMap(listsDao::removeListObservable)
+                        .subscribe(),
                 setCurrentListSubject
                         .subscribe(currentListDao.saveCurrentListIdObserver())
         ));

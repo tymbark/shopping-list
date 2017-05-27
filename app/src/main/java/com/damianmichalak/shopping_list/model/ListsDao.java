@@ -1,8 +1,7 @@
 package com.damianmichalak.shopping_list.model;
 
+import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.References;
-import com.damianmichalak.shopping_list.helper.EventsWrapper;
-import com.damianmichalak.shopping_list.helper.RxUtils;
 import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 import com.google.firebase.database.DatabaseReference;
 
@@ -13,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
+import rx.functions.Action1;
 
 @Singleton
 public class ListsDao {
@@ -22,23 +22,34 @@ public class ListsDao {
     @Nonnull
     private final References references;
     @Nonnull
-    private final EventsWrapper singleListEW;
+    private final Database<ShoppingList> shoppingListDB;
 
     @Inject
     public ListsDao(@Nonnull final References references,
-                    @Nonnull final EventsWrapper singleListEW,
-                    @Nonnull final EventsWrapper availableListsEW,
+                    @Nonnull final Database<ShoppingList> shoppingListDB,
+                    @Nonnull final Database<String> listsIdsDB,
+                    @Nonnull final CurrentListDao currentListDao,
                     @Nonnull final UserDao userDao) {
         this.references = references;
-        this.singleListEW = singleListEW;
+        this.shoppingListDB = shoppingListDB;
 
         availableListsObservable = userDao.getUidObservable()
                 .filter(uid -> uid != null)
-                .switchMap(o -> RxUtils.createObservableMapForReference(
-                        references.userListsReference(), availableListsEW, String.class))
+                .switchMap(o -> listsIdsDB.itemsAsMap(references.userListsReference(), String.class))
+                .doOnNext(setAsCurrentIfThereIsOnlyOneItem(currentListDao))
                 .replay(1)
                 .refCount();
 
+    }
+
+    @Nonnull
+    private Action1<Map<String, String>> setAsCurrentIfThereIsOnlyOneItem(@Nonnull CurrentListDao currentListDao) {
+        return stringStringMap -> {
+            if (stringStringMap.size() == 1) {
+                final String key = stringStringMap.keySet().iterator().next();
+                currentListDao.saveCurrentListIdObserver().onNext(key);
+            }
+        };
     }
 
     @Nonnull
@@ -72,6 +83,6 @@ public class ListsDao {
 
     @Nonnull
     public Observable<ShoppingList> getObservableForSingleList(String key) {
-        return RxUtils.createObservableForReference(references.singleListReference(key), new EventsWrapper(), ShoppingList.class);
+        return shoppingListDB.get(key, references.allListsReference(), ShoppingList.class);
     }
 }
