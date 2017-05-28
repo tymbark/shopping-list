@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.helper.DateHelper;
 import com.damianmichalak.shopping_list.model.api_models.Product;
 import com.damianmichalak.shopping_list.presenter.ProductsListPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
 import com.jakewharton.rxbinding.view.RxView;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -28,13 +26,14 @@ import rx.subscriptions.Subscriptions;
 public class ProductsListManager implements ViewHolderManager {
 
     @Nonnull
-    private final DateFormat dateFormat = DateFormat.getDateTimeInstance();
-    @Nonnull
     private final Resources resources;
+    @Nonnull
+    private final DateHelper dateHelper;
 
     @Inject
-    public ProductsListManager(@Nonnull Resources resources) {
+    public ProductsListManager(@Nonnull Resources resources, @Nonnull DateHelper dateHelper) {
         this.resources = resources;
+        this.dateHelper = dateHelper;
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ProductsListManager implements ViewHolderManager {
             final ProductsListPresenter.ShoppingListItemWithKey adapterItem = (ProductsListPresenter.ShoppingListItemWithKey) item;
             final Product product = adapterItem.getProduct();
             itemName.setText(product.getName());
-            itemDate.setText(resources.getString(R.string.shopping_list_date_string, dateFormat.format(new Date(product.getDateAdded()))));
+            itemDate.setText(resources.getString(R.string.shopping_list_date_string, dateHelper.getDateForTimestamp(product.getDateAdded())));
 
             subscription.set(Subscriptions.from(
                     RxView.clicks(done)

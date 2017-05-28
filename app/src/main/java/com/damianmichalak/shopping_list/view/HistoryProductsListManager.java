@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
+import com.damianmichalak.shopping_list.helper.DateHelper;
 import com.damianmichalak.shopping_list.model.api_models.Product;
 import com.damianmichalak.shopping_list.presenter.HistoryPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,13 +25,14 @@ import rx.subscriptions.Subscriptions;
 public class HistoryProductsListManager implements ViewHolderManager {
 
     @Nonnull
-    private final DateFormat dateFormat = DateFormat.getDateTimeInstance();
-    @Nonnull
     private final Resources resources;
+    @Nonnull
+    private final DateHelper dateHelper;
 
     @Inject
-    public HistoryProductsListManager(@Nonnull Resources resources) {
+    public HistoryProductsListManager(@Nonnull Resources resources, @Nonnull DateHelper dateHelper) {
         this.resources = resources;
+        this.dateHelper = dateHelper;
     }
 
     @Override
@@ -73,7 +72,7 @@ public class HistoryProductsListManager implements ViewHolderManager {
             final HistoryPresenter.HistoryItem adapterItem = (HistoryPresenter.HistoryItem) item;
             final Product product = adapterItem.getProduct();
             itemName.setText(product.getName());
-            itemDate.setText(resources.getString(R.string.history_date_string, dateFormat.format(new Date(product.getDateAdded()))));
+            itemDate.setText(resources.getString(R.string.history_date_string, dateHelper.getDateForTimestamp(product.getDatePurchased())));
 
             subscription.set(Subscriptions.from(
             ));

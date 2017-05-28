@@ -55,4 +55,7 @@
     <string name="history_toolbar_title">History</string>
     <string name="history_empty_text">This list has no history</string>
 
+    <!-- Dates -->
+    <string name="date_today">"today, "</string>
+
 </resources>
