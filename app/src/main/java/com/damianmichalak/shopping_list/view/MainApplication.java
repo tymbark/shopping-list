@@ -12,9 +12,11 @@ import com.damianmichalak.shopping_list.model.ProductsDao;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Provides;
+import rx.Scheduler;
 
 public class MainApplication extends Application {
 
@@ -26,6 +28,7 @@ public class MainApplication extends Application {
         applicationComponent = DaggerMainApplication_ApplicationComponent
                 .builder()
                 .mainApplicationModule(new MainApplicationModule(this))
+                .networkModule(new NetworkModule())
                 .build();
 
     }
@@ -56,6 +59,12 @@ public class MainApplication extends Application {
         ListsDao listDao();
 
         UserDao userDao();
+
+        @Named("UI") // todo add annotations
+        Scheduler scheduler();
+
+//        @Named("IO")
+//        Scheduler scheduler();
 
     }
 

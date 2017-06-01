@@ -49,6 +49,9 @@ public class UserDao {
 
     }
 
+    /**
+     * This can emit null if not logged in yet
+     */
     @Nonnull
     public Observable<String> getUidObservable() {
         return uidObservable;

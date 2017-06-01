@@ -1,5 +1,6 @@
 package com.damianmichalak.shopping_list.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.helper.AuthHelper;
-import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.presenter.MainActivityPresenter;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -38,8 +38,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
     @Inject
     MainActivityPresenter presenter;
-    @Inject
-    AuthHelper authHelper;
 
     @BindView(R.id.main_root_view)
     View rootView;
@@ -52,12 +50,17 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     private final SerialSubscription subscription = new SerialSubscription();
     private ActionBar supportActionBar;
 
+
+    @Nonnull
+    public static Intent newIntent(Context context) {
+        return new Intent(context, MainActivity.class);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initDagger();
-        authHelper.onCreate();
 
         ButterKnife.bind(this);
 
@@ -73,8 +76,11 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                         .subscribe(o -> Snackbar.make(rootView, R.string.main_activity_list_dont_exist_after_qr, Snackbar.LENGTH_LONG).show()),
                 presenter.getQrCodeListSuccess()
                         .subscribe(s -> Snackbar.make(rootView, getString(R.string.main_activity_list_added_qr, s), Snackbar.LENGTH_LONG).show()),
-                presenter.getEmptyUserNameObservable()
-                        .subscribe(o -> DialogHelper.showUserNameInputDialog(MainActivity.this, presenter.getNewUserNameSubject(), null)),
+                presenter.getShowWelcomeScreenObservable()
+                        .subscribe(o -> {
+                            finish();
+                            startActivity(WelcomeActivity.newIntent(MainActivity.this));
+                        }),
                 presenter.getSubscription()
         ));
 
@@ -158,19 +164,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        authHelper.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        authHelper.onStop();
     }
 
     @Override

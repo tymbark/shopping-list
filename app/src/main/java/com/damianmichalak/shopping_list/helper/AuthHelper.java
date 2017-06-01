@@ -1,12 +1,16 @@
 package com.damianmichalak.shopping_list.helper;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 public class AuthHelper {
@@ -15,6 +19,8 @@ public class AuthHelper {
     private final FirebaseAuth.AuthStateListener mAuthListener;
     @Nonnull
     private final FirebaseAuth mAuth;
+    @Nullable
+    private Context context;
 
     @Inject
     public AuthHelper(@Nonnull final UserDao userDao) {
@@ -35,27 +41,28 @@ public class AuthHelper {
     }
 
     public void onStop() {
+        context = null;
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
-    public void onStart() {
+    public void onStart(Context context) {
+        this.context = context;
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     public void onCreate() {
         mAuth.signInAnonymously()
+                .addOnFailureListener(e -> {
+                    if (context != null)
+                        Toast.makeText(context, R.string.welcome_cannot_login, Toast.LENGTH_LONG).show();
+                })
                 .addOnCompleteListener(task -> {
-                    Log.d("AUTH", "signInAnonymously:onComplete:" + task.isSuccessful());
+                    Logger.log("AUTH", "signInAnonymously:onComplete:" + task.isSuccessful());
 
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the auth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
                     if (!task.isSuccessful()) {
-                        Log.w("AUTH", "signInAnonymously", task.getException());
-//                        Toast.makeText(MainActivity.this, "Authentication failed.",
-//                                Toast.LENGTH_SHORT).show();
+                        Logger.log("AUTH", "signInAnonymously : " + task.getException());
                     }
                 });
     }

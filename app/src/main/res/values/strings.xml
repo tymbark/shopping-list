@@ -5,6 +5,13 @@
     <string name="navigation_title_products">Products</string>
     <string name="navigation_title_history">History</string>
 
+    <!-- Welcome -->
+    <string name="welcome_main_text">Shared Shopping List</string>
+    <string name="welcome_subtext">Click here to continue</string>
+    <string name="welcome_error_not_connected">You are not connected</string>
+    <string name="welcome_error_internet">No internet connection</string>
+    <string name="welcome_cannot_login">This app requires internet connection to launch.</string>
+
     <!-- Main -->
     <string name="main_activity_list_dont_exist_after_qr">This list does not exist</string>
     <string name="main_activity_list_added_qr">Added new list: %1$s</string>

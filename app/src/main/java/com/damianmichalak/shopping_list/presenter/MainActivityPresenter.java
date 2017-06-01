@@ -1,12 +1,10 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
-import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
-import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
-import com.damianmichalak.shopping_list.model.api_models.User;
 import com.damianmichalak.shopping_list.model.UserDao;
+import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,8 +18,6 @@ import rx.subscriptions.Subscriptions;
 public class MainActivityPresenter {
 
     @Nonnull
-    private final UserDao userDao;
-    @Nonnull
     private final Observable<Object> closeDrawerObservable;
     @Nonnull
     private final PublishSubject<Object> removeListClickSubject = PublishSubject.create();
@@ -32,9 +28,9 @@ public class MainActivityPresenter {
     @Nonnull
     private final Observable<ShoppingList> qrCodeListError;
     @Nonnull
-    private final Observable<String> qrCodeListSuccess;
+    private final Observable<Object> showWelcomeScreenObservable;
     @Nonnull
-    private final Observable<User> emptyUserNameObservable;
+    private final Observable<String> qrCodeListSuccess;
 
     @Inject
     public MainActivityPresenter(@Nonnull final CurrentListDao currentListDao,
@@ -43,7 +39,6 @@ public class MainActivityPresenter {
 
         closeDrawerObservable = currentListDao.getCurrentListKeyObservable()
                 .map(o -> null);
-        this.userDao = userDao;
 
         subscription.set(Subscriptions.from(
                 removeListClickSubject
@@ -63,21 +58,15 @@ public class MainActivityPresenter {
                 .flatMap(listsDao::getObservableForSingleList)
                 .filter(shoppingList -> shoppingList == null);
 
-        emptyUserNameObservable = userDao.getUserObservable()
-                .filter(user -> user != null)
-                .filter(user -> Strings.isNullOrEmpty(user.getName()))
-                .first();
+        showWelcomeScreenObservable = userDao.getUidObservable()
+                .filter(o -> o == null)
+                .map(o -> null);
 
     }
 
     @Nonnull
-    public Observable<User> getEmptyUserNameObservable() {
-        return emptyUserNameObservable;
-    }
-
-    @Nonnull
-    public Observer<String> getNewUserNameSubject() {
-        return userDao.usernameObserver();
+    public Observable<Object> getShowWelcomeScreenObservable() {
+        return showWelcomeScreenObservable;
     }
 
     @Nonnull
