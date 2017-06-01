@@ -12,7 +12,6 @@ import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

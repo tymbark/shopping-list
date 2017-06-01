@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 
@@ -56,12 +57,16 @@ public class ProductsListManager implements ViewHolderManager {
         @BindView(R.id.shopping_item_done)
         View done;
 
+        private final Observable<Void> clickObservable;
+
         @Nonnull
         private final SerialSubscription subscription = new SerialSubscription();
 
         public ProductViewHolder(@Nonnull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            clickObservable = RxView.clicks(done).share();
         }
 
         @Override
@@ -78,8 +83,7 @@ public class ProductsListManager implements ViewHolderManager {
             itemDate.setText(resources.getString(R.string.shopping_list_date_string, dateHelper.getDateForTimestamp(product.getDateAdded())));
 
             subscription.set(Subscriptions.from(
-                    RxView.clicks(done)
-                            .subscribe(adapterItem.removeItem())
+                    clickObservable.subscribe(adapterItem.removeItem())
             ));
         }
 
