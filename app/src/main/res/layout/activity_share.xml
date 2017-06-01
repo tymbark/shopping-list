@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
               android:background="@android:color/white"
               android:gravity="center"
               android:orientation="vertical">
 
     <TextView
-        android:id="@+id/activity_share_qr_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:text="@string/activity_share_qr_label"
+        android:textColor="@color/shopping_item_product_date_color"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/activity_share_qr_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        tools:text="Please scan this unique QR code \ngenerated for the shopping list:\nParty list"
+        android:gravity="center"
+        android:padding="8dp"
         android:textColor="@android:color/black"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        tools:text="Party List"/>
 
     <ImageView
         android:id="@+id/activity_share_qr_view"

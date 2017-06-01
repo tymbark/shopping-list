@@ -47,7 +47,7 @@ public class ShareActivity extends BaseActivity {
                 presenter.getCurrentListKeyObservable()
                         .subscribe(listId -> QRHelper.generateQR(listId, qrView)),
                 presenter.getCurrentListNameObservable()
-                        .subscribe(listName -> ShareActivity.this.name.setText(getResources().getString(R.string.activity_share_qr_label, listName)))
+                        .subscribe(listName -> name.setText(listName))
         ));
 
         final ActionBar supportActionBar = getSupportActionBar();

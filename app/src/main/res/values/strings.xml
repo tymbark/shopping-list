@@ -43,7 +43,7 @@
     <string name="shopping_list_empty_products_text">This list is empty</string>
 
     <!-- Share Activity (generate QR) -->
-    <string name="activity_share_qr_label">Please scan this unique QR code \ngenerated for the shopping list:\n%1$s</string>
+    <string name="activity_share_qr_label">Please scan this unique QR code \ngenerated for the shopping list:</string>
     <string name="activity_share_title">Generate QR</string>
 
     <!-- Scanner -->
