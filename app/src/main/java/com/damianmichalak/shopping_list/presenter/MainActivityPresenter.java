@@ -20,8 +20,6 @@ public class MainActivityPresenter {
     @Nonnull
     private final Observable<Object> closeDrawerObservable;
     @Nonnull
-    private final PublishSubject<Object> removeListClickSubject = PublishSubject.create();
-    @Nonnull
     private final PublishSubject<String> qrCodeShoppingListSubject = PublishSubject.create();
     @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();
@@ -40,12 +38,7 @@ public class MainActivityPresenter {
         closeDrawerObservable = currentListDao.getCurrentListKeyObservable()
                 .map(o -> null);
 
-        subscription.set(Subscriptions.from(
-                removeListClickSubject
-                        .withLatestFrom(currentListDao.getCurrentListKeyObservable(), (o, currentListKey) -> currentListKey)
-                        .flatMap(listsDao::removeListObservable)
-                        .subscribe()
-        ));
+        subscription.set(Subscriptions.from());
 
         qrCodeListSuccess = qrCodeShoppingListSubject
                 .flatMap(qrCodeKey -> listsDao.getObservableForSingleList(qrCodeKey)
@@ -87,11 +80,6 @@ public class MainActivityPresenter {
     @Nonnull
     public SerialSubscription getSubscription() {
         return subscription;
-    }
-
-    @Nonnull
-    public Observer<Object> getRemoveListClickSubject() {
-        return removeListClickSubject;
     }
 
     @Nonnull

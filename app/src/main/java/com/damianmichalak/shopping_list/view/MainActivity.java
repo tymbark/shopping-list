@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
 import com.damianmichalak.shopping_list.helper.AuthHelper;
+import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.presenter.MainActivityPresenter;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -149,10 +150,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
             return true;
         } else {
             switch (item.getItemId()) {
-                case R.id.delete_list:
-//                    todo floatingActionButtonAdd dialog are you sure
-                    presenter.getRemoveListClickSubject().onNext(null);
-                    return true;
                 case R.id.rename_list:
 //                    todo implement it
                     Toast.makeText(this, "not implemented", Toast.LENGTH_SHORT).show();
