@@ -18,7 +18,6 @@ public class ProductsDatabase {
     @Nonnull
     private final EventsWrapper eventsWrapper;
 
-    @Inject
     ProductsDatabase(@Nonnull References References,
                      @Nonnull EventsWrapper eventsWrapper) {
         this.References = References;

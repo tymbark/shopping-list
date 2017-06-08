@@ -1,6 +1,7 @@
 package com.damianmichalak.shopping_list.helper;
 
 
+import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -8,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import rx.AsyncEmitter;
@@ -74,6 +76,10 @@ public class Database<T> {
     }
 
     public Observable<Map<String, T>> itemsAsMap(DatabaseReference reference, Class<T> type) {
+        return itemsAsMap(reference, type, null);
+    }
+
+    public Observable<Map<String, T>> itemsAsMap(DatabaseReference reference, Class<T> type, @Nullable String orderByChild) {
         return Observable.fromEmitter((Action1<AsyncEmitter<Map<String, T>>>) emitter -> {
             mapEventsWrapper.setEventsListener(new EventsWrapper.EventsListener() {
                 @Override
@@ -92,7 +98,11 @@ public class Database<T> {
                     emitter.onError(new Throwable(databaseError.getMessage()));
                 }
             });
-            reference.addValueEventListener(mapEventsWrapper.getFirebaseListener());
+            if (Strings.isNotNullAndNotEmpty(orderByChild)) {
+                reference.orderByChild(orderByChild).addValueEventListener(mapEventsWrapper.getFirebaseListener());
+            } else {
+                reference.addValueEventListener(mapEventsWrapper.getFirebaseListener());
+            }
         }, AsyncEmitter.BackpressureMode.LATEST)
                 .doOnUnsubscribe(() -> reference.removeEventListener(mapEventsWrapper.getFirebaseListener()));
     }

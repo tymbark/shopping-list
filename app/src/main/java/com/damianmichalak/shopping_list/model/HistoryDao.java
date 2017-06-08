@@ -35,7 +35,7 @@ public class HistoryDao {
                 .replay(1)
                 .refCount();
 
-        productsObservable = referenceObservable.switchMap(reference -> database.itemsAsMap(reference, Product.class))
+        productsObservable = referenceObservable.switchMap(reference -> database.itemsAsMap(reference, Product.class, "datePurchased"))
                 .replay(1)
                 .refCount();
     }
