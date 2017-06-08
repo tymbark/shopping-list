@@ -73,6 +73,9 @@ public class ShoppingListFragment extends BaseFragment {
                         .subscribe(adapter),
                 presenter.getEmptyListObservable()
                         .subscribe(RxView.visibility(emptyListView)),
+                presenter.getShowProductsObservable()
+                        .subscribe(o -> ((MainActivity) getActivity())
+                                .selectItemNavigation(R.id.navigation_products)),
 //                presenter.getFloatingActionButtonObservable()
 //                        .subscribe(RxView.visibility(floatingActionButtonAdd)),
 //                presenter.getNoListsObservable()

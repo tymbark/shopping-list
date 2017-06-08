@@ -16,6 +16,7 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -40,6 +41,8 @@ public class ShoppingListPresenter {
     private final PublishSubject<String> allowedToRemoveSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> setCurrentListSubject = PublishSubject.create();
+    @Nonnull
+    private final PublishSubject<Object> showProductsSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
     @Nonnull
@@ -98,6 +101,11 @@ public class ShoppingListPresenter {
     }
 
     @Nonnull
+    public Observable<Object> getShowProductsObservable() {
+        return showProductsSubject;
+    }
+
+    @Nonnull
     public Observable<List<BaseAdapterItem>> getListObservable() {
         return listObservable;
     }
@@ -148,7 +156,10 @@ public class ShoppingListPresenter {
         }
 
         public Observer<Void> clickObserver() {
-            return Observers.create(aVoid -> setCurrentListSubject.onNext(key));
+            return Observers.create(aVoid -> {
+                setCurrentListSubject.onNext(key);
+                showProductsSubject.onNext(null);
+            });
         }
 
         public Observer<Void> removeObserver() {

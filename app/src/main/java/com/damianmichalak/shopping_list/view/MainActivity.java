@@ -181,6 +181,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }
     }
 
+    public void selectItemNavigation(int item) {
+        if (navigation != null) {
+            navigation.setSelectedItemId(item);
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
