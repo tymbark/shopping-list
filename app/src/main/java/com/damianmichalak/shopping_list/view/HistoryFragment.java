@@ -27,6 +27,8 @@ import rx.subscriptions.Subscriptions;
 
 public class HistoryFragment extends BaseFragment {
 
+    public static final String TAG = "HistoryFragment";
+
     @BindView(R.id.history_list_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.history_empty_view)

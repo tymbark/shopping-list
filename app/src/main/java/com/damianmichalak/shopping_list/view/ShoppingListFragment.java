@@ -30,6 +30,7 @@ import rx.subscriptions.Subscriptions;
 
 public class ShoppingListFragment extends BaseFragment {
 
+    public static final String TAG = "ShoppingListFragment";
     @Inject
     ShoppingListPresenter presenter;
     @Inject

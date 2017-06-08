@@ -31,6 +31,7 @@ import rx.subscriptions.Subscriptions;
 
 public class ProductsListFragment extends BaseFragment {
 
+    public static final String TAG = "ProductsListFragment";
     @Inject
     ProductsListPresenter presenter;
     @Inject

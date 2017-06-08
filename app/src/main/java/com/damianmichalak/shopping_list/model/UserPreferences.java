@@ -24,6 +24,7 @@ public class UserPreferences {
     private static final String SUGGESTED_PRODUCTS = "suggested_products";
     private static final String USER_UID = "uid";
     private static final String CURRENT_LIST = "current_list";
+    private static final String CURRENT_OPENED_FRAGMENT = "current_opened_fragment";
 
     @Nonnull
     private final SharedPreferences preferences;
@@ -96,6 +97,16 @@ public class UserPreferences {
     @Nullable
     public String getUid() {
         return preferences.getString(USER_UID, null);
+    }
+
+
+    public void setCurrentOpenedFragment(String uid) {
+        preferences.edit().putString(CURRENT_OPENED_FRAGMENT, uid).apply();
+    }
+
+    @Nullable
+    public String getCurrentOpenedFragment() {
+        return preferences.getString(CURRENT_OPENED_FRAGMENT, null);
     }
 
     public void setCurrentList(String uid) {

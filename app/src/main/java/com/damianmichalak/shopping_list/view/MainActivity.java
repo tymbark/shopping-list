@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.ActivityScope;
-import com.damianmichalak.shopping_list.helper.AuthHelper;
-import com.damianmichalak.shopping_list.helper.DialogHelper;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.presenter.MainActivityPresenter;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -44,6 +42,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     View rootView;
     @BindView(R.id.main_drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.navigation)
+    BottomNavigationView navigation;
 
     private DrawerFragment drawerFragment;
 
@@ -65,14 +65,24 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         ButterKnife.bind(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, ProductsListFragment.newInstance()).commit();
-
         setupDrawerAndToolbar();
-        setupBottomNavigation();
+        navigation.setOnNavigationItemSelectedListener(this);
 
         subscription.set(Subscriptions.from(
                 presenter.getCloseDrawerObservable()
                         .subscribe(o -> drawerLayout.closeDrawers()),
+                presenter.getCurrentOpenedFragment()
+                        .subscribe(tag -> {
+                            if (Strings.isNullOrEmpty(tag)) {
+                                navigation.setSelectedItemId(R.id.navigation_shopping_list);
+                            } else if (tag.equals(ProductsListFragment.TAG)) {
+                                navigation.setSelectedItemId(R.id.navigation_products);
+                            } else if (tag.equals(ShoppingListFragment.TAG)) {
+                                navigation.setSelectedItemId(R.id.navigation_shopping_list);
+                            } else if (tag.equals(HistoryFragment.TAG)) {
+                                navigation.setSelectedItemId(R.id.navigation_history);
+                            }
+                        }),
                 presenter.getQrCodeListError()
                         .subscribe(o -> Snackbar.make(rootView, R.string.main_activity_list_dont_exist_after_qr, Snackbar.LENGTH_LONG).show()),
                 presenter.getQrCodeListSuccess()
@@ -85,12 +95,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 presenter.getSubscription()
         ));
 
-    }
-
-    private void setupBottomNavigation() {
-        final BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(this);
-        navigation.setSelectedItemId(R.id.navigation_shopping_list);
     }
 
     private void setupDrawerAndToolbar() {
@@ -181,13 +185,16 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_shopping_list:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance(), ShoppingListFragment.TAG).commit();
+                presenter.getCurrentOpenedFragmentSubject().onNext(ShoppingListFragment.TAG);
                 return true;
             case R.id.navigation_products:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, ProductsListFragment.newInstance()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, ProductsListFragment.newInstance(), ProductsListFragment.TAG).commit();
+                presenter.getCurrentOpenedFragmentSubject().onNext(ProductsListFragment.TAG);
                 return true;
             case R.id.navigation_history:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, HistoryFragment.newInstance()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, HistoryFragment.newInstance(), HistoryFragment.TAG).commit();
+                presenter.getCurrentOpenedFragmentSubject().onNext(HistoryFragment.TAG);
                 return true;
         }
         return false;

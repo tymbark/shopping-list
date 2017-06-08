@@ -4,6 +4,7 @@ package com.damianmichalak.shopping_list.presenter;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.UserDao;
+import com.damianmichalak.shopping_list.model.UserPreferences;
 import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 
 import javax.annotation.Nonnull;
@@ -22,6 +23,8 @@ public class MainActivityPresenter {
     @Nonnull
     private final PublishSubject<String> qrCodeShoppingListSubject = PublishSubject.create();
     @Nonnull
+    private final PublishSubject<String> currentOpenedFragmentSubject = PublishSubject.create();
+    @Nonnull
     private final SerialSubscription subscription = new SerialSubscription();
     @Nonnull
     private final Observable<ShoppingList> qrCodeListError;
@@ -29,16 +32,23 @@ public class MainActivityPresenter {
     private final Observable<Object> showWelcomeScreenObservable;
     @Nonnull
     private final Observable<String> qrCodeListSuccess;
+    @Nonnull
+    private final Observable<String> currentOpenedFragment;
 
     @Inject
     public MainActivityPresenter(@Nonnull final CurrentListDao currentListDao,
                                  @Nonnull final ListsDao listsDao,
+                                 @Nonnull final UserPreferences userPreferences,
                                  @Nonnull final UserDao userDao) {
 
         closeDrawerObservable = currentListDao.getCurrentListKeyObservable()
                 .map(o -> null);
 
-        subscription.set(Subscriptions.from());
+        subscription.set(Subscriptions.from(
+                currentOpenedFragmentSubject.subscribe(userPreferences::setCurrentOpenedFragment)
+        ));
+
+        currentOpenedFragment = Observable.fromCallable(userPreferences::getCurrentOpenedFragment);
 
         qrCodeListSuccess = qrCodeShoppingListSubject
                 .flatMap(qrCodeKey -> listsDao.getObservableForSingleList(qrCodeKey)
@@ -58,8 +68,18 @@ public class MainActivityPresenter {
     }
 
     @Nonnull
+    public Observable<String> getCurrentOpenedFragment() {
+        return currentOpenedFragment;
+    }
+
+    @Nonnull
     public Observable<Object> getShowWelcomeScreenObservable() {
         return showWelcomeScreenObservable;
+    }
+
+    @Nonnull
+    public Observer<String> getCurrentOpenedFragmentSubject() {
+        return currentOpenedFragmentSubject;
     }
 
     @Nonnull
