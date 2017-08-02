@@ -2,6 +2,7 @@ package com.damianmichalak.shopping_list.view;
 
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,7 @@ public class ProductsListManager implements ViewHolderManager {
         @BindView(R.id.shopping_item_done)
         View done;
 
-        private final Observable<Void> clickObservable;
+//        private final Observable<Void> clickObservable;
 
         @Nonnull
         private final SerialSubscription subscription = new SerialSubscription();
@@ -66,13 +67,13 @@ public class ProductsListManager implements ViewHolderManager {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            clickObservable = RxView.clicks(done).share();
+//            clickObservable = RxView.clicks(done).share();
         }
 
         @Override
         public void onViewRecycled() {
             super.onViewRecycled();
-            subscription.set(Subscriptions.empty());
+//            subscription.set(Subscriptions.empty());
         }
 
         @Override
@@ -83,7 +84,7 @@ public class ProductsListManager implements ViewHolderManager {
             itemDate.setText(resources.getString(R.string.shopping_list_date_string, dateHelper.getDateForTimestamp(product.getDateAdded())));
 
             subscription.set(Subscriptions.from(
-                    clickObservable.subscribe(adapterItem.removeItem())
+                    RxView.clicks(done).subscribe(adapterItem.removeItem())
             ));
         }
 

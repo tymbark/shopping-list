@@ -1,6 +1,8 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
+import android.util.Log;
+
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
@@ -19,6 +21,8 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
+import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -68,6 +72,30 @@ public class ProductsListPresenter {
 
         subscription.set(Subscriptions.from(
                 removeItemSubject
+                        .doOnSubscribe(new Action0() {
+                            @Override
+                            public void call() {
+                                Log.d("CHUJ", "subscribe");
+                            }
+                        })
+                        .doOnUnsubscribe(new Action0() {
+                            @Override
+                            public void call() {
+                                Log.d("CHUJ", "UNsubscribe");
+                            }
+                        })
+                        .doOnCompleted(new Action0() {
+                            @Override
+                            public void call() {
+                                Log.d("CHUJ", "completed");
+                            }
+                        })
+                        .doOnNext(new Action1<Product>() {
+                            @Override
+                            public void call(Product product) {
+                                Log.d("CHUJ", "next");
+                            }
+                        })
                         .flatMap(productsDao::removeItemByKeyObservable)
                         .subscribe(),
                 newShoppingListObserver
