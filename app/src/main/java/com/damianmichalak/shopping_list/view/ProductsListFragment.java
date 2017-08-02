@@ -70,8 +70,10 @@ public class ProductsListFragment extends BaseFragment {
         recyclerView.setAdapter(adapter);
 
         subscription.set(Subscriptions.from(
-                presenter.getCurrentShoppingListObservable()
+                presenter.getCurrentShoppingListItemsObservable()
                         .subscribe(adapter),
+                presenter.getListNameObservable()
+                        .subscribe(((MainActivity) getActivity())::setToolbarSubtitle),
                 presenter.getEmptyListObservable()
                         .subscribe(RxView.visibility(emptyListView)),
                 presenter.getFloatingActionButtonObservable()

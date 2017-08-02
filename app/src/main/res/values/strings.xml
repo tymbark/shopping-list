@@ -15,6 +15,7 @@
     <!-- Main -->
     <string name="main_activity_list_dont_exist_after_qr">This list does not exist</string>
     <string name="main_activity_list_added_qr">Added new list: %1$s</string>
+    <string name="main_activity_toolbar_subtitle">" ► %1$s"</string>
 
     <!-- Drawer Items -->
     <string name="drawer_open">open</string>

@@ -65,6 +65,8 @@ public class HistoryFragment extends BaseFragment {
         subscription.set(Subscriptions.from(
                 presenter.getHistoryProductsForCurrentList()
                         .subscribe(adapter),
+                presenter.getListNameObservable()
+                        .subscribe(((MainActivity) getActivity())::setToolbarSubtitle),
                 presenter.getHistoryEmptyObservable()
                         .subscribe(RxView.visibility(emptyView))
         ));

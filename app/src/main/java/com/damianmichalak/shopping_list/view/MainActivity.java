@@ -128,6 +128,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }
     }
 
+    public void setToolbarSubtitle(@Nullable String subtitle) {
+        if (supportActionBar != null) {
+            supportActionBar.setSubtitle(Strings.nullToEmpty(getString(R.string.main_activity_toolbar_subtitle, subtitle)));
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

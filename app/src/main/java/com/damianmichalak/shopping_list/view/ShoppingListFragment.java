@@ -40,8 +40,6 @@ public class ShoppingListFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.shopping_list_add_button)
     View floatingActionButtonAdd;
-    @BindView(R.id.shopping_list_empty_view)
-    View noListsView;
     @BindView(R.id.shopping_list_empty_products_view)
     View emptyListView;
 
@@ -78,12 +76,10 @@ public class ShoppingListFragment extends BaseFragment {
                                 .selectItemNavigation(R.id.navigation_products)),
 //                presenter.getFloatingActionButtonObservable()
 //                        .subscribe(RxView.visibility(floatingActionButtonAdd)),
-//                presenter.getNoListsObservable()
-//                        .subscribe(RxView.visibility(noListsView)),
                 presenter.getShowNewListDialogObservable()
                         .subscribe(o -> DialogHelper.showNewListNameDialog(getActivity(), presenter.getAddNewListClickSubject())),
-//                presenter.getListNameObservable()
-//                        .subscribe(name -> ((MainActivity) getActivity()).setToolbarTitle(name)),
+                presenter.getListNameObservable()
+                        .subscribe(((MainActivity) getActivity())::setToolbarSubtitle),
                 presenter.getSubscription()
         ));
 
@@ -135,7 +131,7 @@ public class ShoppingListFragment extends BaseFragment {
         @Nonnull
         @Named("AddListEmptyClickObservable")
         Observable<Void> provideAddListEmptyClickObservable() {
-            return RxView.clicks(noListsView).share();
+            return RxView.clicks(emptyListView).share();
         }
 
         @Provides

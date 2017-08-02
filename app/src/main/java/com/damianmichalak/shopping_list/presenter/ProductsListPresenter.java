@@ -1,8 +1,6 @@
 package com.damianmichalak.shopping_list.presenter;
 
 
-import android.util.Log;
-
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
@@ -21,8 +19,6 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -34,7 +30,7 @@ public class ProductsListPresenter {
     @Nonnull
     private final Observable<String> listNameObservable;
     @Nonnull
-    private final Observable<List<BaseAdapterItem>> currentShoppingListObservable;
+    private final Observable<List<BaseAdapterItem>> currentShoppingListItemsObservable;
     @Nonnull
     private final PublishSubject<Product> removeItemSubject = PublishSubject.create();
     @Nonnull
@@ -60,13 +56,13 @@ public class ProductsListPresenter {
 
         showNewListDialogObservable = addListClickObservable.map(v -> null);
 
-        currentShoppingListObservable = productsDao.getProductsObservable()
+        currentShoppingListItemsObservable = productsDao.getProductsObservable()
                 .map(toAdapterItems());
 
         noListsObservable = listsDao.getAvailableListsObservable().map(Map::isEmpty);
 
         emptyListObservable = Observable
-                .combineLatest(currentShoppingListObservable.map(List::isEmpty), noListsObservable,
+                .combineLatest(currentShoppingListItemsObservable.map(List::isEmpty), noListsObservable,
                         (currentListEmpty, noLists) -> currentListEmpty && !noLists)
                 .share();
 
@@ -125,8 +121,8 @@ public class ProductsListPresenter {
     }
 
     @Nonnull
-    public Observable<List<BaseAdapterItem>> getCurrentShoppingListObservable() {
-        return currentShoppingListObservable;
+    public Observable<List<BaseAdapterItem>> getCurrentShoppingListItemsObservable() {
+        return currentShoppingListItemsObservable;
     }
 
     @Nonnull

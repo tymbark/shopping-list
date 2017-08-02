@@ -2,8 +2,10 @@ package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
+import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.HistoryDao;
 import com.damianmichalak.shopping_list.model.api_models.Product;
+import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
@@ -21,6 +24,8 @@ import rx.subjects.PublishSubject;
 public class HistoryPresenter {
 
     @Nonnull
+    private final Observable<String> listNameObservable;
+    @Nonnull
     private final Observable<List<BaseAdapterItem>> historyProductsForCurrentList;
     @Nonnull
     private final Observable<Boolean> historyEmptyObservable;
@@ -30,7 +35,8 @@ public class HistoryPresenter {
     private final HistoryDao historyDao;
 
     @Inject
-    public HistoryPresenter(@Nonnull final HistoryDao historyDao) {
+    public HistoryPresenter(@Nonnull final HistoryDao historyDao,
+                            @Nonnull final CurrentListDao currentListDao) {
 
         this.historyDao = historyDao;
         historyProductsForCurrentList = historyDao.getProductsObservable()
@@ -40,6 +46,10 @@ public class HistoryPresenter {
 
         historyEmptyObservable = historyProductsForCurrentList
                 .map(List::isEmpty);
+
+        listNameObservable = currentListDao.getCurrentListObservable()
+                .filter(list -> list != null)
+                .map(ShoppingList::getName);
 
     }
 
@@ -63,6 +73,11 @@ public class HistoryPresenter {
     @Nonnull
     public Observable<List<BaseAdapterItem>> getHistoryProductsForCurrentList() {
         return historyProductsForCurrentList;
+    }
+
+    @Nonnull
+    public Observable<String> getListNameObservable() {
+        return listNameObservable;
     }
 
     @Nonnull

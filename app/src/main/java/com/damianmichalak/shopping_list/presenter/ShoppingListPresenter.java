@@ -5,6 +5,7 @@ import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
+import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -47,6 +48,8 @@ public class ShoppingListPresenter {
     private final PublishSubject<String> addNewListClickSubject = PublishSubject.create();
     @Nonnull
     private final PublishSubject<String> removeListClickSubject = PublishSubject.create();
+    @Nonnull
+    private final Observable<String> listNameObservable;
 
     @Inject
     ShoppingListPresenter(@Nonnull final CurrentListDao currentListDao,
@@ -67,6 +70,11 @@ public class ShoppingListPresenter {
         showNewListDialogObservable = Observable.merge(addListEmptyClickObservable, addListClickObservable)
                 .map(v -> null);
 
+        listNameObservable = currentListDao.getCurrentListObservable()
+                .filter(list -> list != null)
+                .map(ShoppingList::getName);
+
+
         subscription.set(Subscriptions.from(
                 addNewListClickSubject
                         .flatMap(listsDao::addNewListObservable)
@@ -78,6 +86,11 @@ public class ShoppingListPresenter {
                         .subscribe(currentListDao.saveCurrentListIdObserver())
         ));
 
+    }
+
+    @Nonnull
+    public Observable<String> getListNameObservable() {
+        return listNameObservable;
     }
 
     @Nonnull
