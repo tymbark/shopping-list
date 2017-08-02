@@ -116,11 +116,12 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.shopping_list_share, menu);
-        return true;
-    }
+    //    todo add options
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.shopping_list_share, menu);
+//        return true;
+//    }
 
     public void setToolbarTitle(@Nullable String title) {
         if (supportActionBar != null) {
@@ -151,26 +152,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
-    }
-
-    //    todo move this actions to fragment not MainActivity
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        } else {
-            switch (item.getItemId()) {
-                case R.id.rename_list:
-//                    todo implement it
-                    Toast.makeText(this, "not implemented", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.share_list:
-                    startActivity(ShareActivity.newIntent(this));
-                    return true;
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
