@@ -12,6 +12,7 @@ import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Scheduler;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;
@@ -48,7 +50,8 @@ public class ProductsListPresenter {
     ProductsListPresenter(@Nonnull final ProductsDao productsDao,
                           @Nonnull final CurrentListDao currentListDao,
                           @Nonnull final ListsDao listsDao,
-                          @Named("AddListClickObservable") Observable<Void> addListClickObservable) {
+                          @Named("AddListClickObservable") Observable<Void> addListClickObservable,
+                          @Nonnull final @Named("UI") Scheduler uiScheduler) {
 
         listNameObservable = currentListDao.getCurrentListObservable()
                 .filter(list -> list != null)
@@ -68,6 +71,8 @@ public class ProductsListPresenter {
 
         subscription.set(Subscriptions.from(
                 removeItemSubject
+                        .throttleFirst(100, TimeUnit.MILLISECONDS, uiScheduler)
+                        .distinctUntilChanged()
                         .flatMap(productsDao::removeItemByKeyObservable)
                         .subscribe(),
                 newShoppingListObserver

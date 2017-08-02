@@ -1,5 +1,7 @@
 package com.damianmichalak.shopping_list.model.api_models;
 
+import com.damianmichalak.shopping_list.helper.guava.Objects;
+
 public class Product {
 
     private String id;
@@ -41,4 +43,19 @@ public class Product {
         return new Product(key, name, dateAdded, datePurchased);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return dateAdded == product.dateAdded &&
+                datePurchased == product.datePurchased &&
+                Objects.equal(id, product.id) &&
+                Objects.equal(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, dateAdded, datePurchased);
+    }
 }
