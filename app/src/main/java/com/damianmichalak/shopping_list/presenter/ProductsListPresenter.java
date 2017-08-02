@@ -72,30 +72,6 @@ public class ProductsListPresenter {
 
         subscription.set(Subscriptions.from(
                 removeItemSubject
-                        .doOnSubscribe(new Action0() {
-                            @Override
-                            public void call() {
-                                Log.d("CHUJ", "subscribe");
-                            }
-                        })
-                        .doOnUnsubscribe(new Action0() {
-                            @Override
-                            public void call() {
-                                Log.d("CHUJ", "UNsubscribe");
-                            }
-                        })
-                        .doOnCompleted(new Action0() {
-                            @Override
-                            public void call() {
-                                Log.d("CHUJ", "completed");
-                            }
-                        })
-                        .doOnNext(new Action1<Product>() {
-                            @Override
-                            public void call(Product product) {
-                                Log.d("CHUJ", "next");
-                            }
-                        })
                         .flatMap(productsDao::removeItemByKeyObservable)
                         .subscribe(),
                 newShoppingListObserver
