@@ -1,9 +1,9 @@
 package com.damianmichalak.shopping_list.model.apiModels
 
-data class Product(val id: String,
-                   val name: String,
-                   val dateAdded: Long,
-                   val datePurchased: Long) {
+data class Product(val id: String = "",
+                   val name: String = "",
+                   val dateAdded: Long = -1,
+                   val datePurchased: Long = -1) {
 
     fun purchased(): Product {
         return Product(id, name, dateAdded, System.currentTimeMillis())
