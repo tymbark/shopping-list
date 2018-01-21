@@ -3,7 +3,7 @@ package com.damianmichalak.shopping_list.model;
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.guava.Maps;
-import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
+import com.damianmichalak.shopping_list.model.apiModels.ShoppingList;
 import com.google.firebase.database.DatabaseReference;
 
 import org.junit.Before;

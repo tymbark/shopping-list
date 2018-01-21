@@ -5,7 +5,7 @@ import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
-import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
+import com.damianmichalak.shopping_list.model.apiModels.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -17,7 +17,6 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.observers.Observers;
 import rx.subjects.PublishSubject;

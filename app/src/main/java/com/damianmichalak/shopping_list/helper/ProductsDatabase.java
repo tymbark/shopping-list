@@ -1,12 +1,11 @@
 package com.damianmichalak.shopping_list.helper;
 
 
-import com.damianmichalak.shopping_list.model.api_models.Product;
+import com.damianmichalak.shopping_list.model.apiModels.Product;
 
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 import rx.AsyncEmitter;
 import rx.Observable;

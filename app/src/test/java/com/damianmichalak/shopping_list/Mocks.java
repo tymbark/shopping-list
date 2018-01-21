@@ -1,7 +1,7 @@
 package com.damianmichalak.shopping_list;
 
-import com.damianmichalak.shopping_list.model.api_models.Product;
-import com.damianmichalak.shopping_list.model.api_models.User;
+import com.damianmichalak.shopping_list.model.apiModels.Product;
+import com.damianmichalak.shopping_list.model.apiModels.User;
 
 import java.util.Random;
 

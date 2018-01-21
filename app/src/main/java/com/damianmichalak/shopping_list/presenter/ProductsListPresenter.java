@@ -6,8 +6,8 @@ import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.ProductsDao;
-import com.damianmichalak.shopping_list.model.api_models.Product;
-import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
+import com.damianmichalak.shopping_list.model.apiModels.Product;
+import com.damianmichalak.shopping_list.model.apiModels.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;

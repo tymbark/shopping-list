@@ -4,8 +4,8 @@ import com.damianmichalak.shopping_list.helper.guava.Lists;
 import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.HistoryDao;
-import com.damianmichalak.shopping_list.model.api_models.Product;
-import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
+import com.damianmichalak.shopping_list.model.apiModels.Product;
+import com.damianmichalak.shopping_list.model.apiModels.ShoppingList;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;

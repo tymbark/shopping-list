@@ -3,7 +3,7 @@ package com.damianmichalak.shopping_list.presenter;
 import com.damianmichalak.shopping_list.helper.ConnectivityHelper;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.UserDao;
-import com.damianmichalak.shopping_list.model.api_models.User;
+import com.damianmichalak.shopping_list.model.apiModels.User;
 
 import java.util.concurrent.TimeUnit;
 

@@ -5,7 +5,7 @@ import com.damianmichalak.shopping_list.Mocks;
 import com.damianmichalak.shopping_list.helper.Database;
 import com.damianmichalak.shopping_list.helper.References;
 import com.damianmichalak.shopping_list.helper.guava.Maps;
-import com.damianmichalak.shopping_list.model.api_models.Product;
+import com.damianmichalak.shopping_list.model.apiModels.Product;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

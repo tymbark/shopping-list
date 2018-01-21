@@ -5,7 +5,7 @@ import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.UserDao;
 import com.damianmichalak.shopping_list.model.UserPreferences;
-import com.damianmichalak.shopping_list.model.api_models.ShoppingList;
+import com.damianmichalak.shopping_list.model.apiModels.ShoppingList;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -2,17 +2,11 @@ package com.damianmichalak.shopping_list.presenter;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.dagger.StringResources;
-import com.damianmichalak.shopping_list.helper.guava.Lists;
-import com.damianmichalak.shopping_list.helper.guava.Objects;
 import com.damianmichalak.shopping_list.helper.guava.Strings;
 import com.damianmichalak.shopping_list.model.CurrentListDao;
 import com.damianmichalak.shopping_list.model.ListsDao;
 import com.damianmichalak.shopping_list.model.UserDao;
-import com.damianmichalak.shopping_list.model.api_models.User;
-import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
-
-import java.util.List;
-import java.util.Map;
+import com.damianmichalak.shopping_list.model.apiModels.User;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,8 +14,6 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Observer;
-import rx.functions.Func1;
-import rx.observers.Observers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;

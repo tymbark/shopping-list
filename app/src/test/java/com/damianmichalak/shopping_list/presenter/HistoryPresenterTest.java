@@ -3,7 +3,7 @@ package com.damianmichalak.shopping_list.presenter;
 import com.damianmichalak.shopping_list.Mocks;
 import com.damianmichalak.shopping_list.helper.guava.Maps;
 import com.damianmichalak.shopping_list.model.HistoryDao;
-import com.damianmichalak.shopping_list.model.api_models.Product;
+import com.damianmichalak.shopping_list.model.apiModels.Product;
 
 import org.junit.Before;
 import org.junit.Test;

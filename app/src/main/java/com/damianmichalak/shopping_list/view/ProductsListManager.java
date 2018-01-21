@@ -2,7 +2,6 @@ package com.damianmichalak.shopping_list.view;
 
 
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import android.widget.TextView;
 
 import com.damianmichalak.shopping_list.R;
 import com.damianmichalak.shopping_list.helper.DateHelper;
-import com.damianmichalak.shopping_list.model.api_models.Product;
+import com.damianmichalak.shopping_list.model.apiModels.Product;
 import com.damianmichalak.shopping_list.presenter.ProductsListPresenter;
 import com.jacekmarchwicki.universaladapter.BaseAdapterItem;
 import com.jacekmarchwicki.universaladapter.ViewHolderManager;
@@ -21,7 +20,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.subscriptions.SerialSubscription;
 import rx.subscriptions.Subscriptions;
 

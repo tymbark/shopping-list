@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -50,7 +49,9 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     private ActionBarDrawerToggle drawerToggle;
     private final SerialSubscription subscription = new SerialSubscription();
     private ActionBar supportActionBar;
-
+    private ShoppingListFragment shoppingListFragment = ShoppingListFragment.newInstance();
+    private ProductsListFragment productsListFragment = ProductsListFragment.newInstance();
+    private HistoryFragment historyFragment = HistoryFragment.newInstance();
 
     @Nonnull
     public static Intent newIntent(Context context) {
@@ -178,19 +179,25 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_shopping_list:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, ShoppingListFragment.newInstance(), ShoppingListFragment.TAG).commit();
-                presenter.getCurrentOpenedFragmentSubject().onNext(ShoppingListFragment.TAG);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, shoppingListFragment, ShoppingListFragment.TAG).commit();
+//                presenter.getCurrentOpenedFragmentSubject().onNext(ShoppingListFragment.TAG);
                 return true;
             case R.id.navigation_products:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, ProductsListFragment.newInstance(), ProductsListFragment.TAG).commit();
-                presenter.getCurrentOpenedFragmentSubject().onNext(ProductsListFragment.TAG);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, productsListFragment, ProductsListFragment.TAG).commit();
+//                presenter.getCurrentOpenedFragmentSubject().onNext(ProductsListFragment.TAG);
                 return true;
             case R.id.navigation_history:
-                getSupportFragmentManager().beginTransaction().replace(R.id.content, HistoryFragment.newInstance(), HistoryFragment.TAG).commit();
-                presenter.getCurrentOpenedFragmentSubject().onNext(HistoryFragment.TAG);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content, historyFragment, HistoryFragment.TAG).commit();
+//                presenter.getCurrentOpenedFragmentSubject().onNext(HistoryFragment.TAG);
                 return true;
         }
         return false;
+    }
+
+    //this is needed not to close MainActivity after opening drawer
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return drawerToggle.onOptionsItemSelected(item);
     }
 
     public Component getComponent() {
