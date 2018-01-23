@@ -35,7 +35,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         )
     }
     private val subscription = SerialSubscription()
-    //    private var supportActionBar: ActionBar? = null
     private val shoppingListFragment = ShoppingListFragment.newInstance()
     private val productsListFragment = ProductsListFragment.newInstance()
     private val historyFragment = HistoryFragment.newInstance()
