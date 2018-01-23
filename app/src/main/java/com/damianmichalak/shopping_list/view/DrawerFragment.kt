@@ -59,8 +59,8 @@ class DrawerFragment : BaseFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         subscription.set(Subscriptions.empty())
+        super.onDestroyView()
     }
 
     override fun initDagger() {
