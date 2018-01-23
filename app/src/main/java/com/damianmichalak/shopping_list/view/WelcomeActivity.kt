@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import butterknife.ButterKnife
 import com.damianmichalak.shopping_list.R
 import com.damianmichalak.shopping_list.dagger.ActivityScope
 import com.damianmichalak.shopping_list.helper.AuthHelper
@@ -32,7 +31,6 @@ class WelcomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.welcome_activity)
-        ButterKnife.bind(this)
         initDagger()
         authHelper.onCreate()
 

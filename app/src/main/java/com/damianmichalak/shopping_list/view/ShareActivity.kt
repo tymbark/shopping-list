@@ -3,7 +3,6 @@ package com.damianmichalak.shopping_list.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import butterknife.ButterKnife
 import com.damianmichalak.shopping_list.R
 import com.damianmichalak.shopping_list.dagger.ActivityScope
 import com.damianmichalak.shopping_list.helper.QRHelper
@@ -24,7 +23,6 @@ class ShareActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share)
         initDagger()
-        ButterKnife.bind(this)
 
         subscription.set(Subscriptions.from(
                 presenter.currentListKeyObservable

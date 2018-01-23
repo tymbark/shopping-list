@@ -9,7 +9,6 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
 import android.widget.Toast
-import butterknife.ButterKnife
 import com.damianmichalak.shopping_list.R
 import com.damianmichalak.shopping_list.dagger.ActivityScope
 import com.damianmichalak.shopping_list.helper.guava.Strings
@@ -43,8 +42,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initDagger()
-
-        ButterKnife.bind(this)
 
         setupDrawerAndToolbar()
         navigation.setOnNavigationItemSelectedListener(this)

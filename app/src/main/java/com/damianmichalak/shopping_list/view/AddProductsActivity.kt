@@ -4,7 +4,6 @@ package com.damianmichalak.shopping_list.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import butterknife.ButterKnife
 import com.damianmichalak.shopping_list.R
 import com.damianmichalak.shopping_list.dagger.ActivityScope
 import com.damianmichalak.shopping_list.helper.RxSnackbar
@@ -35,7 +34,6 @@ class AddProductsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
-        ButterKnife.bind(this)
         initDagger()
 
         activity_product_recycler_view.layoutManager = FlexboxLayoutManager()
